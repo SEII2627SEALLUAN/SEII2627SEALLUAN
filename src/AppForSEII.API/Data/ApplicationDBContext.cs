@@ -15,6 +15,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     }
 
+    public DbSet<Game> Game { get; set; }
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
