@@ -1,4 +1,5 @@
 @startuml
 hide methods
 !include Game.puml
+!include Sport.puml
 @enduml
