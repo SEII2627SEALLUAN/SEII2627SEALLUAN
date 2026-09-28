@@ -18,7 +18,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
-
+    public DbSet<RefereeGroup> RefereeGroups {get; set;}
 
 
 }
