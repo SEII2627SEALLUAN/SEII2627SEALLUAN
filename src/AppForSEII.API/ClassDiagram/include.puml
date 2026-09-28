@@ -5,4 +5,5 @@
 !include .\\Item.puml
 !include .\\Purchase.puml
 !include .\\PurchaseStatus.puml
+!include .\\Sport.puml
 @enduml
