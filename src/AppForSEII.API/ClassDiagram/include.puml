@@ -1,4 +1,9 @@
-@startuml
+@startuml name
 !include .\\ApplicationUser.puml
 !include .\\Team.puml
+!include .\\Game.puml
+!include .\\Gender.puml
+!include .\\Item.puml
+!include .\\Purchase.puml
+!include .\\PurchaseStatus.puml
 @enduml

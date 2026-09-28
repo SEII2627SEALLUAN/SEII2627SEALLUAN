@@ -16,4 +16,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<Team> Teams { get; set; }
 
+    public DbSet<Game> Game { get; set; }
+
+    public DbSet<Item> Items { get; set; }
+
+    public DbSet<Purchase> Purchases { get; set; }
 }
