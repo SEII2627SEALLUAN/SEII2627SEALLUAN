@@ -20,4 +20,6 @@ public class Game
     // [ForeignKey(nameof(Sport))]
     public int SportId { get; set; }
 
+    public List<Sport> Sports { get; set; } = new List<Sport>();
+
 }
