@@ -12,11 +12,14 @@ public class Game
 
     [Required]
     [StringLength(50, MinimumLength = 5)]
-    public string? Place { get; set; } 
+    public string? Place { get; set; } = "More than 5 chars";
 
     public string? Description { get; set; }
 
     public Sport? Sport { get; set; }
 
+    public ApplicationUser? ResponsibleFor { get; set; }
+
+    public IList<GameInvitation>? GameInvitations { get; set; }
 
 }

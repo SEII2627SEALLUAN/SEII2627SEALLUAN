@@ -7,4 +7,6 @@ class Team {
     + MinAge : int <<get>> <<set>> = 3
     + MaxAge : int <<get>> <<set>> = 3
 }
+Team --> "Sport" Sport
+Team --> "GameInvitations<GameInvitation>" "IList`1"
 @enduml

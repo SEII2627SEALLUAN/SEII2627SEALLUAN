@@ -13,4 +13,9 @@ public class Team
     public int MinAge { get; set; } = 3;
 
     public int MaxAge { get; set; } = 3;
+
+    public Sport? Sport { get; set; }
+
+    public IList<GameInvitation>? GameInvitations { get; set; }
+
 }

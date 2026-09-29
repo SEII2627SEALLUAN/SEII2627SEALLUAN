@@ -13,4 +13,11 @@ public class Sport
     public string Description { get; set; } = "Description";
     [Required]
     public string BasicRules { get; set; } = "Rules to the game";
+
+    public Game? Game { get; set; }
+
+    public IList<Game> Games { get; set; } = new List<Game>();
+
+    public IList<Team> Teams { get; set; } = new List<Team>();
+
 }
