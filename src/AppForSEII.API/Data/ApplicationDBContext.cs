@@ -17,4 +17,7 @@ public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext(
     public  DbSet<RefereeGroup> RefereeGroups  { get; set; }
     public DbSet<Item> Items { get; set; }
     public DbSet<Purchase> Purchases { get; set; }
+    public DbSet<PurchaseItem> PurchaseItems { get; set; }
+    
+
 }
