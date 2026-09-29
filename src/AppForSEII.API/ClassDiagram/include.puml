@@ -1,10 +1,4 @@
 @startuml
-!include .\\ApplicationUser.puml
-!include .\\Game.puml
-!include .\\Gender.puml
-!include .\\Item.puml
-!include .\\Purchase.puml
-!include .\\PurchaseStatus.puml
-!include .\\RefereeGroup.puml
-!include .\\Sport.puml
+!include ./RefereeGroup.puml
+!include ./ApplicationUser.puml
 @enduml
