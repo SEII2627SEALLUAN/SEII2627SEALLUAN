@@ -8,14 +8,15 @@ public class ApplicationUser : IdentityUser
     {
     }
 
-    public ApplicationUser(string id, string name, string surname, string userName)
+    public ApplicationUser(string name, string surname, DateOnly birthDate, int age, Gender gender)
     {
-        Id = id;
         Name = name;
         Surname = surname;
-        UserName = userName;
-        Email = userName;
+        BirthDate = birthDate;
+        Age = age;
+        Gender = gender;
     }
+
 
     public string? Name { get; set; }
     public string? Surname { get; set; }

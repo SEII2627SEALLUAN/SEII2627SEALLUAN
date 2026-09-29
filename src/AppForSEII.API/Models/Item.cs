@@ -20,4 +20,5 @@ public class Item
 
     public int QuantityAvailableForPurchase { get; set; }
 
+    public IList<PurchaseItem> PurchaseItems {get; set;}
 }

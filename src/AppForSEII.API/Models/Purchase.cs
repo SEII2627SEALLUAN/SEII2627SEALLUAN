@@ -33,4 +33,6 @@ public class Purchase
     public PurchaseStatus PurchaseStatus { get; set; }
 
     public string UserId { get; set; } = "";
+
+    public IList<PurchaseItem> PurchaseItems {get; set;}
 }
