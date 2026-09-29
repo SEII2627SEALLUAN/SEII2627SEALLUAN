@@ -7,4 +7,6 @@ public class InterestedIn
     public string UserId { get; set; } = "0";
 
     public int Skill { get; set; } = 5;
+    public Team Team {get; set;}
+    public ApplicationUser ApplicationUser {get; set;}
 }
