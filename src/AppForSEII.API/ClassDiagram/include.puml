@@ -1,9 +1,23 @@
-@startuml
+<<<<<<< HEAD
+@startuml name
 !include .\\ApplicationUser.puml
+!include .\\Team.puml
 !include .\\Game.puml
 !include .\\Gender.puml
 !include .\\Item.puml
 !include .\\Purchase.puml
 !include .\\PurchaseStatus.puml
-!include .\\Sport.puml
 @enduml
+=======
+@startuml
+!include ./ApplicationUser.puml
+!include ./Game.puml
+!include ./Gender.puml
+!include ./Item.puml
+!include ./Purchase.puml
+!include ./PurchaseStatus.puml
+!include ./RefereeGroup.puml
+!include ./Sport.puml
+!include ./TeamInvitation.puml
+@enduml
+>>>>>>> origin/development
