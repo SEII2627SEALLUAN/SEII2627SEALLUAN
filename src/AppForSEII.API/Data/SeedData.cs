@@ -116,7 +116,7 @@ namespace AppForSEII.API.Data {
                     recommendedAge: 12,
                     gender: null,
                     size: "M",
-                    quantityAvailableForPurchase: 100
+                    quantityAvailableForPurchase: 150
                 );
                 item.Sport = sports[1];            // attach the Basketball sport
                 dbcontext.Items.Add(item);
@@ -129,7 +129,7 @@ namespace AppForSEII.API.Data {
                     recommendedAge: 14,
                     gender: null,
                     size: "S",
-                    quantityAvailableForPurchase: 100
+                    quantityAvailableForPurchase: 10
                 );
                 item.Sport = sports[2];            // attach the Baseball sport
                 dbcontext.Items.Add(item);
@@ -141,8 +141,8 @@ namespace AppForSEII.API.Data {
                     price: 40.0m,
                     recommendedAge: 16,
                     gender: null,
-                    size: "M",
-                    quantityAvailableForPurchase: 100
+                    size: "L",
+                    quantityAvailableForPurchase: 42
                 );
                 item.Sport = sports[3];            // attach the Tennis sport
                 dbcontext.Items.Add(item);
