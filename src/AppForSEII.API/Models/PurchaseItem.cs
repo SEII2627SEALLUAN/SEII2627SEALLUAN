@@ -5,6 +5,18 @@ namespace AppForSEII.API.Models;
 [PrimaryKey(nameof(ItemId), nameof(PurchaseId))]
 public class PurchaseItem
 {
+    public PurchaseItem()
+    {
+    }
+    
+    public PurchaseItem(int itemId, int purchaseId, int quantity, decimal price)
+    {
+        ItemId = itemId;
+        PurchaseId = purchaseId;
+        Quantity = quantity;
+        Price = price;
+    }
+
     public int ItemId { get; set; }
 
     [ForeignKey(nameof(ItemId))]

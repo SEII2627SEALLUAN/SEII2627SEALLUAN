@@ -5,6 +5,22 @@ namespace AppForSEII.API.Models;
 
 public class Item
 {
+    public Item()
+    {
+        PurchaseItems = new List<PurchaseItem>();
+    }
+    
+    public Item(string name, decimal price, int? recommendedAge, Gender? gender, string? size, int quantityAvailableForPurchase)
+    {
+        Name = name;
+        Price = price;
+        RecommendedAge = recommendedAge;
+        Gender = gender;
+        Size = size;
+        QuantityAvailableForPurchase = quantityAvailableForPurchase;
+        PurchaseItems = new List<PurchaseItem>();
+    }
+
     [Key]
     public int Id { get; set; }
     [Required]
