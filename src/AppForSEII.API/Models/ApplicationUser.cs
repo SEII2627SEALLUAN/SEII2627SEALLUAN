@@ -8,6 +8,16 @@ public class ApplicationUser : IdentityUser
     {
     }
 
+//constructor for seeding the database, attributes id and email are required by the IdentityUser class
+    public ApplicationUser(string id, string name, string surname, string email)
+    {
+        Id = id;
+        Name = name;
+        Surname = surname;
+        Email = email;
+        UserName = email;
+    }
+
     public ApplicationUser(string name, string surname, DateOnly birthDate, int age, Gender gender)
     {
         Name = name;
