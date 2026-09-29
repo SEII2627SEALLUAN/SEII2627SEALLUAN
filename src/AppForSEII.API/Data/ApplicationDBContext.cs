@@ -16,10 +16,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     }
 
     public DbSet<Game> Game { get; set; }
+    public DbSet<Sport> Sport { get; set; }
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
 
 
+    public DbSet<RefereeGroup> RefereeGroups {get; set;}    
+    
+    public DbSet<Item> Items{get;set;}
 
+    public DbSet<Purchase> Purchases{get;set;}
 }
