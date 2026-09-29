@@ -4,6 +4,27 @@ namespace AppForSEII.API.Models;
 
 public class Purchase
 {
+    public Purchase()
+    {
+        PurchaseItems = new List<PurchaseItem>();
+    }
+    public Purchase(DateTime purchaseDate, string purchaseDescription, double totalPrice, string street, string city, string province, string creditCardNumber, string ccv, string expirationDate, bool wrapped, PurchaseStatus purchaseStatus, string userId)
+    {
+        PurchaseDate = purchaseDate;
+        PurchaseDescription = purchaseDescription;
+        TotalPrice = totalPrice;
+        Street = street;
+        City = city;
+        Province = province;
+        CreditCardNumber = creditCardNumber;
+        CCV = ccv;
+        ExpirationDate = expirationDate;
+        Wrapped = wrapped;
+        PurchaseStatus = purchaseStatus;
+        UserId = userId;
+        PurchaseItems = new List<PurchaseItem>();
+    }
+    
     [Key]
     public int Id { get; set; }
 
@@ -33,4 +54,7 @@ public class Purchase
     public PurchaseStatus PurchaseStatus { get; set; }
 
     public string UserId { get; set; } = "";
+
+    public IList<PurchaseItem> PurchaseItems {get; set;}
+    public ApplicationUser User { get; set; }
 }

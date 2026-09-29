@@ -1,0 +1,10 @@
+@startuml
+class Game {
+    + Id : int <<get>> <<set>>
+    + Name : string <<get>> <<set>>
+    + Place : string <<get>> <<set>>
+    + Description : string? <<get>> <<set>>
+    + SportId : int <<get>> <<set>>
+}
+Game --> "Date" DateTime
+@enduml
