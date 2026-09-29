@@ -56,4 +56,5 @@ public class Purchase
     public string UserId { get; set; } = "";
 
     public IList<PurchaseItem> PurchaseItems {get; set;}
+    public ApplicationUser User { get; set; }
 }

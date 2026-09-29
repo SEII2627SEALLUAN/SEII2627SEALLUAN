@@ -37,4 +37,6 @@ public class Item
     public int QuantityAvailableForPurchase { get; set; }
 
     public IList<PurchaseItem> PurchaseItems {get; set;}
+
+    public Sport? Sport { get; set; }
 }

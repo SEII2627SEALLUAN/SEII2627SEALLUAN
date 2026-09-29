@@ -26,4 +26,5 @@ public class Sport
     public string Description { get; set; } = "Description";
     [Required]
     public string BasicRules { get; set; } = "Rules to the game";
+    public List<Item> Items { get; set; }
 }

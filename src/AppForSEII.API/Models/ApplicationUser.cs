@@ -33,4 +33,5 @@ public string? Surname { get; set; }
 public DateOnly BirthDate { get; set; }
 public int Age { get; set; }
 public Gender Gender { get; set; }
+public List<Purchase> Purchases { get; set; }
 }
