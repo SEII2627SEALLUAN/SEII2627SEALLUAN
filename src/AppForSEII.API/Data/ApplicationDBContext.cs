@@ -5,20 +5,16 @@ using AppForSEII.API.DTOs.ApplicationUserDTO;
 
 namespace AppForSEII.API.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+public class ApplicationDbContext(DbContextOptions options) : IdentityDbContext(options)
 {
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
     }
 
-    public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-
-    public DbSet<Team> Teams { get; set; }
-
-    public DbSet<Game> Game { get; set; }
-
+    public DbSet<Sport> Sports { get; set; }
+    public  DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    public  DbSet<RefereeGroup> RefereeGroups  { get; set; }
     public DbSet<Item> Items { get; set; }
-
     public DbSet<Purchase> Purchases { get; set; }
 }

@@ -1,4 +1,6 @@
 @startuml
+
 hide methods
-!include Game.puml
+!include RefereeGroup.puml
+
 @enduml
