@@ -1,4 +1,16 @@
+<<<<<<< HEAD
+@startuml name
+!include .\\ApplicationUser.puml
+!include .\\Team.puml
+!include .\\Game.puml
+!include .\\Gender.puml
+!include .\\Item.puml
+!include .\\Purchase.puml
+!include .\\PurchaseStatus.puml
+@enduml
+=======
 @startuml
 !include ./RefereeGroup.puml
 !include ./ApplicationUser.puml
 @enduml
+>>>>>>> origin/development

@@ -1,0 +1,10 @@
+@startuml
+class Team {
+    + Id : int <<get>> <<set>>
+    + Name : string <<get>> <<set>> = "Team name"
+    + Description : string <<get>> <<set>> = "Team name"
+    + MaxMembers : int <<get>> <<set>>
+    + MinAge : int <<get>> <<set>> = 3
+    + MaxAge : int <<get>> <<set>> = 3
+}
+@enduml
