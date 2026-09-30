@@ -9,7 +9,6 @@ class Sport {
 }
 class "IList`1"<T> {
 }
-Sport --> "Game" Game
-Sport o-> "Games<Game>" "IList`1"
-Sport o-> "Teams<Team>" "IList`1"
+Sport o-> "InterestedIn<InterestedIn>" "IList`1"
+Sport o-> "Team<Team>" "IList`1"
 @enduml

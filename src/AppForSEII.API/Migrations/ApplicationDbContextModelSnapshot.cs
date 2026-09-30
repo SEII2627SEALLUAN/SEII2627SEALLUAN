@@ -28,28 +28,63 @@ namespace AppForSEII.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("BirthDate")
+                        .HasColumnType("date");
 
-                    b.Property<string>("Description")
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Place")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("ResponsibleForId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("SportId")
-                        .HasColumnType("int");
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Surname")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
@@ -275,6 +310,262 @@ namespace AppForSEII.API.Migrations
                     b.ToTable("Team");
                 });
 
+            modelBuilder.Entity("AppForSEII.API.Models.InterestedIn", b =>
+                {
+                    b.Property<int>("SportId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Skill")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SportId", "UserId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("InterestedIn");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Item", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("QuantityAvailableForPurchase")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RecommendedAge")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Size")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Purchase", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CCV")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("CreditCardNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExpirationDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Province")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PurchaseDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PurchaseStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Wrapped")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Purchases");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.RefereeGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Rules")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GameId")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("RefereeGroups");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Sport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BasicRules")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MinimumNumberOfPlayers")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumberofRefeeres")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sports");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Team", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MaxAge")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxMembers")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinAge")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SportId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("SportId");
+
+                    b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.TeamInvitation", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("InvitationAccepted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("InvitationMessage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "TeamId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("TeamId");
+
+                    b.ToTable("TeamInvitations");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -482,69 +773,61 @@ namespace AppForSEII.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AppForSEII.API.Models.ApplicationUser", b =>
+            modelBuilder.Entity("AppForSEII.API.Models.InterestedIn", b =>
                 {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("BirthDate")
-                        .HasColumnType("date");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
-                });
-
-            modelBuilder.Entity("AppForSEII.API.Models.Game", b =>
-                {
-                    b.HasOne("AppForSEII.API.Models.ApplicationUser", "ResponsibleFor")
-                        .WithMany("ResponsibleOf")
-                        .HasForeignKey("ResponsibleForId");
-
-                    b.HasOne("AppForSEII.API.Models.Sport", "Sport")
-                        .WithMany("Games")
-                        .HasForeignKey("SportId");
-
-                    b.Navigation("ResponsibleFor");
-
-                    b.Navigation("Sport");
-                });
-
-            modelBuilder.Entity("AppForSEII.API.Models.GameInvitation", b =>
-                {
-                    b.HasOne("AppForSEII.API.Models.Game", "GameInvited")
-                        .WithMany("GameInvitations")
-                        .HasForeignKey("GameId")
+                    b.HasOne("AppForSEII.API.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("InterestedIn")
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AppForSEII.API.Models.Team", "TeamInvited")
-                        .WithMany("GameInvitations")
+                    b.HasOne("AppForSEII.API.Models.Sport", "Sport")
+                        .WithMany("InterestedIn")
+                        .HasForeignKey("SportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.Team", "Team")
+                        .WithMany()
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("GameInvited");
+                    b.Navigation("ApplicationUser");
 
-                    b.Navigation("TeamInvited");
+                    b.Navigation("Sport");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.Team", b =>
                 {
-                    b.HasOne("AppForSEII.API.Models.Sport", "Sport")
-                        .WithMany("Teams")
-                        .HasForeignKey("SportId");
+                    b.HasOne("AppForSEII.API.Models.ApplicationUser", null)
+                        .WithMany("Team")
+                        .HasForeignKey("ApplicationUserId");
 
-                    b.Navigation("Sport");
+                    b.HasOne("AppForSEII.API.Models.Sport", null)
+                        .WithMany("Team")
+                        .HasForeignKey("SportId");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.TeamInvitation", b =>
+                {
+                    b.HasOne("AppForSEII.API.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("TeamInvitation")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AppForSEII.API.Models.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Team");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -598,26 +881,20 @@ namespace AppForSEII.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AppForSEII.API.Models.Game", b =>
+            modelBuilder.Entity("AppForSEII.API.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("GameInvitations");
+                    b.Navigation("InterestedIn");
+
+                    b.Navigation("Team");
+
+                    b.Navigation("TeamInvitation");
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.Sport", b =>
                 {
-                    b.Navigation("Games");
+                    b.Navigation("InterestedIn");
 
-                    b.Navigation("Teams");
-                });
-
-            modelBuilder.Entity("AppForSEII.API.Models.Team", b =>
-                {
-                    b.Navigation("GameInvitations");
-                });
-
-            modelBuilder.Entity("AppForSEII.API.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("ResponsibleOf");
+                    b.Navigation("Team");
                 });
 #pragma warning restore 612, 618
         }
