@@ -1,9 +1,16 @@
 @startuml
 class ApplicationUser {
     + ApplicationUser()
-    + ApplicationUser(id:string, name:string, surname:string, userName:string)
+    + ApplicationUser(id:string, name:string, surname:string, email:string)
+    + ApplicationUser(name:string, surname:string, birthDate:DateOnly, age:int, gender:Gender)
     + Name : string? <<get>> <<set>>
     + Surname : string? <<get>> <<set>>
+    + Age : int <<get>> <<set>>
+}
+class "List`1"<T> {
 }
 IdentityUser <|-- ApplicationUser
+ApplicationUser --> "BirthDate" DateOnly
+ApplicationUser --> "Gender" Gender
+ApplicationUser --> "Purchases<Purchase>" "List`1"
 @enduml

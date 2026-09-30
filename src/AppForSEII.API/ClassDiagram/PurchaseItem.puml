@@ -1,0 +1,12 @@
+@startuml
+class PurchaseItem {
+    + PurchaseItem()
+    + PurchaseItem(itemId:int, purchaseId:int, quantity:int, price:decimal)
+    + ItemId : int <<get>> <<set>>
+    + PurchaseId : int <<get>> <<set>>
+    + Quantity : int <<get>> <<set>> = 1
+    + Price : decimal <<get>> <<set>>
+}
+PurchaseItem --> "Item" Item
+PurchaseItem --> "Purchase" Purchase
+@enduml

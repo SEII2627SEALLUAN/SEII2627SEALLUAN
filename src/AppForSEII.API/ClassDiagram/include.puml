@@ -1,23 +1,15 @@
-<<<<<<< HEAD
-@startuml name
-!include .\\ApplicationUser.puml
-!include .\\Team.puml
-!include .\\Game.puml
-!include .\\Gender.puml
-!include .\\Item.puml
-!include .\\Purchase.puml
-!include .\\PurchaseStatus.puml
-@enduml
-=======
 @startuml
-!include ./ApplicationUser.puml
 !include ./Game.puml
-!include ./Gender.puml
-!include ./Item.puml
+!include ./InterestedIn.puml
+!include ./PurchaseItem.puml
 !include ./Purchase.puml
-!include ./PurchaseStatus.puml
-!include ./RefereeGroup.puml
-!include ./Sport.puml
+!include ./Team.puml
+!include ./Referee.puml
 !include ./TeamInvitation.puml
+!include ./Gender.puml
+!include ./RefereeGroup.puml
+!include ./Item.puml
+!include ./Sport.puml
+!include ./ApplicationUser.puml
+!include ./PurchaseStatus.puml
 @enduml
->>>>>>> origin/development

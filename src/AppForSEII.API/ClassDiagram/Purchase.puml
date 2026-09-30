@@ -1,5 +1,7 @@
 @startuml
 class Purchase {
+    + Purchase()
+    + Purchase(purchaseDate:DateTime, purchaseDescription:string, totalPrice:double, street:string, city:string, province:string, creditCardNumber:string, ccv:string, expirationDate:string, wrapped:bool, purchaseStatus:PurchaseStatus, userId:string)
     + Id : int <<get>> <<set>>
     + PurchaseDescription : string? <<get>> <<set>>
     + TotalPrice : double <<get>> <<set>>
@@ -12,6 +14,10 @@ class Purchase {
     + Wrapped : bool <<get>> <<set>> = false
     + UserId : string <<get>> <<set>> = ""
 }
+class "IList`1"<T> {
+}
 Purchase --> "PurchaseDate" DateTime
 Purchase --> "PurchaseStatus" PurchaseStatus
+Purchase --> "PurchaseItems<PurchaseItem>" "IList`1"
+Purchase --> "User" ApplicationUser
 @enduml

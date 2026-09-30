@@ -1,0 +1,7 @@
+@startuml
+class InterestedIn {
+    + SportId : int <<get>> <<set>>
+    + UserId : string <<get>> <<set>> = "0"
+    + Skill : int <<get>> <<set>> = 5
+}
+@enduml
