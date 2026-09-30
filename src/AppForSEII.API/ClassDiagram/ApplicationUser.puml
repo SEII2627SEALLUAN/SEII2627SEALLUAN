@@ -11,5 +11,7 @@ class "List`1"<T> {
 IdentityUser <|-- ApplicationUser
 ApplicationUser --> "BirthDate" DateOnly
 ApplicationUser --> "Gender" Gender
-ApplicationUser --> "InterestedIn<InterestedIn>" "List`1"
+ApplicationUser o-> "InterestedIn<InterestedIn>" "List`1"
+ApplicationUser o-> "TeamInvitation<TeamInvitation>" "List`1"
+ApplicationUser o-> "Team<Team>" "List`1"
 @enduml

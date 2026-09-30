@@ -22,5 +22,8 @@ public string? Surname { get; set; }
 public DateOnly BirthDate { get; set; }
 public int Age { get; set; }
 public Gender Gender { get; set; }
-public List<InterestedIn> InterestedIn {get; set;}
+public List<InterestedIn> InterestedIn {get; set;} = new List<InterestedIn>();
+public List<TeamInvitation> TeamInvitation {get; set;}= new List<TeamInvitation>();
+public List<Team> Team {get; set;} = new List<Team>();
+
 }

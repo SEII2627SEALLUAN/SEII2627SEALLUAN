@@ -7,4 +7,8 @@ class Sport {
     + Description : string <<get>> <<set>> = "Description"
     + BasicRules : string <<get>> <<set>> = "Rules to the game"
 }
+class "IList`1"<T> {
+}
+Sport o-> "InterestedIn<InterestedIn>" "IList`1"
+Sport o-> "Team<Team>" "IList`1"
 @enduml

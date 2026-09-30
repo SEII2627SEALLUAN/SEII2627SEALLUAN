@@ -1,9 +1,11 @@
 @startuml
 class InterestedIn {
+    + Id : int <<get>> <<set>>
     + SportId : int <<get>> <<set>>
     + UserId : string <<get>> <<set>> = "0"
     + Skill : int <<get>> <<set>> = 5
 }
-InterestedIn --> "Team" Team
-InterestedIn --> "ApplicationUser" ApplicationUser
+InterestedIn o-> "Sport" Sport
+InterestedIn o-> "Team" Team
+InterestedIn o-> "ApplicationUser" ApplicationUser
 @enduml
