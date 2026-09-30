@@ -6,7 +6,7 @@ public class Sport
     {
         
     }
-    public Sport(int id, string name, int minimumNumberOfPlayers, int numberofRefeeres, string description, string basicRules, IList<Game> games, IList<Team> teams)
+    public Sport(int id, string name, int minimumNumberOfPlayers, int numberofRefeeres, string description, string basicRules)
     {
         Id = id;
         Name = name;
@@ -14,8 +14,6 @@ public class Sport
         NumberofRefeeres = numberofRefeeres;
         Description = description;
         BasicRules = basicRules;
-        Games = games;
-        Team = teams;
     }
 
     [Key]
@@ -37,5 +35,5 @@ public class Sport
 
     // 1:N collection property for Teams
     public IList<Team> Team { get; set; } = new List<Team>();
-    public List<Item> Items { get; set; }
+    public List<Item> Items { get; set; } = new List<Item>();
 }
