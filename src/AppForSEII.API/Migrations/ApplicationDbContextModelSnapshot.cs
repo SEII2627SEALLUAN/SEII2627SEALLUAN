@@ -521,21 +521,21 @@ namespace AppForSEII.API.Migrations
 
             modelBuilder.Entity("AppForSEII.API.Models.GameInvitation", b =>
                 {
-                    b.HasOne("AppForSEII.API.Models.Game", "Game")
+                    b.HasOne("AppForSEII.API.Models.Game", "GameInvited")
                         .WithMany("GameInvitations")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AppForSEII.API.Models.Team", "Team")
+                    b.HasOne("AppForSEII.API.Models.Team", "TeamInvited")
                         .WithMany("GameInvitations")
                         .HasForeignKey("TeamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Game");
+                    b.Navigation("GameInvited");
 
-                    b.Navigation("Team");
+                    b.Navigation("TeamInvited");
                 });
 
             modelBuilder.Entity("AppForSEII.API.Models.Team", b =>
