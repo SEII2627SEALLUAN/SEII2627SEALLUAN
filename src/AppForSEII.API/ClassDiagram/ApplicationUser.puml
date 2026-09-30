@@ -4,6 +4,14 @@ class ApplicationUser {
     + ApplicationUser(id:string, name:string, surname:string, userName:string)
     + Name : string? <<get>> <<set>>
     + Surname : string? <<get>> <<set>>
+    + Age : int <<get>> <<set>>
+}
+class "List`1"<T> {
 }
 IdentityUser <|-- ApplicationUser
+ApplicationUser --> "BirthDate" DateOnly
+ApplicationUser --> "Gender" Gender
+ApplicationUser o-> "InterestedIn<InterestedIn>" "List`1"
+ApplicationUser o-> "TeamInvitation<TeamInvitation>" "List`1"
+ApplicationUser o-> "Team<Team>" "List`1"
 @enduml
