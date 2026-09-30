@@ -2,6 +2,22 @@ namespace AppForSEII.API.Models;
 
 public class Team
 {
+    public Team()
+    {
+        
+    }
+    public Team(int id, string name, string description, int maxMembers, int minAge, int maxAge, Sport? sport, IList<GameInvitation>? gameInvitations)
+    {
+        Id = id;
+        Name = name;
+        Description = description;
+        MaxMembers = maxMembers;
+        MinAge = minAge;
+        MaxAge = maxAge;
+        Sport = sport;
+        GameInvitations = gameInvitations;
+    }
+
     public int Id { get; set; }
 
     public string Name { get; set; } = "Team name";

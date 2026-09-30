@@ -1,6 +1,24 @@
 namespace AppForSEII.API.Models;
 public class Sport
 {
+
+    public Sport()
+    {
+        
+    }
+    public Sport(int id, string name, int minimumNumberOfPlayers, int numberofRefeeres, string description, string basicRules, Game? game, IList<Game> games, IList<Team> teams)
+    {
+        Id = id;
+        Name = name;
+        MinimumNumberOfPlayers = minimumNumberOfPlayers;
+        NumberofRefeeres = numberofRefeeres;
+        Description = description;
+        BasicRules = basicRules;
+        Game = game;
+        Games = games;
+        Teams = teams;
+    }
+
     [Key]
     public int Id { get; set; }
     [Required]

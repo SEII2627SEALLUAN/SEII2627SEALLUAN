@@ -1,6 +1,24 @@
 namespace AppForSEII.API.Models;
 public class Game
 {
+
+    public Game()
+    {
+        
+    }
+
+    public Game(int id, string? name, DateTime date, string? place, string? description, Sport? sport, ApplicationUser? responsibleFor, IList<GameInvitation>? gameInvitations)
+    {
+        Id = id;
+        Name = name;
+        Date = date;
+        Place = place;
+        Description = description;
+        Sport = sport;
+        ResponsibleFor = responsibleFor;
+        GameInvitations = gameInvitations;
+    }
+
     [Key]
     public int Id { get; set; }
 
