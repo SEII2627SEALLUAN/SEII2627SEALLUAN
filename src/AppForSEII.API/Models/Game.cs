@@ -38,6 +38,6 @@ public class Game
 
     public ApplicationUser? ResponsibleFor { get; set; }
 
-    public IList<GameInvitation>? GameInvitations { get; set; }
+    public IList<GameInvitation>? GameInvitations { get; set; } = new List<GameInvitation>();
 
 }
