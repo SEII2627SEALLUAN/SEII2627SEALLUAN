@@ -71,7 +71,85 @@ namespace AppForSEII.API.Data {
 
         }
 
+        public static void SeedSportsAndItems(ApplicationDbContext dbcontext) {
+            //Sport
+            string[] sportsnames = { "Soccer", "Basketball", "Baseball", "Tennis" };
+            List<Sport> sports = new List<Sport>();
 
+            foreach (string sportsname in sportsnames)
+            {
+                var sport = dbcontext.Sports.FirstOrDefault(s => s.Name == sportsname);
+                if (sport == null)
+                {
+                    sport = new Sport(
+                        id: 0,
+                        name: sportsname,
+                        minimumNumberOfPlayers: 2,
+                        numberofRefeeres: 1,
+                        description: "Description of " + sportsname,
+                        basicRules: "Rules of " + sportsname
+                    );
+                    dbcontext.Sports.Add(sport);   
+                }
+                sports.Add(sport);                  
+            }
+            dbcontext.SaveChanges(); //Added Sport WITH NEW ID            
+            //Item
+            if (dbcontext.Items.FirstOrDefault(i => i.Name == "Soccer Ball") == null)
+            {
+                var item = new Item(
+                    name: "Soccer Ball",
+                    price: 20.0m,
+                    recommendedAge: 10,
+                    gender: null,
+                    size: "M",
+                    quantityAvailableForPurchase: 100
+                );
+                item.Sport = sports[0];            // attach the Soccer sport
+                dbcontext.Items.Add(item);
+            }
+            if (dbcontext.Items.FirstOrDefault(i => i.Name == "Basketball") == null)
+            {
+                var item = new Item(
+                    name: "Basketball",
+                    price: 25.0m,
+                    recommendedAge: 12,
+                    gender: null,
+                    size: "M",
+                    quantityAvailableForPurchase: 150
+                );
+                item.Sport = sports[1];            // attach the Basketball sport
+                dbcontext.Items.Add(item);
+            }
+            if (dbcontext.Items.FirstOrDefault(i => i.Name == "Baseball") == null)
+            {
+                var item = new Item(
+                    name: "Baseball",
+                    price: 30.0m,
+                    recommendedAge: 14,
+                    gender: null,
+                    size: "S",
+                    quantityAvailableForPurchase: 10
+                );
+                item.Sport = sports[2];            // attach the Baseball sport
+                dbcontext.Items.Add(item);
+            }
+            if (dbcontext.Items.FirstOrDefault(i => i.Name == "Tennis Racket") == null)
+            {
+                var item = new Item(
+                    name: "Tennis Racket",
+                    price: 40.0m,
+                    recommendedAge: 16,
+                    gender: null,
+                    size: "L",
+                    quantityAvailableForPurchase: 42
+                );
+                item.Sport = sports[3];            // attach the Tennis sport
+                dbcontext.Items.Add(item);
+            }
+
+            dbcontext.SaveChanges();
+        }
 
 
 
