@@ -18,25 +18,14 @@ public ApplicationUser()
         UserName = email;
     }
 
-    public ApplicationUser(string name, string surname, DateOnly birthDate, int age, Gender gender)
-    {
-        Name = name;
-        Surname = surname;
-        BirthDate = birthDate;
-        Age = age;
-        Gender = gender;
-    }
-
 
 public string? Name { get; set; }
 public string? Surname { get; set; }
 public DateOnly BirthDate { get; set; }
 public int Age { get; set; }
 public Gender Gender { get; set; }
-public List<Game> ResponsibleOf { get; set; } = new List<Game>();
 public List<InterestedIn> InterestedIn {get; set;} = new List<InterestedIn>();
 public List<TeamInvitation> TeamInvitation {get; set;}= new List<TeamInvitation>();
 public List<Team> Team {get; set;} = new List<Team>();
 
 }
-
