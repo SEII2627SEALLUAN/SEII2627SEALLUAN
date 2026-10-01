@@ -34,27 +34,31 @@ namespace AppForSEII.API.Data
                 logger.LogError(ex, "An error occurred seeding Sports and Items in the Database.");
             }
  
+            try
+            {
+                SeedTeams(dbContext);
+            } catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding Teams in the Database.");
+            }
 
         }
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles) {
-        {
-            foreach (string roleName in roles)
-            {
-                // Checks if role does not exist in the database 
-                if (!roleManager.RoleExistsAsync(roleName).Result)
-                {
+
+            foreach (string roleName in roles) {
+                //it checks such role does not exist in the database 
+                if (!roleManager.RoleExistsAsync(roleName).Result) {
                     IdentityRole role = new IdentityRole();
                     role.Name = roleName;
                     role.NormalizedName = roleName;
                     IdentityResult roleResult = roleManager.CreateAsync(role).Result;
                 }
             }
+
         }
-    }
-        public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles)
-        {
-            // First, check if the user does not already exist in the DB
+        public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles) {
+        
             if (userManager.FindByNameAsync("elena@uclm.es").Result == null)
             {
                 ApplicationUser user = new ApplicationUser("1", "Elena", "Navarro Martínez", "elena@uclm.es");
@@ -65,7 +69,6 @@ namespace AppForSEII.API.Data
 
                 if (result.IsCompletedSuccessfully)
                 {
-                    // Administrator role
                     userManager.AddToRoleAsync(user, roles[0]).Wait();
                 }
             }
@@ -80,7 +83,6 @@ namespace AppForSEII.API.Data
 
                 if (result.IsCompletedSuccessfully)
                 {
-                    // Customer role
                     userManager.AddToRoleAsync(user, roles[2]).Wait();
                 }
             }
@@ -88,7 +90,6 @@ namespace AppForSEII.API.Data
 
         public static void SeedSportsAndItems(ApplicationDbContext dbcontext)
         {
-            // 1. Seed Sports using classmate's attributes (id removed)
             string[] sportsnames = { "Soccer", "Basketball", "Baseball", "Tennis" };
             List<Sport> sports = new List<Sport>();
 
@@ -105,13 +106,12 @@ namespace AppForSEII.API.Data
                         description: "Description of " + sportsname,
                         basicRules: "Rules of " + sportsname
                     );
-                    dbcontext.Sports.Add(sport);   
+                    dbcontext.Sports.Add(sport);
                 }
-                sports.Add(sport);                  
+                sports.Add(sport);
             }
-            dbcontext.SaveChanges(); // Saves Sports and generates Identity IDs 
+            dbcontext.SaveChanges();
 
-            // 2. Seed Items and attach corresponding Sport
             if (dbcontext.Items.FirstOrDefault(i => i.Name == "Soccer Ball") == null)
             {
                 var item = new Item(
@@ -122,7 +122,7 @@ namespace AppForSEII.API.Data
                     size: "M",
                     quantityAvailableForPurchase: 100
                 );
-                item.Sport = sports[0]; // Attach Soccer
+                item.Sport = sports[0];
                 dbcontext.Items.Add(item);
             }
 
@@ -136,7 +136,7 @@ namespace AppForSEII.API.Data
                     size: "M",
                     quantityAvailableForPurchase: 150
                 );
-                item.Sport = sports[1]; // Attach Basketball
+                item.Sport = sports[1];
                 dbcontext.Items.Add(item);
             }
 
@@ -150,7 +150,7 @@ namespace AppForSEII.API.Data
                     size: "S",
                     quantityAvailableForPurchase: 10
                 );
-                item.Sport = sports[2]; // Attach Baseball
+                item.Sport = sports[2];
                 dbcontext.Items.Add(item);
             }
 
@@ -164,45 +164,99 @@ namespace AppForSEII.API.Data
                     size: "L",
                     quantityAvailableForPurchase: 42
                 );
-                item.Sport = sports[3]; // Attach Tennis
+                item.Sport = sports[3];
                 dbcontext.Items.Add(item);
             }
 
             dbcontext.SaveChanges();
         }
 
-        public static void SeedTeams(ApplicationDbContext dbcontext){
-        var soccer = dbcontext.Sports.FirstOrDefault(s => s.Name == "Soccer");
-        var basketball = dbcontext.Sports.FirstOrDefault(s => s.Name == "Basketball");
-
-        var teamsData = new[]
+        public static void SeedTeams(ApplicationDbContext dbcontext)
         {
-            (name: "Soccer Stars", description: "A team created in 1999", maxMembers: 12, minAge: 18, maxAge: 40, sport: soccer, captain: "elena@uclm.es"),
-            (name: "Basketball Legends", description: "The tallest players in the world", maxMembers: 12, minAge: 18, maxAge: 40, sport: basketball, captain: "elena@uclm.es")
-        };
+            var soccer = dbcontext.Sports.FirstOrDefault(s => s.Name == "Soccer");
+            var basketball = dbcontext.Sports.FirstOrDefault(s => s.Name == "Basketball");
 
-        foreach (var data in teamsData)
-        {
-            if (dbcontext.Teams.Any(t => t.Name == data.name))
+            var teamsData = new[]
             {
-                continue; // Skip if already seeded
+                (name: "Soccer Stars", Description: "A team created in 1999", MaxMembers: 12, MinAge: 18, MaxAge: 40, Sport: soccer, Captain: "elena@uclm.es"),
+                (name: "Basketball Legends", Description: "The tallest players in the world", MaxMembers: 12, MinAge: 18, MaxAge: 40, Sport: basketball, Captain: "elena@uclm.es")
+            };
+
+            foreach (var data in teamsData)
+            {
+                if (dbcontext.Teams.FirstOrDefault(t => t.Name == data.name) != null)
+                {
+                    continue;
+                }
+
+                var team = new Team(
+                    0,
+                    data.name,
+                    data.Description,
+                    data.MaxMembers,
+                    data.MinAge,
+                    data.MaxAge,
+                    data.Sport,
+                    null
+                );
+
+                dbcontext.Teams.Add(team);
+
+                var captain = dbcontext.Users.Include(u => u.Team).FirstOrDefault(u => u.UserName == data.Captain);
+                if (captain != null)
+                {
+                    captain.Team.Add(team);
+                }
+            }
+            dbcontext.SaveChanges();
+        }
+
+        public static void SeedInterestedIn(ApplicationDbContext dbcontext)
+        {
+            var elena = dbcontext.Users.FirstOrDefault(u => u.UserName == "elena@uclm.es");
+            var peter = dbcontext.Users.FirstOrDefault(u => u.UserName == "peter@uclm.es");
+
+            var soccer = dbcontext.Sports.FirstOrDefault(s => s.Name == "Soccer");
+            var tennis = dbcontext.Sports.FirstOrDefault(s => s.Name == "Tennis");
+            var basketball = dbcontext.Sports.FirstOrDefault(s => s.Name == "Basketball");
+
+            if (elena != null && soccer != null && tennis != null)
+            {
+                if (!dbcontext.InterestedIn.Any(i => i.ApplicationUser == elena && i.Sport == soccer))
+                {
+                    dbcontext.InterestedIn.Add(new InterestedIn
+                    {
+                        ApplicationUser = elena,
+                        Sport = soccer,
+                        Skill = 4
+                    });
+                }
+
+                if (!dbcontext.InterestedIn.Any(i => i.ApplicationUser == elena && i.Sport == tennis))
+                {
+                    dbcontext.InterestedIn.Add(new InterestedIn
+                    {
+                        ApplicationUser = elena,
+                        Sport = tennis,
+                        Skill = 5
+                    });
+                }
             }
 
-        var team = new Team(
-            0,
-            data.name,
-            data.description,
-            data.maxMembers,
-            data.minAge,
-            data.maxAge,
-            data.sport,
-            null // GameInvitations
-        );
+            if (peter != null && basketball != null)
+            {
+                if (!dbcontext.InterestedIn.Any(i => i.ApplicationUser == peter && i.Sport == basketball))
+                {
+                    dbcontext.InterestedIn.Add(new InterestedIn
+                    {
+                        ApplicationUser = peter,
+                        Sport = basketball,
+                        Skill = 3
+                    });
+                }
+            }
 
-        dbcontext.Teams.Add(team);
-    }
-
-        dbcontext.SaveChanges();
-    }
+            dbcontext.SaveChanges();
+        }
     }
 }
