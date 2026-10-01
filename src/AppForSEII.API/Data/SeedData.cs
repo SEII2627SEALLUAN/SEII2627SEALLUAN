@@ -34,6 +34,13 @@ namespace AppForSEII.API.Data
                 logger.LogError(ex, "An error occurred seeding Sports and Items in the Database.");
             }
  
+            try
+            {
+                SeedTeams(dbContext);
+            } catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding Teams in the Database.");
+            }
 
         }
 
