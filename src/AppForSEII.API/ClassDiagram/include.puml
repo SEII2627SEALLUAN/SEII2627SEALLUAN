@@ -1,4 +1,5 @@
 @startuml
+!include .\\GameInvitation.puml
 !include .\\ApplicationUser.puml
 !include .\\Gender.puml
 !include .\\InterestedIn.puml
@@ -9,4 +10,5 @@
 !include .\\Sport.puml
 !include .\\Team.puml
 !include .\\TeamInvitation.puml
+>>>>>>> origin/development
 @enduml

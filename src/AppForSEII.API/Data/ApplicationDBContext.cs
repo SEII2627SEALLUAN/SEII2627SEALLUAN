@@ -23,6 +23,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasColumnType("decimal(18,2)");
     }
 
+
+    public DbSet<Game> Games { get; set; }
+
+    public DbSet<GameInvitation> GameInvitations { get; set; }
+
     public DbSet<Sport> Sports { get; set; } = null!;
     public DbSet<Team> Teams { get; set; } = null!;
     public DbSet<InterestedIn> InterestedIn { get; set; } = null!;
