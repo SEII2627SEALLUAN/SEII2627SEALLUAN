@@ -1,10 +1,8 @@
 ﻿namespace AppForSEII.API.Models;
 public class Sport
 {
-
     public Sport()
     {
-        
     }
     public Sport(int id, string name, int minimumNumberOfPlayers, int numberofRefeeres, string description, string basicRules)
     {
@@ -28,12 +26,9 @@ public class Sport
     public string Description { get; set; } = "Description";
     [Required]
     public string BasicRules { get; set; } = "Rules to the game";
-
-
-    public IList<Game> Games { get; set; } = new List<Game>();
+    public List<Item> Items { get; set; }
     public IList<InterestedIn> InterestedIn { get; set; } = new List<InterestedIn>();
 
     // 1:N collection property for Teams
     public IList<Team> Team { get; set; } = new List<Team>();
-    public List<Item> Items { get; set; } = new List<Item>();
 }
