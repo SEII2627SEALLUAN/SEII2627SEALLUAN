@@ -1,3 +1,6 @@
+using AppForSEII.API.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore; 
 namespace AppForSEII.API.Data {
     public class SeedData {
         public static void Initialize(ApplicationDbContext dbContext, IServiceProvider serviceProvider, ILogger logger) {
@@ -26,6 +29,13 @@ namespace AppForSEII.API.Data {
                 logger.LogError(ex, "An error occurred seeding Sports and Items in the Database.");
             }
  
+            try
+            {
+                SeedTeams(dbContext);
+            } catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding Teams in the Database.");
+            }
 
         }
 
@@ -74,6 +84,8 @@ namespace AppForSEII.API.Data {
 
                 }
             }
+
+
 
         }
 
@@ -154,6 +166,43 @@ namespace AppForSEII.API.Data {
                 dbcontext.Items.Add(item);
             }
 
+            dbcontext.SaveChanges();
+        }
+
+        public static void SeedTeams(ApplicationDbContext dbcontext)
+        {
+            var soccer = dbcontext.Sports.FirstOrDefault(s => s.Name == "Soccer");
+            var basketball = dbcontext.Sports.FirstOrDefault(s => s.Name == "Basketball");
+
+            var teamsData = new[]
+            {
+                (name: "Soccer Stars", Description: "A team created in 1999", MaxMembers: 12, MinAge: 18, MaxAge: 40, Sport: soccer, Captain: "elena@uclm.es"),
+                (name: "Basketball Legends", Description: "The tallest players in the world", MaxMembers: 12, MinAge: 18, MaxAge: 40, Sport: basketball, Captain: "elena@uclm.es")
+            };
+
+            foreach (var data in teamsData)
+            {
+                if (dbcontext.Teams.FirstOrDefault (t => t.Name == data.name) != null)
+                {
+                    continue; // Skip if the team already exists
+                }
+                var team = new Team(
+                    id: 0,
+                    name: data.name,
+                    description: data.Description,
+                    maxMembers: data.MaxMembers,
+                    minAge: data.MinAge,
+                    maxAge: data.MaxAge,
+                    sport: data.Sport,
+                    gameInvitations: null
+                );
+                dbcontext.Teams.Add(team);
+                var captain = dbcontext.Users.Include(u => u.Team).FirstOrDefault(u => u.UserName == data.Captain);
+                if (captain != null)
+                {
+                    captain.Team.Add(team);
+                }
+            }
             dbcontext.SaveChanges();
         }
 
