@@ -1,4 +1,4 @@
-namespace AppForSEII.API.Models;
+﻿namespace AppForSEII.API.Models;
 public class Sport
 {
     public Sport()
@@ -27,4 +27,8 @@ public class Sport
     [Required]
     public string BasicRules { get; set; } = "Rules to the game";
     public List<Item> Items { get; set; }
+    public IList<InterestedIn> InterestedIn { get; set; } = new List<InterestedIn>();
+
+    // 1:N collection property for Teams
+    public IList<Team> Team { get; set; } = new List<Team>();
 }
