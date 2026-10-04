@@ -1,5 +1,7 @@
 @startuml
 class Item {
+    + Item()
+    + Item(name:string, price:decimal, recommendedAge:int?, gender:Gender?, size:string?, quantityAvailableForPurchase:int)
     + Id : int <<get>> <<set>>
     + Name : string <<get>> <<set>>
     + Price : decimal <<get>> <<set>>
@@ -7,5 +9,9 @@ class Item {
     + Size : string? <<get>> <<set>>
     + QuantityAvailableForPurchase : int <<get>> <<set>>
 }
+class "IList`1"<T> {
+}
 Item --> "Gender" Gender
+Item --> "PurchaseItems<PurchaseItem>" "IList`1"
+Item --> "Sport" Sport
 @enduml

@@ -1,7 +1,8 @@
 @startuml
 class ApplicationUser {
     + ApplicationUser()
-    + ApplicationUser(id:string, name:string, surname:string, userName:string)
+    + ApplicationUser(id:string, name:string, surname:string, email:string)
+    + ApplicationUser(name:string, surname:string, birthDate:DateOnly, age:int, gender:Gender)
     + Name : string? <<get>> <<set>>
     + Surname : string? <<get>> <<set>>
     + Age : int <<get>> <<set>>
@@ -14,4 +15,5 @@ ApplicationUser --> "Gender" Gender
 ApplicationUser o-> "InterestedIn<InterestedIn>" "List`1"
 ApplicationUser o-> "TeamInvitation<TeamInvitation>" "List`1"
 ApplicationUser o-> "Team<Team>" "List`1"
+ApplicationUser --> "Purchases<Purchase>" "List`1"
 @enduml

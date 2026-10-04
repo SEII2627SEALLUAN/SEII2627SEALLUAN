@@ -33,7 +33,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<InterestedIn> InterestedIn { get; set; } = null!;
     public DbSet<TeamInvitation> TeamInvitations { get; set; } = null!;
     public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
-    public DbSet<RefereeGroup> RefereeGroups { get; set; } = null!;
     public DbSet<Item> Items { get; set; } = null!;
     public DbSet<Purchase> Purchases { get; set; } = null!;
+
+    public DbSet<Referee> Referees {get; set;}
+    public  DbSet<RefereeGroup> RefereeGroups  { get; set; }
+
 }

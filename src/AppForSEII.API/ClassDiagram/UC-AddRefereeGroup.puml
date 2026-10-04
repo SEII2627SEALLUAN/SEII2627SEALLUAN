@@ -2,5 +2,6 @@
 
 hide methods
 !include RefereeGroup.puml
+!include Referee.puml
 
 @enduml
