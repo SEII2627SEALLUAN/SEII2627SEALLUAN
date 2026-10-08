@@ -52,20 +52,20 @@ namespace AppForSEII.API.Data
 
             try
             {
-                SeedTeams(dbContext);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error occurred seeding Teams in the Database.");
-            }
-
-            try
-            {
                 SeedInterestedIn(dbContext);
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An error occurred seeding InterestedIn in the Database.");
+            }
+
+            try
+            {
+                SeedTeamInvitations(dbContext);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding TeamInvitations in the Database.");
             }
         }
 
@@ -86,33 +86,36 @@ namespace AppForSEII.API.Data
 
         public static void SeedUsers(UserManager<ApplicationUser> userManager, List<string> roles)
         {
-            if (userManager.FindByNameAsync("elena@uclm.es").Result == null)
-            {
-                ApplicationUser user = new ApplicationUser("1", "Elena", "Navarro Martínez", "elena@uclm.es");
-                user.EmailConfirmed = true;
+            // Existing users: do not change email or id (SeedTeams / SeedTeamInvitations depend on them)
+            SeedUser(userManager, "1", "Elena", "Navarro Martínez", new DateOnly(1985, 5, 20), Gender.Female, "elena@uclm.es", "Password1234%", roles[0]);
+            SeedUser(userManager, "3", "Peter", "Jackson", new DateOnly(1998, 10, 12), Gender.Male, "peter@uclm.es", "OtherPass12$", roles[2]);
 
-                var result = userManager.CreateAsync(user, "Password1234%");
-                result.Wait();
+            // Third user: not interested in the sport (see SeedInterestedIn)
+            SeedUser(userManager, "4", "María", "García López", new DateOnly(2001, 3, 15), Gender.Female, "maria@uclm.es", "Password1234%", roles[2]);
+        }
 
-                if (result.IsCompletedSuccessfully)
-                {
-                    userManager.AddToRoleAsync(user, roles[0]).Wait();
-                }
+        private static void SeedUser(UserManager<ApplicationUser> userManager, string id, string name, string surname,DateOnly birthDate, Gender gender, string email, string password, string role)
+        {
+            if (userManager.FindByNameAsync(email).Result != null) return; // already seeded
+
+            ApplicationUser user = new ApplicationUser(id, name, surname, birthDate, CalculateAge(birthDate), gender, email);
+            user.EmailConfirmed = true;
+
+            IdentityResult result = userManager.CreateAsync(user, password).Result;
+            if (!result.Succeeded)
+            {   
+                throw new InvalidOperationException(
+            $"Could not create {email}: " + string.Join("; ", result.Errors.Select(e => e.Description)));
             }
+            userManager.AddToRoleAsync(user, role).Wait();
+        }
 
-            if (userManager.FindByNameAsync("peter@uclm.es").Result == null)
-            {
-                ApplicationUser user = new ApplicationUser("3", "Peter", "Jackson", "peter@uclm.es");
-                user.EmailConfirmed = true;
-
-                var result = userManager.CreateAsync(user, "OtherPass12$");
-                result.Wait();
-
-                if (result.IsCompletedSuccessfully)
-                {
-                    userManager.AddToRoleAsync(user, roles[2]).Wait();
-                }
-            }
+        private static int CalculateAge(DateOnly birthDate)
+        {
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            int age = today.Year - birthDate.Year;
+            if (birthDate > today.AddYears(-age)) age--; // birthday not reached yet this year
+            return age;
         }
 
         public static void SeedSportsAndItems(ApplicationDbContext dbcontext)
@@ -126,7 +129,7 @@ namespace AppForSEII.API.Data
                 if (sport == null)
                 {
                     sport = new Sport(
-                        id: 0,
+
                         name: sportsname,
                         minimumNumberOfPlayers: 2,
                         numberofRefeeres: 1,
@@ -199,7 +202,6 @@ namespace AppForSEII.API.Data
 
             dbcontext.SaveChanges();
         }
-
         public static void SeedTeams(ApplicationDbContext dbcontext)
         {
             var soccer = dbcontext.Sports.FirstOrDefault(s => s.Name == "Soccer");
@@ -215,7 +217,7 @@ namespace AppForSEII.API.Data
             {
                 if (dbcontext.Teams.FirstOrDefault(t => t.Name == data.name) != null)
                 {
-                    continue; // Skip if the team already exists
+                    continue;
                 }
 
                 var team = new Team(
@@ -244,50 +246,49 @@ namespace AppForSEII.API.Data
 
         public static void SeedInterestedIn(ApplicationDbContext dbcontext)
         {
-            var elena = dbcontext.Users.FirstOrDefault(u => u.UserName == "elena@uclm.es");
-            var peter = dbcontext.Users.FirstOrDefault(u => u.UserName == "peter@uclm.es");
-
-            var soccer = dbcontext.Sports.FirstOrDefault(s => s.Name == "Soccer");
-            var tennis = dbcontext.Sports.FirstOrDefault(s => s.Name == "Tennis");
-            var basketball = dbcontext.Sports.FirstOrDefault(s => s.Name == "Basketball");
-
-            if (elena != null && soccer != null && tennis != null)
+            // Two users interested in the same sport (a sport needs at least 2 players).
+            // María has no rows on purpose: she is the user not interested in the sport.
+            var interests = new[]
             {
-                if (!dbcontext.InterestedIn.Any(i => i.ApplicationUser == elena && i.Sport == soccer))
-                {
-                    dbcontext.InterestedIn.Add(new InterestedIn
-                    {
-                        ApplicationUser = elena,
-                        Sport = soccer,
-                        Skill = 4
-                    });
-                }
+                (UserName: "elena@uclm.es", SportName: "Soccer", Skill: 4),
+                (UserName: "peter@uclm.es", SportName: "Soccer", Skill: 3)
+            };
 
-                if (!dbcontext.InterestedIn.Any(i => i.ApplicationUser == elena && i.Sport == tennis))
-                {
-                    dbcontext.InterestedIn.Add(new InterestedIn
-                    {
-                        ApplicationUser = elena,
-                        Sport = tennis,
-                        Skill = 5
-                    });
-                }
-            }
-
-            if (peter != null && basketball != null)
+            foreach (var interest in interests)
             {
-                if (!dbcontext.InterestedIn.Any(i => i.ApplicationUser == peter && i.Sport == basketball))
+                var user = dbcontext.Users.FirstOrDefault(u => u.UserName == interest.UserName);
+                var sport = dbcontext.Sports.FirstOrDefault(s => s.Name == interest.SportName);
+                if (user == null || sport == null) continue; // missing user or sport: skip
+
+                if (!dbcontext.InterestedIn.Any(i => i.UserId == user.Id && i.SportId == sport.Id))
                 {
-                    dbcontext.InterestedIn.Add(new InterestedIn
-                    {
-                        ApplicationUser = peter,
-                        Sport = basketball,
-                        Skill = 3
-                    });
+                    dbcontext.InterestedIn.Add(new InterestedIn(sport, user.Id, interest.Skill));
                 }
             }
 
             dbcontext.SaveChanges();
+        }
+
+        public static void SeedTeamInvitations(ApplicationDbContext dbcontext)
+        {
+            var peter = dbcontext.Users.FirstOrDefault(u => u.UserName == "peter@uclm.es");
+            var team = dbcontext.Teams.FirstOrDefault(t => t.Name == "Soccer Stars");
+
+            if (peter != null && team != null)
+            {
+                if (!dbcontext.TeamInvitations.Any(ti => ti.UserId == peter.Id && ti.TeamId == team.Id))
+                {
+                    dbcontext.TeamInvitations.Add(new TeamInvitation
+                    {
+                        UserId = peter.Id,
+                        TeamId = team.Id,
+                        InvitationAccepted = false,
+                        InvitationMessage = "Join Soccer Stars team!"
+                    });
+                }
+
+                dbcontext.SaveChanges();
+            }
         }
     }
 }
