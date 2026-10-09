@@ -1,10 +1,14 @@
 @startuml
 class Game {
+    + Game()
+    + Game(id:int, name:string?, date:DateTime, place:string?, description:string?, sport:Sport?, responsibleFor:ApplicationUser?, gameInvitations:IList<GameInvitation>?)
     + Id : int <<get>> <<set>>
-    + Name : string <<get>> <<set>>
-    + Place : string <<get>> <<set>>
+    + Name : string? <<get>> <<set>>
+    + Place : string? <<get>> <<set>> = "More than 5 chars"
     + Description : string? <<get>> <<set>>
-    + SportId : int <<get>> <<set>>
 }
 Game --> "Date" DateTime
+Game --> "Sport" Sport
+Game --> "ResponsibleFor" ApplicationUser
+Game o-> "GameInvitations<GameInvitation>" "IList`1"
 @enduml

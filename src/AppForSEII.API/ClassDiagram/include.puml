@@ -1,14 +1,17 @@
 @startuml
-!include .\\ApplicationUser.puml
-!include .\\GameInvitation.puml
-!include .\\Gender.puml
-!include .\\InterestedIn.puml
-!include .\\Item.puml
-!include .\\Purchase.puml
-!include .\\PurchaseStatus.puml
-!include .\\Referee.puml
-!include .\\RefereeGroup.puml
-!include .\\Sport.puml
-!include .\\Team.puml
-!include .\\TeamInvitation.puml
+!include ./Game.puml
+!include ./RefereeAssignedTo.puml
+!include ./InterestedIn.puml
+!include ./PurchaseItem.puml
+!include ./Purchase.puml
+!include ./Team.puml
+!include ./GameInvitation.puml
+!include ./Referee.puml
+!include ./TeamInvitation.puml
+!include ./Gender.puml
+!include ./RefereeGroup.puml
+!include ./Item.puml
+!include ./Sport.puml
+!include ./ApplicationUser.puml
+!include ./PurchaseStatus.puml
 @enduml

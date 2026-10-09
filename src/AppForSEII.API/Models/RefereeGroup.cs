@@ -17,4 +17,9 @@ public class RefereeGroup
 
     public int GameId{get; set;}
 
+    public IList<RefereeAssignedTo>? RefereeAssignedTos {get; set;}
+
+    public Game Game {get; set;} = new Game();
+
+
 }
