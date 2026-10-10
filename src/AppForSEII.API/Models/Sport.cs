@@ -1,4 +1,5 @@
 ﻿namespace AppForSEII.API.Models;
+[Index(nameof(Name), IsUnique = true)]
 public class Sport
 {
     public Sport()
