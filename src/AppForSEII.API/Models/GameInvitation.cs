@@ -28,5 +28,6 @@ public class GameInvitation
     public Game GameInvited { get; set; } = null!;
 
     public bool AcceptedGame { get; set; } = false;
+    [StringLength(500, MinimumLength = 11, ErrorMessage = "Message more than 10 characters")]
     public string Message { get; set; } = "Message more than 10 chars";
 }
