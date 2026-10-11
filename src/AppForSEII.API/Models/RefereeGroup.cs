@@ -5,6 +5,21 @@ namespace AppForSEII.API.Models;
 [Index(nameof(GameId), IsUnique = true)]
 public class RefereeGroup
 {
+    public RefereeGroup()
+    {
+    }
+
+    public RefereeGroup(int id, string name, string? description, string? rules, int gameId, IList<RefereeAssignedTo>? refereeAssignedTos, Game game)
+    {
+        Id = id;
+        Name = name;
+        Description = description;
+        Rules = rules;
+        GameId = gameId;
+        RefereeAssignedTos = refereeAssignedTos;
+        Game = game;
+    }
+
     [Key]
     public int Id{get; set;}
 
