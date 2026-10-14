@@ -27,10 +27,10 @@ public class Team
 
     public int MaxMembers { get; set; }
 
-    [Range(1, 100)]
+    [Range(3, 100)]
     public int MinAge { get; set; } = 3;
 
-    [Range(1, 100)]
+    [Range(3, 100)]
     public int MaxAge { get; set; } = 3;
 
     public int SportId { get; set; }      
