@@ -20,18 +20,29 @@ public class Team
 
     public int Id { get; set; }
 
+    [Required]
     public string Name { get; set; } = "Team name";
 
     public string Description { get; set; } = "Team name";
 
     public int MaxMembers { get; set; }
 
+    [Range(1, 100)]
     public int MinAge { get; set; } = 3;
 
+    [Range(1, 100)]
     public int MaxAge { get; set; } = 3;
 
+    public int SportId { get; set; }      
     public Sport? Sport { get; set; }
+    public string? ApplicationUserId { get; set; }
+
+    [ForeignKey(nameof(ApplicationUserId))]
+    public ApplicationUser? ApplicationUser { get; set; }
 
     public IList<GameInvitation>? GameInvitations { get; set; }
+    public IList<TeamInvitation>? TeamInvitations { get; set; }
+
+    
 
 }
