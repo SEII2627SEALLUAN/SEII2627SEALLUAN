@@ -33,22 +33,24 @@ public class Purchase
     public string? PurchaseDescription { get; set; }
 
     public double TotalPrice { get; set; }
-
+    [Required]
     [StringLength(255, MinimumLength = 3, ErrorMessage = "Between 3 and 255 chars")]
     public string Street { get; set; }
-
+    [Required]
     [StringLength(255, MinimumLength = 3, ErrorMessage = "Between 3 and 255 chars")]
     public string City { get; set; }
-
+    [Required]
     [StringLength(255, MinimumLength = 3, ErrorMessage = "Between 3 and 255 chars")]
     public string Province { get; set; }
-
-    public string CreditCardNumber { get; set; } = "12345678901234567890";
-
+    [Required]
+    [StringLength(20, MinimumLength = 20, ErrorMessage = "Credit card number must be 20 digits")]
+    public string CreditCardNumber { get; set; } = "1234-6789-1234-6789";
+    [Required]
+    [StringLength(3, MinimumLength = 3, ErrorMessage = "CCV must be 3 digits")]
     public string CCV { get; set; } = "123";
-
+    [Required]
+    [StringLength(5, MinimumLength = 5, ErrorMessage = "Expiration date must be in MM/YY format")]
     public string ExpirationDate { get; set; } = "10/30";
-
     public bool Wrapped { get; set; } = false;
 
     public PurchaseStatus PurchaseStatus { get; set; }
