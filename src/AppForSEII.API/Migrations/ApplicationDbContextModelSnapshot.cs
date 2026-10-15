@@ -240,7 +240,8 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<string>("CCV")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -249,11 +250,13 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<string>("CreditCardNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("ExpirationDate")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
 
                     b.Property<string>("Province")
                         .IsRequired()
