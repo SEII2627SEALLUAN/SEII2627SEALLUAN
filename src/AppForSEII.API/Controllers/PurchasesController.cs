@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AppForSEII.API.Controllers
 {
-    {
     [Route("api/[controller]")]
     [ApiController]
     public class PurchasesController : ControllerBase
@@ -45,5 +44,5 @@ namespace AppForSEII.API.Controllers
             
             return Ok(purchase);
         }
-
+    }
 }
