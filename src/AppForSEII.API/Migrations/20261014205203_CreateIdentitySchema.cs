@@ -209,9 +209,9 @@ namespace AppForSEII.API.Migrations
                     Street = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     City = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Province = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    CreditCardNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CCV = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ExpirationDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreditCardNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    CCV = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    ExpirationDate = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
                     Wrapped = table.Column<bool>(type: "bit", nullable: false),
                     PurchaseStatus = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
