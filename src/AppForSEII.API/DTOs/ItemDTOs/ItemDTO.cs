@@ -7,14 +7,16 @@ public class ItemDTO
     public Gender? Gender { get; set; }
     public decimal Price { get; set; }
     public string Size { get; set; }
+    public int QuantityAvailableForPurchase { get; set; }
     public Sport Sport { get; set; }
-    public ItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, Sport sport)
+    public ItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, int quantityAvailableForPurchase, Sport sport)
     {
         Name = name;
         RecommendedAge = recommendedAge;
         Gender = gender;
         Price = price;
         Size = size;
+        QuantityAvailableForPurchase = quantityAvailableForPurchase;
         Sport = sport;
     }
     public bool Equals(ItemDTO other)
