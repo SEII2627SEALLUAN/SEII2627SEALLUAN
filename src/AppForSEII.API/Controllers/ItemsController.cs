@@ -23,7 +23,7 @@ namespace AppForSEII.API.Controllers
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<ItemDTO>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> GetItemsForPurchase(string? name, Gender? gender, Sport? sport)
+        public async Task<ActionResult> GetItemsForPurchase(string? name, Gender? gender, string? sport)
         {
                 var items = await _context.Items
                     .Include(i=>i.Sport) //include sport
