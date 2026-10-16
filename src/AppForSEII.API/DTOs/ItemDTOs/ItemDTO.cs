@@ -8,8 +8,8 @@ public class ItemDTO
     public decimal Price { get; set; }
     public string Size { get; set; }
     public int QuantityAvailableForPurchase { get; set; }
-    public Sport Sport { get; set; }
-    public ItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, int quantityAvailableForPurchase, Sport sport)
+    public string SportName { get; set; }
+    public ItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, int quantityAvailableForPurchase, string sportName)
     {
         Name = name;
         RecommendedAge = recommendedAge;
@@ -17,8 +17,9 @@ public class ItemDTO
         Price = price;
         Size = size;
         QuantityAvailableForPurchase = quantityAvailableForPurchase;
-        Sport = sport;
+        SportName = sportName;
     }
+
     public bool Equals(ItemDTO other)
     {
         if (other == null) return false;
@@ -27,7 +28,7 @@ public class ItemDTO
         if (Gender != other.Gender) return false;
         if (Price != other.Price) return false;
         if (Size != other.Size) return false;
-        if (Sport != other.Sport) return false;
+        if (SportName != other.SportName) return false;
         return true;
     }
 }

@@ -33,7 +33,7 @@ namespace AppForSEII.API.Controllers
                         && (i.QuantityAvailableForPurchase>0)) //do not show out of stock items
                         .OrderBy(i=>i.Name)
                             .ThenBy(i=>i.Price)
-                            .Select(i=>new ItemDTO(i.Name, i.RecommendedAge??0, i.Gender??Gender.Other, i.Price, i.Size??"", i.Sport)) //show DTO only
+                            .Select(i=>new ItemDTO(i.Name, i.RecommendedAge??0, i.Gender??Gender.Other, i.Price, i.Size??"", i.QuantityAvailableForPurchase, i.Sport.Name)) //show DTO only
                         .ToListAsync();
                     return Ok(items);
 

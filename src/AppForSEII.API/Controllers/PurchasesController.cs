@@ -32,7 +32,7 @@ namespace AppForSEII.API.Controllers
                         .ThenInclude(s => s.Sport) //then join table Sport
              .Select(p => new PurchaseDetailDTO(p.User.Name, p.User.Surname, p.PurchaseDate, p.PurchaseDescription, p.Wrapped, p.TotalPrice,
                     p.PurchaseItems //select the items in the purchase, to DTOs
-                        .Select(pi => new ItemDTO(pi.Item.Name, pi.Item.RecommendedAge, pi.Item.Gender, pi.Item.Price, pi.Item.Size, pi.Item.Sport)).ToList<ItemDTO>()))
+                        .Select(pi => new ItemDTO(pi.Item.Name, pi.Item.RecommendedAge, pi.Item.Gender, pi.Item.Price, pi.Item.Size, pi.Item.QuantityAvailableForPurchase, pi.Item.Sport.Name)).ToList<ItemDTO>()))
              .FirstOrDefaultAsync();
 
 
