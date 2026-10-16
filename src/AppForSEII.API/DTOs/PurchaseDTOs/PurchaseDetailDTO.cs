@@ -8,8 +8,8 @@ public class PurchaseDetailDTO
     public string Description { get; set; }
     public bool Wrapped { get; set; }
     public double TotalPrice { get; set; }
-    public IList<ItemDTO> Items { get; set; }
-    public PurchaseDetailDTO(string customerName, string customerSurname, DateTime purchaseDate, string description, bool wrapped, double totalPrice, IList<ItemDTO> items)
+    public IList<ItemDTO> PurchaseItems { get; set; }
+    public PurchaseDetailDTO(string customerName, string customerSurname, DateTime purchaseDate, string description, bool wrapped, double totalPrice, IList<ItemDTO> purchaseItems)
     {
         CustomerName = customerName;
         CustomerSurname = customerSurname;
@@ -17,7 +17,7 @@ public class PurchaseDetailDTO
         Description = description;
         Wrapped = wrapped;
         TotalPrice = totalPrice;
-        Items = items;
+        PurchaseItems = purchaseItems;
     }
     public bool Equals(PurchaseDetailDTO other)
     {
@@ -28,10 +28,10 @@ public class PurchaseDetailDTO
         if (Description != other.Description) return false;
         if (Wrapped != other.Wrapped) return false;
         if (TotalPrice != other.TotalPrice) return false;
-        if (Items.Count != other.Items.Count) return false;
-        for (int i = 0; i < Items.Count; i++)
+        if (PurchaseItems.Count != other.PurchaseItems.Count) return false;
+        for (int i = 0; i < PurchaseItems.Count; i++)
         {
-            if (!Items[i].Equals(other.Items[i])) return false;
+            if (!PurchaseItems[i].Equals(other.PurchaseItems[i])) return false;
         }
         return true;
     }
