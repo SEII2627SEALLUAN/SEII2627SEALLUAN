@@ -7,7 +7,7 @@ public class GameDTO
         
     }
 
-    public GameDTO(int id, string? name, DateTime date, string? place, string? description, string sportName, IList<TeamDTO> teams)
+    public GameDTO(int id, string? name, DateTime date, string? place, string? description, string sportName, IList<GameInvitationDTO> gameInvitations)
     {
         Id = id;
         Name = name;
@@ -15,7 +15,7 @@ public class GameDTO
         Place = place;
         Description = description;
         SportName = sportName;
-        Teams = teams;
+        GameInvitations = gameInvitations;
     }
 
     public int Id { get; set; }
@@ -34,6 +34,8 @@ public class GameDTO
 
     public string SportName { get; set; } = "Sport name";
 
-    public IList<TeamDTO> Teams { get; set; }
+    public IList<GameInvitationDTO> GameInvitations { get; set; }
+
+
 
 }
