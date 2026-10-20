@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using AppForSEII.API.DTOs.TeamDTOs;
 namespace AppForSEII.API.Models;
 
 public class GameInvitationDTO
