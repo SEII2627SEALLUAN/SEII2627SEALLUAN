@@ -103,49 +103,6 @@ namespace AppForSEII.API.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(TeamDTO), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetTeam(int id)
-        {
-            var team = await _context.Teams
-                .Include(t => t.ApplicationUser) // Captain
-                .Include(t => t.Sport)
-                .Include(t => t.TeamInvitations!)
-                    .ThenInclude(ti => ti.ApplicationUser!) // Invited players
-                .FirstOrDefaultAsync(t => t.Id == id);
-
-            if (team == null)
-            {
-                return NotFound();
-            }
-
-            var captain = team.ApplicationUser;
-
-            var invitationDTOs = team.TeamInvitations?
-                .Where(ti => ti.ApplicationUser != null)
-                .Select(ti => new TeamInvitationDTO(
-                    ti.ApplicationUser!.Name ?? "Unknown",
-                    ti.ApplicationUser!.Surname ?? "Unknown",
-                    ti.ApplicationUser!.Age,
-                    ti.InvitationMessage ?? string.Empty
-                ))
-                .ToList() ?? new List<TeamInvitationDTO>();
-
-            var teamDTO = new TeamDTO(
-                team.Id,
-                team.Name ?? "Team",
-                team.MinAge,
-                team.MaxAge,
-                team.MaxMembers,
-                captain?.Name ?? "Unknown",
-                captain?.Surname ?? "Unknown",
-                captain?.Age ?? 0,
-                team.Sport?.Name ?? "Unknown",
-                invitationDTOs
-            );
-
-            return Ok(teamDTO);
-        }
+        
     }
 }

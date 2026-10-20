@@ -1,8 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace AppForSEII.API.Models
-{
+namespace AppForSEII.API.DTOs.TeamDTOs{
     public class TeamInvitationDTO
     {
         public TeamInvitationDTO()
