@@ -32,14 +32,17 @@ namespace AppForSEII.API.Controllers
                 g.Place, 
                 g.Description, 
                 g.Sport != null ? g.Sport.Name : "No sport",
-                g.GameInvitations.Select(gi => new GameInvitationDTO(gi.Message, new List<TeamDTO> { new TeamDTO(gi.TeamInvited.Id, 
-                                    gi.TeamInvited.Name, 
-                                    gi.TeamInvited.MinAge, 
-                                    gi.TeamInvited.MaxAge, 
-                                    gi.TeamInvited.MaxMembers, 
-                                    gi.TeamInvited.ApplicationUser.Name,
-                                    gi.TeamInvited.ApplicationUser.Surname,
-                                    gi.TeamInvited.Sport != null ? gi.TeamInvited.Sport.Name : "No sport") })).ToList<GameInvitationDTO>()
+                g.GameInvitations.Select(gi => new GameInvitationDTO(
+                    gi.TeamInvited.Id,
+                    gi.TeamInvited.Name,
+                    gi.TeamInvited.MinAge,
+                    gi.TeamInvited.MaxAge,
+                    gi.TeamInvited.MaxMembers,
+                    gi.TeamInvited.ApplicationUser.Name,
+                    gi.TeamInvited.ApplicationUser.Surname,
+                    gi.TeamInvited.Sport != null ? gi.TeamInvited.Sport.Name : "No sport",
+                    gi.Message
+                )).ToList<GameInvitationDTO>()
             )).FirstOrDefaultAsync();
 
             if (Game == null)
