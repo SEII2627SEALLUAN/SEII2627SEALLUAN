@@ -43,6 +43,15 @@ namespace AppForSEII.API.Controllers
         [ProducesResponseType(typeof(IList<TeamDTO>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainName)
         {
+            if (string.IsNullOrEmpty(sport))
+            {
+                sport = await _context.Sports
+                    .OrderBy(s => s.Id)
+                    .Select(s => s.Name)
+                    .FirstOrDefaultAsync();
+            }
+
+
             IList<TeamDTO> teams = await _context.Teams
             .Include(m=> m.Sport)
             .Include(m=> m.ApplicationUser)
