@@ -2,8 +2,14 @@ using AppForSEII.API.DTOS.PurchaseDTOS;
 
 namespace AppForSEII.API.DTOs.PurchaseDTOs
 {
-    public class PurchaseForCreateDTO
+    public class PurchaseForCreateDTO //used in create, takes many parameters
     {
+        [EmailAddress]
+        [Required]
+        public string CustomerUserName { get; set; }="peter.jackson@uclm.es";
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your Name and Surname")]
+        [StringLength(50, MinimumLength = 10, ErrorMessage = "Name and Surname must have at least 10 characters")]
+        public string CustomerNameSurname { get; set; }="Peter Jackson";
         [Required]
         [StringLength(255, MinimumLength = 3, ErrorMessage = "Between 3 and 255 chars")]
         public string Street { get; set; }
@@ -21,20 +27,14 @@ namespace AppForSEII.API.DTOs.PurchaseDTOs
         public string CCV { get; set; } = "123";
         [Required]
         [StringLength(5, MinimumLength = 5, ErrorMessage = "Expiration date must be in MM/YY format")]
-        public string ExpirationDate { get; set; } = "10/30";
-        [EmailAddress]
-        [Required]
-        public string CustomerUserName { get; set; }="peter.jackson@uclm.es";
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set your Name and Surname")]
-        [StringLength(50, MinimumLength = 10, ErrorMessage = "Name and Surname must have at least 10 characters")]
-        public string CustomerNameSurname { get; set; }="Peter Jackson";
-        
+        public string ExpirationDate { get; set; } = "10/30";        
         public string? PurchaseDescription { get; set; } = "Purchase";
         public bool Wrapped { get; set; }=false;
-        public IList<PurchaseItemDTO> PurchaseItems;
+        [Required]
+        [MinLength(1, ErrorMessage = "At least one item must be selected")]
+        public IList<PurchaseItemForCreateDTO> PurchaseItems { get; set; }
 
-        public PurchaseForCreateDTO(string street, string city, string province, string creditCardNumber, string ccv, string expirationDate, string customerUserName, string customerNameSurname, IList<PurchaseItemDTO> purchaseItemDTOs, string purchaseDescription, bool wrapped)
+        public PurchaseForCreateDTO(string street, string city, string province, string creditCardNumber, string ccv, string expirationDate, string customerUserName, string customerNameSurname, IList<PurchaseItemForCreateDTO> purchaseItems, string purchaseDescription, bool wrapped)
         {
          Street = street;
          City = city;
@@ -44,14 +44,14 @@ namespace AppForSEII.API.DTOs.PurchaseDTOs
          ExpirationDate = expirationDate;
          CustomerUserName = customerUserName;
          CustomerNameSurname = customerNameSurname;
-         PurchaseItems = purchaseItemDTOs;
+         PurchaseItems = purchaseItems;
          PurchaseDescription = purchaseDescription;
          Wrapped = wrapped;
         }
 
         public PurchaseForCreateDTO()
         {
-            PurchaseItems = new List<PurchaseItemDTO>();
+            PurchaseItems = new List<PurchaseItemForCreateDTO>();
         }
         public override bool Equals(object? obj)
         {

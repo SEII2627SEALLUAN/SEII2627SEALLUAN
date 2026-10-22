@@ -1,6 +1,6 @@
 namespace AppForSEII.API.DTOS.PurchaseDTOS
 {
-    public class PurchaseItemDTO
+    public class PurchaseItemDTO //shows items like this in the details of a purchase. Many details indeed
     {
         public string Name { get; set; }
         public int? RecommendedAge { get; set; }
@@ -8,8 +8,7 @@ namespace AppForSEII.API.DTOS.PurchaseDTOS
         public decimal Price { get; set; }
         public string Size { get; set; }
         public int Quantity { get; set; }
-        public string SportName { get; set; }
-        public PurchaseItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, int quantity, string sportName)
+        public PurchaseItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, int quantity)
         {
             Name = name;
             RecommendedAge = recommendedAge;
@@ -17,7 +16,6 @@ namespace AppForSEII.API.DTOS.PurchaseDTOS
             Price = price;
             Size = size;
             Quantity = quantity;
-            SportName = sportName;
         }
 
         public bool Equals(PurchaseItemDTO other)
@@ -28,7 +26,6 @@ namespace AppForSEII.API.DTOS.PurchaseDTOS
             if (Gender != other.Gender) return false;
             if (Price != other.Price) return false;
             if (Size != other.Size) return false;
-            if (SportName != other.SportName) return false;
             return true;
         }
     }
