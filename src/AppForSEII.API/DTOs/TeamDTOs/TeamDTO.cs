@@ -7,7 +7,7 @@ public class TeamDTO
         
     }
 
-    public TeamDTO(int id, string name, int minAge, int maxAge, int maxMembers, string captainName, string sportName)
+    public TeamDTO(int id, string name, int minAge, int maxAge, int maxMembers, string captainName, string captainSurname, string sportName)
     {
         Id = id;
         Name = name;
@@ -16,6 +16,7 @@ public class TeamDTO
         MaxMembers = maxMembers;
         CaptainName = captainName;
         SportName = sportName;
+        CaptainSurname = captainSurname;
     }
 
     public int Id { get; set; }
@@ -29,6 +30,8 @@ public class TeamDTO
     public int MaxMembers { get; set; }
 
     public string CaptainName { get; set; } = "Captain name";
+
+    public string CaptainSurname { get; set; } = "Captain surname";
     public string SportName { get; set; } = "Sport name";
 
 }

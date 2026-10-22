@@ -48,10 +48,14 @@ namespace AppForSEII.API.Controllers
             .Include(m=> m.ApplicationUser)
             .Where(m => (sport == null || (m.Sport != null && m.Sport.Name == sport))
                  && (captainName == null || (m.ApplicationUser != null && m.ApplicationUser.Name == captainName)))
-            .Select(m=>new TeamDTO(m.Id, m.Name, m.MinAge, m.MaxAge, m.MaxMembers, 
-                                   m.ApplicationUser != null ? 
-                                   m.ApplicationUser.Name + " " + m.ApplicationUser.Surname 
-                                   : "No captain", m.Sport != null ? m.Sport.Name : "No sport"))
+            .Select(m=>new TeamDTO(m.Id, 
+                                    m.Name, 
+                                    m.MinAge, 
+                                    m.MaxAge, 
+                                    m.MaxMembers, 
+                                    m.ApplicationUser != null ? m.ApplicationUser.Name : "No captain",
+                                    m.ApplicationUser != null ? m.ApplicationUser.Surname : "",
+                                    m.Sport != null ? m.Sport.Name : "No sport"))
             .ToListAsync();
             return Ok(teams);
         }
