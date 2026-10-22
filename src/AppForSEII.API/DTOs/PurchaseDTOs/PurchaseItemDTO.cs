@@ -7,16 +7,16 @@ namespace AppForSEII.API.DTOS.PurchaseDTOS
         public Gender? Gender { get; set; }
         public decimal Price { get; set; }
         public string Size { get; set; }
-        public int QuantityAvailableForPurchase { get; set; }
+        public int Quantity { get; set; }
         public string SportName { get; set; }
-        public PurchaseItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, int quantityAvailableForPurchase, string sportName)
+        public PurchaseItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, int quantity, string sportName)
         {
             Name = name;
             RecommendedAge = recommendedAge;
             Gender = gender;
             Price = price;
             Size = size;
-            QuantityAvailableForPurchase = quantityAvailableForPurchase;
+            Quantity = quantity;
             SportName = sportName;
         }
 

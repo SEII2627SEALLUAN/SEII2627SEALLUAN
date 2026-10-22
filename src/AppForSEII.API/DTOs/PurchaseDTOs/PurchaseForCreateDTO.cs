@@ -30,7 +30,7 @@ namespace AppForSEII.API.DTOs.PurchaseDTOs
         [StringLength(50, MinimumLength = 10, ErrorMessage = "Name and Surname must have at least 10 characters")]
         public string CustomerNameSurname { get; set; }="Peter Jackson";
         
-        public string PurchaseDescription { get; set; } = "Purchase";
+        public string? PurchaseDescription { get; set; } = "Purchase";
         public bool Wrapped { get; set; }=false;
         public IList<PurchaseItemDTO> PurchaseItems;
 
@@ -64,6 +64,8 @@ namespace AppForSEII.API.DTOs.PurchaseDTOs
                 CreditCardNumber == dTO.CreditCardNumber &&
                 CCV == dTO.CCV &&
                 ExpirationDate == dTO.ExpirationDate &&
+                PurchaseDescription == dTO.PurchaseDescription &&
+                Wrapped == dTO.Wrapped &&
                 PurchaseItems.SequenceEqual(dTO.PurchaseItems); 
         }
     }

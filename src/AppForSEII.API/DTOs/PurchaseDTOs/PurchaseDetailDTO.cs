@@ -1,5 +1,6 @@
 namespace AppForSEII.API.DTOs.PurchaseDTOs;
 using AppForSEII.API.DTOs.ItemDTOs;
+using AppForSEII.API.DTOs.PurchaseDTOs;
 public class PurchaseDetailDTO
 {
     public string CustomerName { get; set; } //ask. From ApplicatuinUserDTO? Inside the method? 
@@ -8,7 +9,7 @@ public class PurchaseDetailDTO
     public string Description { get; set; }
     public bool Wrapped { get; set; }
     public double TotalPrice { get; set; }
-    public IList<ItemDTO> PurchaseItems { get; set; }
+    public IList<PurchaseItemDTO> PurchaseItems { get; set; }
     public PurchaseDetailDTO(string customerName, string customerSurname, DateTime purchaseDate, string description, bool wrapped, double totalPrice, IList<ItemDTO> purchaseItems)
     {
         CustomerName = customerName;
