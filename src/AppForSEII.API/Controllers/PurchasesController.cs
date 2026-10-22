@@ -128,7 +128,7 @@ namespace AppForSEII.API.Controllers
             }
             catch (Exception ex) {
                 _logger.LogError(ex.Message);
-                ModelState.AddModelError("Rental", $"Error! There was an error while saving your purchase, plese, try again later");
+                ModelState.AddModelError("Purchase", $"Error! There was an error while saving your purchase, please, try again later");
                 return Conflict("Error" + ex.Message);
 
             }
