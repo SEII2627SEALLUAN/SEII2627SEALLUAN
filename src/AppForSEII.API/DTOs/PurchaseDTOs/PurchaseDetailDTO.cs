@@ -2,7 +2,7 @@ namespace AppForSEII.API.DTOs.PurchaseDTOs;
 using AppForSEII.API.DTOs.ItemDTOs;
 using AppForSEII.API.DTOS.PurchaseDTOS;
 
-public class PurchaseDetailDTO
+public class PurchaseDetailDTO //returned in the details, for example GetPurchase
 {
     public string CustomerName { get; set; } //ask. From ApplicatuinUserDTO? Inside the method? 
     public string CustomerSurname { get; set; }
