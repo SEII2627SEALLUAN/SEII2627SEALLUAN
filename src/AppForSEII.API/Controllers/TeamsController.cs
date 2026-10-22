@@ -40,42 +40,42 @@ namespace AppForSEII.API.Controllers
         }
 
         [HttpGet]
-[Route("[action]")]
-[ProducesResponseType(typeof(IList<TeamDTO>), (int)HttpStatusCode.OK)]
-public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainName)
-{
-    IList<TeamDTO> teams = await _context.Teams
-        .Include(m => m.Sport)
-        .Include(m => m.ApplicationUser)
-        .Include(m => m.TeamInvitations!)
-            .ThenInclude(ti => ti.ApplicationUser!)
-        .Where(m => (sport == null || (m.Sport != null && m.Sport.Name == sport))
-             && (captainName == null || (m.ApplicationUser != null && m.ApplicationUser.Name == captainName)))
-        .Select(m => new TeamDTO(
-            m.Id,
-            m.Name ?? "Team",
-            m.MinAge,
-            m.MaxAge,
-            m.MaxMembers,
-            m.ApplicationUser != null ? m.ApplicationUser.Name ?? "Unknown" : "No captain",
-            m.ApplicationUser != null ? m.ApplicationUser.Surname ?? "Unknown" : "No surname",
-            m.ApplicationUser != null ? m.ApplicationUser.Age : 0,
-            m.Sport != null ? m.Sport.Name : "No sport",
-            m.TeamInvitations != null 
-                ? m.TeamInvitations
-                    .Where(ti => ti.ApplicationUser != null)
-                    .Select(ti => new TeamInvitationDTO(
-                        ti.ApplicationUser!.Name ?? "Unknown",
-                        ti.ApplicationUser!.Surname ?? "Unknown",
-                        ti.ApplicationUser!.Age,
-                        ti.InvitationMessage ?? string.Empty
-                    )).ToList() 
-                : new List<TeamInvitationDTO>()
-        ))
-        .ToListAsync();
+        [Route("[action]")]
+        [ProducesResponseType(typeof(IList<TeamDTO>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainName)
+        {
+            IList<TeamDTO> teams = await _context.Teams
+                .Include(m => m.Sport)
+                .Include(m => m.ApplicationUser)
+                .Include(m => m.TeamInvitations!)
+                    .ThenInclude(ti => ti.ApplicationUser!)
+                .Where(m => (sport == null || (m.Sport != null && m.Sport.Name == sport))
+                     && (captainName == null || (m.ApplicationUser != null && m.ApplicationUser.Name == captainName)))
+                .Select(m => new TeamDTO(
+                    m.Id,
+                    m.Name ?? "Team",
+                    m.MinAge,
+                    m.MaxAge,
+                    m.MaxMembers,
+                    m.ApplicationUser != null ? m.ApplicationUser.Name ?? "Unknown" : "No captain",
+                    m.ApplicationUser != null ? m.ApplicationUser.Surname ?? "Unknown" : "No surname",
+                    m.ApplicationUser != null ? m.ApplicationUser.Age : 0,
+                    m.Sport != null ? m.Sport.Name : "No sport",
+                    m.TeamInvitations != null
+                        ? m.TeamInvitations
+                            .Where(ti => ti.ApplicationUser != null)
+                            .Select(ti => new TeamInvitationDTO(
+                                ti.ApplicationUser!.Name ?? "Unknown",
+                                ti.ApplicationUser!.Surname ?? "Unknown",
+                                ti.ApplicationUser!.Age,
+                                ti.InvitationMessage ?? string.Empty
+                            )).ToList()
+                        : new List<TeamInvitationDTO>()
+                ))
+                .ToListAsync();
 
-    return Ok(teams);
-}
+            return Ok(teams);
+        }
 
         [HttpPost]
         [ProducesResponseType(typeof(TeamDTO), (int)HttpStatusCode.Created)]
@@ -83,29 +83,9 @@ public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainNa
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         public async Task<ActionResult> CreateTeam(TeamCreateDTO teamCreate)
         {
-            // any validation defined in TeamCreateDTO is checked before running the method so they don't have to be checked again
-            if (string.IsNullOrEmpty(teamCreate.Name) || teamCreate.Name.Length <= 3 || teamCreate.Name.Length >= 10)
-            {
-                ModelState.AddModelError("Name", "Error! Team's name must be between 4 and 9 characters.");
-            }
-            else if (await _context.Teams.AnyAsync(t => t.Name == teamCreate.Name))
+            if (await _context.Teams.AnyAsync(t => t.Name == teamCreate.Name))
             {
                 ModelState.AddModelError("Name", "Error! Team's name must be unique.");
-            }
-
-            if (teamCreate.MaxMembers < 1)
-            {
-                ModelState.AddModelError("MaxMembers", "Error! You must indicate the maximum number of players.");
-            }
-
-            if (teamCreate.MinAge < 3)
-            {
-                ModelState.AddModelError("MinAge", "Error! Minimum age of the team must be at least 3.");
-            }
-
-            if (teamCreate.MinAge > teamCreate.MaxAge)
-            {
-                ModelState.AddModelError("AgeRange", "Error! Minimum age cannot be greater than maximum age.");
             }
 
             var captain = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.UserName == teamCreate.CaptainUserName);
@@ -148,14 +128,6 @@ public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainNa
                         ModelState.AddModelError("TeamInvitations", $"Error! Player '{userName}' is not registered.");
                     }
                 }
-
-                foreach (var invitation in teamCreate.TeamInvitations)
-                {
-                    if (string.IsNullOrEmpty(invitation.InvitationMessage) || invitation.InvitationMessage.Length < 3)
-                    {
-                        ModelState.AddModelError("InvitationMessage", "Error! Personalized invitation message must be at least 3 characters.");
-                    }
-                }
             }
 
             if (ModelState.ErrorCount > 0)
@@ -182,7 +154,6 @@ public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainNa
             {
                 var invitedUser = invitedUsers.First(u => u.UserName == invitationDto.PlayerUserName);
 
-                // team does not exist in the database yet and does not have a valid Id, so we must relate teaminvitation to the object team
                 team.TeamInvitations.Add(new TeamInvitation
                 {
                     Team = team,
@@ -203,7 +174,6 @@ public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainNa
 
             try
             {
-                // we store in the database both team and its teaminvitations
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -225,53 +195,7 @@ public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainNa
                 invitationDTOs
             );
 
-            return CreatedAtAction(nameof(GetTeam), new { id = team.Id }, teamDTO);
-        }
-
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(TeamDTO), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<IActionResult> GetTeam(int id)
-        {
-            var team = await _context.Teams
-                .Include(t => t.ApplicationUser)
-                .Include(t => t.Sport)
-                .Include(t => t.TeamInvitations!)
-                    .ThenInclude(ti => ti.ApplicationUser!)
-                .FirstOrDefaultAsync(t => t.Id == id);
-
-            if (team == null)
-            {
-                _logger.LogError($"Error: Team with id {id} does not exist");
-                return NotFound();
-            }
-
-            var captain = team.ApplicationUser;
-
-            var invitationDTOs = team.TeamInvitations?
-                .Where(ti => ti.ApplicationUser != null)
-                .Select(ti => new TeamInvitationDTO(
-                    ti.ApplicationUser!.Name ?? "Unknown",
-                    ti.ApplicationUser!.Surname ?? "Unknown",
-                    ti.ApplicationUser!.Age,
-                    ti.InvitationMessage ?? string.Empty
-                ))
-                .ToList() ?? new List<TeamInvitationDTO>();
-
-            var teamDTO = new TeamDTO(
-                team.Id,
-                team.Name ?? "Team",
-                team.MinAge,
-                team.MaxAge,
-                team.MaxMembers,
-                captain?.Name ?? "Unknown",
-                captain?.Surname ?? "Unknown",
-                captain?.Age ?? 0,
-                team.Sport?.Name ?? "Unknown",
-                invitationDTOs
-            );
-
-            return Ok(teamDTO);
+            return CreatedAtAction("GetTeam", new { id = team.Id }, teamDTO);
         }
 
     }
