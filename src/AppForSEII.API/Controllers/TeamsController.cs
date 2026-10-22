@@ -40,22 +40,42 @@ namespace AppForSEII.API.Controllers
         }
 
         [HttpGet]
-        [Route("[action]")]
-        [ProducesResponseType(typeof(IList<TeamDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainName)
-        {
-            IList<TeamDTO> teams = await _context.Teams
-            .Include(m => m.Sport)
-            .Include(m => m.ApplicationUser)
-            .Where(m => (sport == null || (m.Sport != null && m.Sport.Name == sport))
-                 && (captainName == null || (m.ApplicationUser != null && m.ApplicationUser.Name == captainName)))
-            .Select(m => new TeamDTO(m.Id, m.Name, m.MinAge, m.MaxAge, m.MaxMembers,
-                                   m.ApplicationUser != null ?
-                                   m.ApplicationUser.Name + " " + m.ApplicationUser.Surname
-                                   : "No captain", m.Sport != null ? m.Sport.Name : "No sport"))
-            .ToListAsync();
-            return Ok(teams);
-        }
+[Route("[action]")]
+[ProducesResponseType(typeof(IList<TeamDTO>), (int)HttpStatusCode.OK)]
+public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainName)
+{
+    IList<TeamDTO> teams = await _context.Teams
+        .Include(m => m.Sport)
+        .Include(m => m.ApplicationUser)
+        .Include(m => m.TeamInvitations!)
+            .ThenInclude(ti => ti.ApplicationUser!)
+        .Where(m => (sport == null || (m.Sport != null && m.Sport.Name == sport))
+             && (captainName == null || (m.ApplicationUser != null && m.ApplicationUser.Name == captainName)))
+        .Select(m => new TeamDTO(
+            m.Id,
+            m.Name ?? "Team",
+            m.MinAge,
+            m.MaxAge,
+            m.MaxMembers,
+            m.ApplicationUser != null ? m.ApplicationUser.Name ?? "Unknown" : "No captain",
+            m.ApplicationUser != null ? m.ApplicationUser.Surname ?? "Unknown" : "No surname",
+            m.ApplicationUser != null ? m.ApplicationUser.Age : 0,
+            m.Sport != null ? m.Sport.Name : "No sport",
+            m.TeamInvitations != null 
+                ? m.TeamInvitations
+                    .Where(ti => ti.ApplicationUser != null)
+                    .Select(ti => new TeamInvitationDTO(
+                        ti.ApplicationUser!.Name ?? "Unknown",
+                        ti.ApplicationUser!.Surname ?? "Unknown",
+                        ti.ApplicationUser!.Age,
+                        ti.InvitationMessage ?? string.Empty
+                    )).ToList() 
+                : new List<TeamInvitationDTO>()
+        ))
+        .ToListAsync();
+
+    return Ok(teams);
+}
 
         [HttpPost]
         [ProducesResponseType(typeof(TeamDTO), (int)HttpStatusCode.Created)]
