@@ -51,6 +51,47 @@ namespace AppForSEII.API.Controllers
             }
             return Ok(Game);
         }
+
+        [HttpPost]
+        [Route("[action]")]
+        [ProducesResponseType(typeof(GameDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
+        public async Task<ActionResult> CreateGame(GameForCreateDTO gameForCreate)
+        {
+            if (await _context.Games.AnyAsync(g => g.Name == gameForCreate.Name))
+            {
+                ModelState.AddModelError("Name", "A game name must be unique");
+            }
+            
+            if (gameForCreate.Date <= DateTime.Today)
+            {
+                ModelState.AddModelError("Date", "The game date cannot be in the past.");
+            }
+
+            if (gameForCreate.Place.Length <= 5) {
+                ModelState.AddModelError("Place", "The place must be more than 5 characters long.");
+            }
+
+            if (gameForCreate.Message.Length <= 10)
+            {
+                ModelState.AddModelError("Message", "The message must be more than 10 characters long.");
+            }
+
+            if (gameForCreate.Invitations.Count == 0)
+            {
+                ModelState.AddModelError("Invitations", "At least one invitation must be provided.");
+            }
+
+            // TODO: Check that the user exists 
+
+            if (ModelState.ErrorCount > 0)
+                return BadRequest(new ValidationProblemDetails(ModelState));
+
+            return Ok();
+
+        }
+
     }
 
 }
