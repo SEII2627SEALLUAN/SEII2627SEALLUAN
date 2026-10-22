@@ -17,12 +17,13 @@ namespace AppForSEII.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<GameDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetGame()
+        public async Task<ActionResult> GetGame(int id)
         {
-            IList<GameDTO> Games = await _context.Games
+            GameDTO? Game = await _context.Games
             .Include(g => g.Sport)
             .Include(g => g.GameInvitations)
                 .ThenInclude(t2 => t2.TeamInvited)
+            .Where(g => g.Id == id)
             .Select(g => new GameDTO(
                 g.Id, 
                 g.Name, 
@@ -34,8 +35,8 @@ namespace AppForSEII.API.Controllers
                                    gi.TeamInvited.ApplicationUser != null ? 
                                    gi.TeamInvited.ApplicationUser.Name + " " + gi.TeamInvited.ApplicationUser.Surname 
                                    : "No captain", gi.TeamInvited.Sport != null ? gi.TeamInvited.Sport.Name : "No sport") })).ToList<GameInvitationDTO>()
-            )).ToListAsync();
-            return Ok(Games);
+            )).FirstOrDefaultAsync();
+            return Ok(Game);
         }
     }
 
