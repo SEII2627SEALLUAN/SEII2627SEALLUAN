@@ -19,6 +19,7 @@ namespace AppForSEII.API.Controllers
         [ProducesResponseType(typeof(IList<GameDTO>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetGame(int id)
         {
+
             GameDTO? Game = await _context.Games
             .Include(g => g.Sport)
             .Include(g => g.GameInvitations)
@@ -40,6 +41,11 @@ namespace AppForSEII.API.Controllers
                                     gi.TeamInvited.ApplicationUser.Surname,
                                     gi.TeamInvited.Sport != null ? gi.TeamInvited.Sport.Name : "No sport") })).ToList<GameInvitationDTO>()
             )).FirstOrDefaultAsync();
+
+            if (Game == null)
+            {
+                return NotFound($"Game with id {id} not found.");
+            }
             return Ok(Game);
         }
     }
