@@ -32,6 +32,7 @@ namespace AppForSEII.API.Data
                 logger.LogError(ex, "An error occurred seeding the Users in the Database.");
             }
 
+
             try
             {
                 SeedSportsAndItems(dbContext);
@@ -43,11 +44,11 @@ namespace AppForSEII.API.Data
 
             try
             {
-                SeedTeams(dbContext);
+                SeedReferees(userManager, dbContext);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred seeding Teams in the Database.");
+                logger.LogError(ex, "An error occurred seeding Referees in the Database.");
             }
 
             try
@@ -68,6 +69,7 @@ namespace AppForSEII.API.Data
                 logger.LogError(ex, "An error occurred seeding InterestedIn in the Database.");
             }
         }
+
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles)
         {
@@ -115,6 +117,73 @@ namespace AppForSEII.API.Data
             }
         }
 
+
+        public static void SeedReferees(UserManager<ApplicationUser> userManager, ApplicationDbContext dbcontext)
+        {
+            string[] sportsnames = { "Soccer", "Basketball", "Baseball" };
+            List<Sport> sports = new List<Sport>();
+
+            foreach(string sportsname in sportsnames)
+            {
+                var sport = dbcontext.Sports.FirstOrDefault(s => s.Name == sportsname);
+                if (sport == null)
+                {
+                    sport = new Sport(
+                        id: 0,
+                        name: sportsname,
+                        minimumNumberOfPlayers: 2,
+                        numberofRefeeres: 1,
+                        description: "Description of " + sportsname,
+                        basicRules: "Rules of " + sportsname
+                    );
+                }
+
+                sports.Add(sport);
+            }
+
+            if(userManager.FindByNameAsync("lucas@uclm.es").Result == null)
+            {
+                Referee referee = new Referee("5", "Lucas", "Lopez", "lucas@uclm.es", 10, 20, [], sports[0]);
+                referee.EmailConfirmed = true;
+
+                var result = userManager.CreateAsync(referee, "Password1234%");
+                result.Wait();
+
+                if (result.IsCompletedSuccessfully)
+                {
+                    userManager.AddToRoleAsync(referee, "Employee").Wait();
+                }
+            }
+
+            if(userManager.FindByNameAsync("john@uclm.es").Result == null)
+            {
+                Referee referee = new Referee("7", "John", "Smith", "john@uclm.es", 1, 0, [], sports[1]);
+                referee.EmailConfirmed = true;
+
+                var result = userManager.CreateAsync(referee, "Password1234%");
+                result.Wait();
+
+                if (result.IsCompletedSuccessfully)
+                {
+                    userManager.AddToRoleAsync(referee, "Employee").Wait();
+                }
+            }
+
+            if(userManager.FindByNameAsync("maria@uclm.es").Result == null)
+            {
+                Referee referee = new Referee("9", "Maria", "Martinez", "maria@uclm.es", 7, 10, [], sports[2]);
+                referee.EmailConfirmed = true;
+
+                var result = userManager.CreateAsync(referee, "Password1234%");
+                result.Wait();
+
+                if (result.IsCompletedSuccessfully)
+                {
+                    userManager.AddToRoleAsync(referee, "Employee").Wait();
+                }
+            }
+            
+        }
         public static void SeedSportsAndItems(ApplicationDbContext dbcontext)
         {
             string[] sportsnames = { "Soccer", "Basketball", "Baseball", "Tennis" };

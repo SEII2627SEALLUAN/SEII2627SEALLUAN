@@ -7,12 +7,25 @@ public class Referee : ApplicationUser
     {
     }
 
-    public Referee(string id, string name, string surname, string email, int rating, int yearsRefereeing, IList<RefereeAssignedTo>? refereeAssignedTos, Sport sportForReferee)
+    public Referee(
+        string id, string? name, string? surname, string email, DateOnly birthDate, int age, 
+        Gender gender, List<InterestedIn> interestedIn, List<TeamInvitation> teamInvitation,
+        List<Team> team, int rating, int yearsRefereeing, 
+        IList<RefereeAssignedTo>? refereeAssignedTos, Sport sportForReferee) :
+    base(id, name, surname, email, birthDate, age, gender, interestedIn, teamInvitation, team)
     {
-        Id = id;
-        Name = name;
-        Surname = surname;
-        Email = email;
+        Rating = rating;
+        YearsRefereeing = yearsRefereeing;
+        RefereeAssignedTos = refereeAssignedTos;
+        SportForReferee = sportForReferee;
+    }
+
+    public Referee(
+        string id, string? name, string? surname, string email,
+        int rating, int yearsRefereeing, 
+        IList<RefereeAssignedTo>? refereeAssignedTos, Sport sportForReferee) :
+    base(id, name, surname, email)
+    {
         Rating = rating;
         YearsRefereeing = yearsRefereeing;
         RefereeAssignedTos = refereeAssignedTos;

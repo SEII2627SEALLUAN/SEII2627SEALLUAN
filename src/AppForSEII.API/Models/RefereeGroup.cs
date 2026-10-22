@@ -9,9 +9,8 @@ public class RefereeGroup
     {
     }
 
-    public RefereeGroup(int id, string name, string? description, string? rules, int gameId, IList<RefereeAssignedTo>? refereeAssignedTos, Game game)
+    public RefereeGroup( string name, string? description, string? rules, int gameId, IList<RefereeAssignedTo>? refereeAssignedTos, Game game)
     {
-        Id = id;
         Name = name;
         Description = description;
         Rules = rules;
