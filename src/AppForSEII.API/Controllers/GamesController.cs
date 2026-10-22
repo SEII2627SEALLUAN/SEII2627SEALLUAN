@@ -36,8 +36,8 @@ namespace AppForSEII.API.Controllers
                                     gi.TeamInvited.MinAge, 
                                     gi.TeamInvited.MaxAge, 
                                     gi.TeamInvited.MaxMembers, 
-                                    gi.TeamInvited.ApplicationUser != null ? gi.TeamInvited.ApplicationUser.Name : "No captain",
-                                    gi.TeamInvited.ApplicationUser != null ? gi.TeamInvited.ApplicationUser.Surname : "",
+                                    gi.TeamInvited.ApplicationUser.Name,
+                                    gi.TeamInvited.ApplicationUser.Surname,
                                     gi.TeamInvited.Sport != null ? gi.TeamInvited.Sport.Name : "No sport") })).ToList<GameInvitationDTO>()
             )).FirstOrDefaultAsync();
             return Ok(Game);

@@ -62,8 +62,8 @@ namespace AppForSEII.API.Controllers
                                     m.MinAge, 
                                     m.MaxAge, 
                                     m.MaxMembers, 
-                                    m.ApplicationUser != null ? m.ApplicationUser.Name : "No captain",
-                                    m.ApplicationUser != null ? m.ApplicationUser.Surname : "",
+                                    m.ApplicationUser.Name,
+                                    m.ApplicationUser.Surname,
                                     m.Sport != null ? m.Sport.Name : "No sport"))
             .ToListAsync();
             return Ok(teams);
