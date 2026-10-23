@@ -57,5 +57,52 @@ namespace AppForSEII.API.Controllers
             return Ok(teams);
         }
 
+        // GET: api/Teams
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TeamDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> GetTeam(int id)
+        {
+            if (_context.Teams == null)
+            {
+                _logger.LogError("Error: Teams table does not exist");
+                return NotFound();
+            }
+
+            var teamdto = await _context.Teams
+                .Where(t => t.Id == id)
+                .Include(t => t.Sport)
+                .Include(t => t.ApplicationUser)
+                .Include(t => t.TeamInvitations!)
+                    .ThenInclude(ti => ti.ApplicationUser!)
+                .Select(t => new TeamDTO(
+                    t.Id,
+                    t.Name,
+                    t.MinAge,
+                    t.MaxAge,
+                    t.MaxMembers,
+                    t.ApplicationUser!.Name!,
+                    t.ApplicationUser!.Surname!,
+                    t.ApplicationUser!.Age,
+                    t.Sport!.Name,
+                    t.TeamInvitations!
+                        .Select(ti => new TeamInvitationDTO(
+                            ti.ApplicationUser!.Name!,
+                            ti.ApplicationUser!.Surname!,
+                            ti.ApplicationUser!.Age,
+                            ti.InvitationMessage
+                        )).ToList<TeamInvitationDTO>()
+                ))
+                .FirstOrDefaultAsync();
+
+            if (teamdto == null)
+            {
+                _logger.LogError($"Error: Team with id {id} does not exist");
+                return NotFound();
+            }
+
+            return Ok(teamdto);
+        }
+
     }
 }
