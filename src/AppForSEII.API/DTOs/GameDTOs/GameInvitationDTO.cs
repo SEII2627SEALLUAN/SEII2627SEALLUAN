@@ -2,22 +2,21 @@ using System.ComponentModel.DataAnnotations;
 using AppForSEII.API.DTOs.TeamDTOs;
 namespace AppForSEII.API.Models;
 
-public class GameInvitationDTO
+public class GameInvitationDTO: TeamDTO
 {
     public GameInvitationDTO()
     {
         
     }
 
-    public GameInvitationDTO(string message, IList<TeamDTO> teams)
+    public GameInvitationDTO(int id, string name, int minAge, int maxAge, int maxMembers, 
+                            string captainName, string captainSurname, string sportName, string message) 
+                            : base(id, name, minAge, maxAge, maxMembers, captainName, captainSurname, sportName)
     {
         Message = message;
-        Teams = teams;
     }
 
     public string Message { get; set; } = "Default message";
-
-    public IList<TeamDTO> Teams { get; set; }
 
 
 }

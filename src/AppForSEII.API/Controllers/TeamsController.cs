@@ -44,15 +44,28 @@ namespace AppForSEII.API.Controllers
         [ProducesResponseType(typeof(IList<TeamDTO>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetTeamsForGame(string? sport, string? captainName)
         {
+            if (string.IsNullOrEmpty(sport))
+            {
+                sport = await _context.Sports
+                    .OrderBy(s => s.Id)
+                    .Select(s => s.Name)
+                    .FirstOrDefaultAsync();
+            }
+
+
             IList<TeamDTO> teams = await _context.Teams
             .Include(m=> m.Sport)
             .Include(m=> m.ApplicationUser)
             .Where(m => (sport == null || (m.Sport != null && m.Sport.Name == sport))
                  && (captainName == null || (m.ApplicationUser != null && m.ApplicationUser.Name == captainName)))
-            .Select(m=>new TeamDTO(m.Id, m.Name, m.MinAge, m.MaxAge, m.MaxMembers, 
-                                   m.ApplicationUser != null ? 
-                                   m.ApplicationUser.Name + " " + m.ApplicationUser.Surname 
-                                   : "No captain", m.Sport != null ? m.Sport.Name : "No sport"))
+            .Select(m=>new TeamDTO(m.Id, 
+                                    m.Name, 
+                                    m.MinAge, 
+                                    m.MaxAge, 
+                                    m.MaxMembers, 
+                                    m.ApplicationUser.Name,
+                                    m.ApplicationUser.Surname,
+                                    m.Sport != null ? m.Sport.Name : "No sport"))
             .ToListAsync();
             return Ok(teams);
         }
