@@ -1,8 +1,11 @@
+using AppForSEII.API.Data;
 using AppForSEII.API.DTOs.TeamDTOs;
+using System.Net;
+
 namespace AppForSEII.API.Controllers
 {
-    [Route("api/[controller]")] 
-    [ApiController] 
+    [Route("api/[controller]")]
+    [ApiController]
     public class TeamsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -35,7 +38,7 @@ namespace AppForSEII.API.Controllers
 
             decimal result = decimal.Round(op1 / op2, 2);
 
-            return Ok(result);      
+            return Ok(result);
 
         }
 
@@ -54,19 +57,23 @@ namespace AppForSEII.API.Controllers
 
 
             IList<TeamDTO> teams = await _context.Teams
-            .Include(m=> m.Sport)
-            .Include(m=> m.ApplicationUser)
+            .Include(m => m.Sport)
+            .Include(m => m.ApplicationUser)
             .Where(m => (sport == null || (m.Sport != null && m.Sport.Name == sport))
                  && (captainName == null || (m.ApplicationUser != null && m.ApplicationUser.Name == captainName)))
-            .Select(m=>new TeamDTO(m.Id, 
-                                    m.Name, 
-                                    m.MinAge, 
-                                    m.MaxAge, 
-                                    m.MaxMembers, 
-                                    m.ApplicationUser.Name,
-                                    m.ApplicationUser.Surname,
-                                    m.Sport != null ? m.Sport.Name : "No sport"))
-            .ToListAsync();
+            .Select(m => new TeamDTO(
+                        m.Id,
+                        m.Name,
+                        m.MinAge,
+                        m.MaxAge,
+                        m.MaxMembers,
+                        m.ApplicationUser.Name,
+                        m.ApplicationUser.Surname,
+                        18,
+                        m.Sport != null ? m.Sport.Name : "No sport",
+                        new List<TeamInvitationDTO>()
+                    ))
+                    .ToListAsync();
             return Ok(teams);
         }
 
