@@ -1,7 +1,11 @@
+using AppForSEII.API.Data;
+using AppForSEII.API.DTOs.TeamDTOs;
+using System.Net;
+
 namespace AppForSEII.API.Controllers
 {
-    [Route("api/[controller]")] 
-    [ApiController] 
+    [Route("api/[controller]")]
+    [ApiController]
     public class TeamsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -34,7 +38,7 @@ namespace AppForSEII.API.Controllers
 
             decimal result = decimal.Round(op1 / op2, 2);
 
-            return Ok(result);      
+            return Ok(result);
 
         }
 
@@ -53,20 +57,71 @@ namespace AppForSEII.API.Controllers
 
 
             IList<TeamDTO> teams = await _context.Teams
-            .Include(m=> m.Sport)
-            .Include(m=> m.ApplicationUser)
+            .Include(m => m.Sport)
+            .Include(m => m.ApplicationUser)
             .Where(m => (sport == null || (m.Sport != null && m.Sport.Name == sport))
                  && (captainName == null || (m.ApplicationUser != null && m.ApplicationUser.Name == captainName)))
-            .Select(m=>new TeamDTO(m.Id, 
-                                    m.Name, 
-                                    m.MinAge, 
-                                    m.MaxAge, 
-                                    m.MaxMembers, 
-                                    m.ApplicationUser.Name,
-                                    m.ApplicationUser.Surname,
-                                    m.Sport != null ? m.Sport.Name : "No sport"))
-            .ToListAsync();
+            .Select(m => new TeamDTO(
+                        m.Id,
+                        m.Name,
+                        m.MinAge,
+                        m.MaxAge,
+                        m.MaxMembers,
+                        m.ApplicationUser.Name,
+                        m.ApplicationUser.Surname,
+                        18,
+                        m.Sport != null ? m.Sport.Name : "No sport",
+                        new List<TeamInvitationDTO>()
+                    ))
+                    .ToListAsync();
             return Ok(teams);
+        }
+
+        // GET: api/Teams
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TeamDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> GetTeam(int id)
+        {
+            if (_context.Teams == null)
+            {
+                _logger.LogError("Error: Teams table does not exist");
+                return NotFound();
+            }
+
+            var teamdto = await _context.Teams
+                .Where(t => t.Id == id)
+                .Include(t => t.Sport)
+                .Include(t => t.ApplicationUser)
+                .Include(t => t.TeamInvitations!)
+                    .ThenInclude(ti => ti.ApplicationUser!)
+                .Select(t => new TeamDTO(
+                    t.Id,
+                    t.Name,
+                    t.MinAge,
+                    t.MaxAge,
+                    t.MaxMembers,
+                    t.ApplicationUser!.Name!,
+                    t.ApplicationUser!.Surname!,
+                    t.ApplicationUser!.Age,
+                    t.Sport!.Name,
+                    t.TeamInvitations!
+                        .Select(ti => new TeamInvitationDTO(
+                            ti.ApplicationUser!.Name!,
+                            ti.ApplicationUser!.Surname!,
+                            ti.ApplicationUser!.Age,
+                            ti.InvitationMessage
+                        )).ToList<TeamInvitationDTO>()
+                ))
+                .FirstOrDefaultAsync();
+
+            if (teamdto == null)
+            {
+                _logger.LogError($"Error: Team with id {id} does not exist");
+                return NotFound();
+            }
+
+            return Ok(teamdto);
         }
 
     }
