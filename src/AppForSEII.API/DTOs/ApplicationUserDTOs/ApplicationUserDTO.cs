@@ -10,7 +10,6 @@ public class ApplicationUserDTO
     {
     }
 
-    // 5-argument constructor
     public ApplicationUserDTO(string id, string? name, string? surname, string? userName, string? phoneNumber)
     {
         Id = id;
