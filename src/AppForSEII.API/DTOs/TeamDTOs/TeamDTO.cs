@@ -1,5 +1,6 @@
 namespace AppForSEII.API.Models;
 
+
 public class TeamDTO
 {
     public TeamDTO()
@@ -34,4 +35,21 @@ public class TeamDTO
     public string? CaptainSurname { get; set; }
     public string SportName { get; set; } = "Sport name";
 
+    public override bool Equals(object? obj)
+    {
+        return obj is TeamDTO dTO &&
+               Id == dTO.Id &&
+               Name == dTO.Name &&
+               MinAge == dTO.MinAge &&
+               MaxAge == dTO.MaxAge &&
+               MaxMembers == dTO.MaxMembers &&
+               CaptainName == dTO.CaptainName &&
+               CaptainSurname == dTO.CaptainSurname &&
+               SportName == dTO.SportName;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Name, MinAge, MaxAge, MaxMembers, CaptainName, CaptainSurname, SportName);
+    }
 }
