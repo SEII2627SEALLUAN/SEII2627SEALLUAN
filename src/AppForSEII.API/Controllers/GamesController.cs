@@ -18,12 +18,14 @@ namespace AppForSEII.API.Controllers
         [HttpGet]
         [Route("[action]")]
         [ProducesResponseType(typeof(IList<GameDTO>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult> GetGame()
+        public async Task<ActionResult> GetGame(int id)
         {
-            IList<GameDTO> Games = await _context.Games
+
+            GameDTO? Game = await _context.Games
             .Include(g => g.Sport)
             .Include(g => g.GameInvitations)
                 .ThenInclude(t2 => t2.TeamInvited)
+            .Where(g => g.Id == id)
             .Select(g => new GameDTO(
                 g.Id, 
                 g.Name, 
@@ -31,12 +33,24 @@ namespace AppForSEII.API.Controllers
                 g.Place, 
                 g.Description, 
                 g.Sport != null ? g.Sport.Name : "No sport",
-                g.GameInvitations.Select(gi => new GameInvitationDTO(gi.Message, new List<TeamDTO> { new TeamDTO(gi.TeamInvited.Id, gi.TeamInvited.Name, gi.TeamInvited.MinAge, gi.TeamInvited.MaxAge, gi.TeamInvited.MaxMembers, 
-                                   gi.TeamInvited.ApplicationUser != null ? 
-                                   gi.TeamInvited.ApplicationUser.Name + " " + gi.TeamInvited.ApplicationUser.Surname 
-                                   : "No captain", gi.TeamInvited.Sport != null ? gi.TeamInvited.Sport.Name : "No sport") })).ToList<GameInvitationDTO>()
-            )).ToListAsync();
-            return Ok(Games);
+                g.GameInvitations.Select(gi => new GameInvitationDTO(
+                    gi.TeamInvited.Id,
+                    gi.TeamInvited.Name,
+                    gi.TeamInvited.MinAge,
+                    gi.TeamInvited.MaxAge,
+                    gi.TeamInvited.MaxMembers,
+                    gi.TeamInvited.ApplicationUser.Name,
+                    gi.TeamInvited.ApplicationUser.Surname,
+                    gi.TeamInvited.Sport != null ? gi.TeamInvited.Sport.Name : "No sport",
+                    gi.Message
+                )).ToList<GameInvitationDTO>()
+            )).FirstOrDefaultAsync();
+
+            if (Game == null)
+            {
+                return NotFound($"Game with id {id} not found.");
+            }
+            return Ok(Game);
         }
     }
 
