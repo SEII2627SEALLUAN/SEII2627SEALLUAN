@@ -144,10 +144,26 @@ namespace AppForSEII.API.Controllers
             }
 
             // TO-DO: 
+            var gameDetail = new GameDTO(
+                game.Id,
+                game.Name,
+                game.Date,
+                game.Place,
+                game.Description,
+                game.Sport.Name,                                   
+                game.GameInvitations.Select(gi => new GameInvitationDTO(
+                    gi.TeamInvited.Id,
+                    gi.TeamInvited.Name,
+                    gi.TeamInvited.MinAge,
+                    gi.TeamInvited.MaxAge,
+                    gi.TeamInvited.MaxMembers,
+                    gi.TeamInvited.ApplicationUser.Name,
+                    gi.TeamInvited.ApplicationUser.Surname,
+                    gi.TeamInvited.Sport.Name,
+                    gi.Message
+                )).ToList<GameInvitationDTO>());
 
-            
-
-            return Ok();
+            return CreatedAtAction("GetGame", new { id = game.Id}, gameDetail);
 
         }
 
