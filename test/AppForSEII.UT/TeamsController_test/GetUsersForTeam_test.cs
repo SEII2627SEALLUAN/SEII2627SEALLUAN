@@ -58,11 +58,9 @@ namespace AppForSEII.UT.TeamsController_test
             Mock<ILogger<TeamsController>> mockLogger = new Mock<ILogger<TeamsController>>();
             TeamsController sut = new TeamsController(mockLogger.Object, _context);
 
-
             // Act
             List<TeamInvitationDTO> expectedInvitations = new List<TeamInvitationDTO>();
             
-
             TeamDTO expectedTeam = new TeamDTO(
                 1,
                 "Soccer Stars",
