@@ -68,7 +68,7 @@ namespace AppForSEII.API.Controllers
             {
                 ModelState.AddModelError("Date", "The game date cannot be in the past.");
             }
-
+            /*
             if (gameForCreate.Place.Length <= 5) {
                 ModelState.AddModelError("Place", "The place must be more than 5 characters long.");
             }
@@ -77,8 +77,8 @@ namespace AppForSEII.API.Controllers
             {
                 ModelState.AddModelError("Message", "The message must be more than 10 characters long.");
             }
-
-            // TODO: Check if the teams in the input are correct
+            */
+            
 
             if (ModelState.ErrorCount > 0)
                 return BadRequest(new ValidationProblemDetails(ModelState));
@@ -89,10 +89,19 @@ namespace AppForSEII.API.Controllers
                         .Include(t => t.Sport)
                         .Where(t => teamNames.Contains(t.Name))
                         .ToListAsync();
+
             
             Sport sport = teams[0].Sport;
 
+            if (teams.Count < sport.MinimumNumberOfPlayers)
+            {
+                ModelState.AddModelError("GameInvitations", $"There should be at least '{sport.MinimumNumberOfPlayers}'");
+            }
+
             var user = await _context.ApplicationUsers.FirstOrDefaultAsync(au => au.Name == gameForCreate.CreatorUserName);
+
+            if (user == null)
+                ModelState.AddModelError("RentalApplicationUser", "Error! UserName is not registered");
 
             Game game = new Game(0, 
                                 gameForCreate.Name,
@@ -133,6 +142,10 @@ namespace AppForSEII.API.Controllers
                 return Conflict("Error" + ex.Message);
 
             }
+
+            // TO-DO: 
+
+            
 
             return Ok();
 

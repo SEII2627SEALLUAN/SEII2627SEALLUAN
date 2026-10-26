@@ -16,6 +16,7 @@ public class GameForCreateDTO
     public string? Place { get; set; }
 
     [Required]
+    [StringLength(50, MinimumLength = 11)]
     public string? Message { get; set; }
 
     public string? Description { get; set; }
@@ -31,6 +32,8 @@ public class GameTeamForCreateDTO
     [Required]
     public string? TeamName { get; set; }
 
+    [Required]
+    [StringLength(50, MinimumLength = 11)]
     public string? RequestMessage { get; set; }
 }
 
