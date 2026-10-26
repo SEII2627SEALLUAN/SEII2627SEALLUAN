@@ -9,7 +9,7 @@ public class GameForCreateDTO
     public string? Name { get; set; }
 
     [Required]
-    public DateTime? Date { get; set; }
+    public DateTime Date { get; set; }
 
     [Required]
     [StringLength(50, MinimumLength = 6)]
@@ -20,18 +20,17 @@ public class GameForCreateDTO
 
     public string? Description { get; set; }
 
-    [Required]
-    public IList<GameInvitationForCreateDTO> Invitations { get; set; } = new List<GameInvitationForCreateDTO>();
+    public List<GameTeamForCreateDTO> Invitations { get; set; }
+
+    public string CreatorUserName { get; set; }
 
 }
 
-
-public class GameInvitationForCreateDTO
+public class GameTeamForCreateDTO
 {
     [Required]
-    public int TeamId { get; set; }
+    public string? TeamName { get; set; }
 
-    [Required]
-    [StringLength(200, MinimumLength = 11)]
-    public string Message { get; set; } = string.Empty;
+    public string? RequestMessage { get; set; }
 }
+

@@ -78,15 +78,61 @@ namespace AppForSEII.API.Controllers
                 ModelState.AddModelError("Message", "The message must be more than 10 characters long.");
             }
 
-            if (gameForCreate.Invitations.Count == 0)
-            {
-                ModelState.AddModelError("Invitations", "At least one invitation must be provided.");
-            }
-
-            // TODO: Check that the user exists 
+            // TODO: Check if the teams in the input are correct
 
             if (ModelState.ErrorCount > 0)
                 return BadRequest(new ValidationProblemDetails(ModelState));
+
+            var teamNames = gameForCreate.Invitations.Select(i => i.TeamName).ToList();
+
+            var teams = await _context.Teams
+                        .Include(t => t.Sport)
+                        .Where(t => teamNames.Contains(t.Name))
+                        .ToListAsync();
+            
+            Sport sport = teams[0].Sport;
+
+            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(au => au.Name == gameForCreate.CreatorUserName);
+
+            Game game = new Game(0, 
+                                gameForCreate.Name,
+                                gameForCreate.Date,
+                                gameForCreate.Place,
+                                gameForCreate.Description,
+                                sport,
+                                user,
+                                new List<GameInvitation>());
+                                
+            // Add the list of game Invitations
+
+            foreach (var invitation in gameForCreate.Invitations)
+            {
+                Team? team = teams.FirstOrDefault(t => t.Name == invitation.TeamName);
+                if (team == null)
+                {
+                    ModelState.AddModelError("GameInvitations", $"Team '{invitation.TeamName}'not available ");
+                } else
+                {
+                    game.GameInvitations.Add(new GameInvitation(team, game, true, invitation.RequestMessage));
+                }
+            }
+
+            if (ModelState.ErrorCount > 0) {
+                return BadRequest(new ValidationProblemDetails(ModelState));
+            }
+
+            _context.Add(game);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                ModelState.AddModelError("Game", $"Error! There was an error while saving the game. Please, try again later");
+                return Conflict("Error" + ex.Message);
+
+            }
 
             return Ok();
 
