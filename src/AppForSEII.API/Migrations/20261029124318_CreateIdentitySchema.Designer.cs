@@ -11,11 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppForSEII.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.Designer.cs
-    [Migration("20261020141113_CreateIdentitySchema")]
-========
-    [Migration("20261014205203_CreateIdentitySchema")]
->>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.Designer.cs
+    [Migration("20261029124318_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
         /// <inheritdoc />
@@ -46,11 +42,6 @@ namespace AppForSEII.API.Migrations
                         .IsRequired()
                         .HasMaxLength(21)
                         .HasColumnType("TEXT");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -166,12 +157,8 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<string>("Message")
                         .IsRequired()
-<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.Designer.cs
-                        .HasColumnType("TEXT");
-========
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
->>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.Designer.cs
+                        .HasColumnType("TEXT");
 
                     b.HasKey("TeamId", "GameId");
 
@@ -188,25 +175,9 @@ namespace AppForSEII.API.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
 
-<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.Designer.cs
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("INTEGER");
-
-========
->>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.Designer.cs
                     b.Property<int>("Skill")
                         .HasColumnType("INTEGER");
 
-<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.Designer.cs
-                    b.Property<int>("TeamId")
-                        .HasColumnType("INTEGER");
-
-========
->>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.Designer.cs
                     b.HasKey("SportId", "UserId");
 
                     b.HasIndex("UserId");
@@ -260,12 +231,8 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<string>("CCV")
                         .IsRequired()
-<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.Designer.cs
-                        .HasColumnType("TEXT");
-========
                         .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
->>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.Designer.cs
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -274,21 +241,13 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<string>("CreditCardNumber")
                         .IsRequired()
-<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.Designer.cs
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ExpirationDate")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-========
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ExpirationDate")
                         .IsRequired()
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
->>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.Designer.cs
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Province")
                         .IsRequired()
@@ -425,11 +384,7 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.Designer.cs
                         .HasColumnType("TEXT");
-========
-                        .HasColumnType("nvarchar(450)");
->>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.Designer.cs
 
                     b.Property<int>("NumberofRefeeres")
                         .HasColumnType("INTEGER");
@@ -468,13 +423,8 @@ namespace AppForSEII.API.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.Designer.cs
-                    b.Property<int?>("SportId")
-                        .HasColumnType("INTEGER");
-========
                     b.Property<int>("SportId")
-                        .HasColumnType("int");
->>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.Designer.cs
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -493,13 +443,6 @@ namespace AppForSEII.API.Migrations
                     b.Property<int>("TeamId")
                         .HasColumnType("INTEGER");
 
-<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.Designer.cs
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-========
->>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.Designer.cs
                     b.Property<bool>("InvitationAccepted")
                         .HasColumnType("INTEGER");
 
@@ -647,7 +590,6 @@ namespace AppForSEII.API.Migrations
                     b.HasBaseType("AppForSEII.API.Models.ApplicationUser");
 
                     b.Property<int>("Rating")
-<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.Designer.cs
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("SportForRefereeId")
@@ -657,12 +599,6 @@ namespace AppForSEII.API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasIndex("SportForRefereeId");
-========
-                        .HasColumnType("int");
-
-                    b.Property<int>("YearsRefereeing")
-                        .HasColumnType("int");
->>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.Designer.cs
 
                     b.HasDiscriminator().HasValue("Referee");
                 });

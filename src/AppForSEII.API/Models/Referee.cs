@@ -8,11 +8,11 @@ public class Referee : ApplicationUser
     }
 
     public Referee(
-        string id, string? name, string? surname, string email, DateOnly birthDate, int age, 
+        string id, string name, string surname, string email, DateOnly birthDate, int age, 
         Gender gender, List<InterestedIn> interestedIn, List<TeamInvitation> teamInvitation,
         List<Team> team, int rating, int yearsRefereeing, 
         IList<RefereeAssignedTo>? refereeAssignedTos, Sport sportForReferee) :
-    base(id, name, surname, email, birthDate, age, gender, interestedIn, teamInvitation, team)
+    base(id, name, surname, birthDate, age, gender, email)
     {
         Rating = rating;
         YearsRefereeing = yearsRefereeing;
@@ -21,10 +21,11 @@ public class Referee : ApplicationUser
     }
 
     public Referee(
-        string id, string? name, string? surname, string email,
+        string id, string name, string surname, string email,
+        DateOnly birthDate, int age, Gender gender,
         int rating, int yearsRefereeing, 
         IList<RefereeAssignedTo>? refereeAssignedTos, Sport sportForReferee) :
-    base(id, name, surname, email)
+    base(id, name, surname, birthDate, age, gender, email)
     {
         Rating = rating;
         YearsRefereeing = yearsRefereeing;

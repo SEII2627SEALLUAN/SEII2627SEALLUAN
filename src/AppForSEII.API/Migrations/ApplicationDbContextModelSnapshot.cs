@@ -33,12 +33,12 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -155,7 +155,7 @@ namespace AppForSEII.API.Migrations
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("TeamId", "GameId");
 
@@ -229,7 +229,7 @@ namespace AppForSEII.API.Migrations
                     b.Property<string>("CCV")
                         .IsRequired()
                         .HasMaxLength(3)
-                        .HasColumnType("nvarchar(3)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -239,12 +239,12 @@ namespace AppForSEII.API.Migrations
                     b.Property<string>("CreditCardNumber")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ExpirationDate")
                         .IsRequired()
                         .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Province")
                         .IsRequired()
@@ -381,7 +381,7 @@ namespace AppForSEII.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("NumberofRefeeres")
                         .HasColumnType("INTEGER");
@@ -421,7 +421,7 @@ namespace AppForSEII.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SportId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -587,10 +587,15 @@ namespace AppForSEII.API.Migrations
                     b.HasBaseType("AppForSEII.API.Models.ApplicationUser");
 
                     b.Property<int>("Rating")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SportForRefereeId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("YearsRefereeing")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
+
+                    b.HasIndex("SportForRefereeId");
 
                     b.HasDiscriminator().HasValue("Referee");
                 });
@@ -858,6 +863,11 @@ namespace AppForSEII.API.Migrations
                     b.Navigation("GameInvitations");
 
                     b.Navigation("TeamInvitations");
+                });
+
+            modelBuilder.Entity("AppForSEII.API.Models.Referee", b =>
+                {
+                    b.Navigation("RefereeAssignedTos");
                 });
 #pragma warning restore 612, 618
         }

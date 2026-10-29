@@ -146,7 +146,11 @@ namespace AppForSEII.API.Data
 
             if(userManager.FindByNameAsync("lucas@uclm.es").Result == null)
             {
-                Referee referee = new Referee("5", "Lucas", "Lopez", "lucas@uclm.es", 10, 20, [], sports[0]);
+                DateOnly date = new DateOnly(1985, 2, 15);
+                Referee referee = new Referee(
+                    "5", "Lucas", "Lopez", "lucas@uclm.es",
+                    date, 41, Gender.Male,
+                     10, 20, [], sports[0]);
                 referee.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(referee, "Password1234%");
@@ -160,7 +164,11 @@ namespace AppForSEII.API.Data
 
             if(userManager.FindByNameAsync("john@uclm.es").Result == null)
             {
-                Referee referee = new Referee("7", "John", "Smith", "john@uclm.es", 1, 0, [], sports[1]);
+                DateOnly date = new DateOnly(2000, 11, 5);
+                Referee referee = new Referee(
+                    "7", "John", "Smith", "john@uclm.es",
+                    date, 26, Gender.Male,
+                 1, 0, [], sports[1]);
                 referee.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(referee, "Password1234%");
@@ -172,9 +180,14 @@ namespace AppForSEII.API.Data
                 }
             }
 
-            if(userManager.FindByNameAsync("maria@uclm.es").Result == null)
+            if(userManager.FindByNameAsync("mariaMartinez@uclm.es").Result == null)
             {
-                Referee referee = new Referee("9", "Maria", "Martinez", "maria@uclm.es", 7, 10, [], sports[2]);
+                DateOnly date = new DateOnly(1996, 3, 25);
+
+                Referee referee = new Referee(
+                    "9", "Maria", "Martinez", "mariaMartinez@uclm.es",
+                    date, 30, Gender.Female,
+                     7, 10, [], sports[2]);
                 referee.EmailConfirmed = true;
 
                 var result = userManager.CreateAsync(referee, "Password1234%");
