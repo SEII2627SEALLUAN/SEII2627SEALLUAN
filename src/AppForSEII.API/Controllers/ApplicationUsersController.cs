@@ -2,7 +2,12 @@ using AppForSEII.API.DTOs.ApplicationUserDTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
+using AppForSEII.API.Data;
+using AppForSEII.API.DTOs.ApplicationUserDTO;
+using AppForSEII.API.Models; 
+using AppForSEII.API.DTOs.TeamDTOs;
+
+
 
 namespace AppForSEII.API.Controllers
 {
