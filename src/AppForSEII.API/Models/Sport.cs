@@ -1,4 +1,5 @@
 ﻿namespace AppForSEII.API.Models;
+[Index(nameof(Name), IsUnique = true)]
 public class Sport
 {
     public Sport()
@@ -14,13 +15,23 @@ public class Sport
         BasicRules = basicRules;
     }
 
+    public Sport( string name, int minimumNumberOfPlayers, int numberofRefeeres, string description, string basicRules)
+    {
+      
+        Name = name;
+        MinimumNumberOfPlayers = minimumNumberOfPlayers;
+        NumberofRefeeres = numberofRefeeres;
+        Description = description;
+        BasicRules = basicRules;
+    }
+
     [Key]
     public int Id { get; set; }
     [Required]
     public string Name { get; set; } = "Game";
-    [Required]
+    [Range(2, 100)]
     public int MinimumNumberOfPlayers { get; set; } = 2;
-    [Required]
+    [Range(1, 10)]
     public int NumberofRefeeres { get; set; } = 1;
     [Required]
     public string Description { get; set; } = "Description";

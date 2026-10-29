@@ -8,6 +8,8 @@ public class ApplicationUserDTO
     public ApplicationUserDTO()
     {
     }
+
+    // Original constructor (kept as it was)
     public ApplicationUserDTO(string id, string? name, string? surname, string? userName, string? phoneNumber )
     {
         Id = id;
@@ -18,6 +20,14 @@ public class ApplicationUserDTO
         PhoneNumber=phoneNumber;
     }
 
+    // NEW (Create Team): same data plus age and skill
+    public ApplicationUserDTO(string id, string? name, string? surname, int age, string? userName, string? phoneNumber, string skill )
+        : this(id, name, surname, userName, phoneNumber)
+    {
+        Age = age;
+        Skill = skill;
+    }
+
     [StringLength(50)]
     public string? Id {get;set;}
 
@@ -26,6 +36,8 @@ public class ApplicationUserDTO
 
     [StringLength(50)]
     public string? Surname {get;set;}
+
+    public int Age { get; set; }
 
     [StringLength(50)]
     public string? UserName{get;set;}
@@ -42,6 +54,7 @@ public class ApplicationUserDTO
                Id == dTO.Id &&
                Name == dTO.Name &&
                Surname == dTO.Surname &&
+               Age == dTO.Age &&
                UserName == dTO.UserName &&
                Email == dTO.Email &&
                PhoneNumber == dTO.PhoneNumber;
@@ -49,6 +62,7 @@ public class ApplicationUserDTO
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Id, Name, Surname, UserName, Email, PhoneNumber);
+        return HashCode.Combine(Id, Name, Surname, Age, UserName, Email, PhoneNumber);
     }
+    public string Skill {get;set;} = string.Empty;
 }

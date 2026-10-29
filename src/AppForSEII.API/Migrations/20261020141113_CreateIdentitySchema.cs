@@ -26,6 +26,7 @@ namespace AppForSEII.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.cs
                 name: "Sports",
                 columns: table => new
                 {
@@ -36,6 +37,67 @@ namespace AppForSEII.API.Migrations
                     NumberofRefeeres = table.Column<int>(type: "INTEGER", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: false),
                     BasicRules = table.Column<string>(type: "TEXT", nullable: false)
+========
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BirthDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: true),
+                    YearsRefereeing = table.Column<int>(type: "int", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefereeGroups",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Rules = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GameId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefereeGroups", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sports",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MinimumNumberOfPlayers = table.Column<int>(type: "int", nullable: false),
+                    NumberofRefeeres = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BasicRules = table.Column<string>(type: "nvarchar(max)", nullable: false)
+>>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.cs
                 },
                 constraints: table =>
                 {
@@ -213,6 +275,39 @@ namespace AppForSEII.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.cs
+========
+                name: "Purchases",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PurchaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PurchaseDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TotalPrice = table.Column<double>(type: "float", nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    City = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Province = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    CreditCardNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    CCV = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    ExpirationDate = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    Wrapped = table.Column<bool>(type: "bit", nullable: false),
+                    PurchaseStatus = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Purchases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Purchases_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+>>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.cs
                 name: "Games",
                 columns: table => new
                 {
@@ -241,7 +336,36 @@ namespace AppForSEII.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.cs
                 name: "Purchases",
+========
+                name: "InterestedIn",
+                columns: table => new
+                {
+                    SportId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Skill = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InterestedIn", x => new { x.SportId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_InterestedIn_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InterestedIn_Sports_SportId",
+                        column: x => x.SportId,
+                        principalTable: "Sports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Items",
+>>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.cs
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -274,6 +398,7 @@ namespace AppForSEII.API.Migrations
                 name: "Teams",
                 columns: table => new
                 {
+<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.cs
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
@@ -283,6 +408,17 @@ namespace AppForSEII.API.Migrations
                     MaxAge = table.Column<int>(type: "INTEGER", nullable: false),
                     SportId = table.Column<int>(type: "INTEGER", nullable: true),
                     ApplicationUserId = table.Column<string>(type: "TEXT", nullable: true)
+========
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaxMembers = table.Column<int>(type: "int", nullable: false),
+                    MinAge = table.Column<int>(type: "int", nullable: false),
+                    MaxAge = table.Column<int>(type: "int", nullable: false),
+                    SportId = table.Column<int>(type: "int", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+>>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.cs
                 },
                 constraints: table =>
                 {
@@ -296,7 +432,8 @@ namespace AppForSEII.API.Migrations
                         name: "FK_Teams_Sports_SportId",
                         column: x => x.SportId,
                         principalTable: "Sports",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -351,10 +488,17 @@ namespace AppForSEII.API.Migrations
                 name: "GameInvitations",
                 columns: table => new
                 {
+<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.cs
                     TeamId = table.Column<int>(type: "INTEGER", nullable: false),
                     GameId = table.Column<int>(type: "INTEGER", nullable: false),
                     AcceptedGame = table.Column<bool>(type: "INTEGER", nullable: false),
                     Message = table.Column<string>(type: "TEXT", nullable: false)
+========
+                    TeamId = table.Column<int>(type: "int", nullable: false),
+                    GameId = table.Column<int>(type: "int", nullable: false),
+                    AcceptedGame = table.Column<bool>(type: "bit", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+>>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.cs
                 },
                 constraints: table =>
                 {
@@ -374,6 +518,7 @@ namespace AppForSEII.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+<<<<<<<< HEAD:src/AppForSEII.API/Migrations/20261020141113_CreateIdentitySchema.cs
                 name: "InterestedIn",
                 columns: table => new
                 {
@@ -416,13 +561,22 @@ namespace AppForSEII.API.Migrations
                     InvitationAccepted = table.Column<bool>(type: "INTEGER", nullable: false),
                     InvitationMessage = table.Column<string>(type: "TEXT", nullable: false),
                     ApplicationUserId = table.Column<string>(type: "TEXT", nullable: false)
+========
+                name: "TeamInvitations",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TeamId = table.Column<int>(type: "int", nullable: false),
+                    InvitationAccepted = table.Column<bool>(type: "bit", nullable: false),
+                    InvitationMessage = table.Column<string>(type: "nvarchar(max)", nullable: false)
+>>>>>>>> origin/development:src/AppForSEII.API/Migrations/20261014205203_CreateIdentitySchema.cs
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TeamInvitations", x => new { x.UserId, x.TeamId });
                     table.ForeignKey(
-                        name: "FK_TeamInvitations_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_TeamInvitations_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -519,14 +673,9 @@ namespace AppForSEII.API.Migrations
                 column: "SportId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InterestedIn_ApplicationUserId",
+                name: "IX_InterestedIn_UserId",
                 table: "InterestedIn",
-                column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_InterestedIn_TeamId",
-                table: "InterestedIn",
-                column: "TeamId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Items_Name",
@@ -567,9 +716,10 @@ namespace AppForSEII.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TeamInvitations_ApplicationUserId",
-                table: "TeamInvitations",
-                column: "ApplicationUserId");
+                name: "IX_Sports_Name",
+                table: "Sports",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_TeamInvitations_TeamId",
