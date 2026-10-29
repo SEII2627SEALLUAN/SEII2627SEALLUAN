@@ -17,6 +17,16 @@ public class GameInvitation
         Message = message;
     }
 
+    public GameInvitation(Team team, Game game, bool acceptedGame, string message)
+    {
+        TeamId = team.Id;
+        TeamInvited = team;
+        GameId = game.Id;
+        GameInvited = game;
+        AcceptedGame = acceptedGame;
+        Message = message;
+    }
+
     public int TeamId { get; set; }
 
     [ForeignKey(nameof(TeamId))]
