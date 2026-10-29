@@ -195,14 +195,14 @@ namespace AppForSEII.API.Controllers
                 minAge: teamCreate.MinAge,
                 maxAge: teamCreate.MaxAge,
                 sport: sport!,
-                gameInvitations: null
+                gameInvitations: null   
             );
             team.ApplicationUser = captain;
             team.TeamInvitations = new List<TeamInvitation>();
 
             List<TeamInvitationDTO> invitationDTOs = new List<TeamInvitationDTO>();
 
-            foreach (var invitationDto in teamCreate.TeamInvitations)
+            foreach (var invitationDto in teamCreate.TeamInvitations!)
             {
                 var invitedUser = invitedUsers.First(u => u.UserName == invitationDto.PlayerUserName);
 
