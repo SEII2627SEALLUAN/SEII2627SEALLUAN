@@ -1,13 +1,14 @@
 using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs.ApplicationUserDTO;
-using AppForSEII.API.DTOs.TeamDTOs;
 using AppForSEII.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace AppForSEII.UT.TeamsController_test
 {
@@ -15,7 +16,8 @@ namespace AppForSEII.UT.TeamsController_test
     {
         public GetUsersForTeam_test()
         {
-            var sport = new Sport(
+            // setting up test sports
+            var soccer = new Sport(
                 name: "Soccer",
                 minimumNumberOfPlayers: 2,
                 numberofRefeeres: 1,
@@ -23,77 +25,100 @@ namespace AppForSEII.UT.TeamsController_test
                 basicRules: "Rules of Soccer"
             );
 
-            var captain = new ApplicationUser(
-                "1",
-                "Elena",
-                "Navarro Martínez",
-                new DateOnly(1985, 5, 20),
-                41,
-                Gender.Female,
-                "elena@uclm.es"
+            var basketball = new Sport(
+                name: "Basketball",
+                minimumNumberOfPlayers: 5,
+                numberofRefeeres: 2,
+                description: "Description of Basketball",
+                basicRules: "Rules of Basketball"
             );
 
-            var team = new Team(
-                id: 1,
-                name: "Soccer Stars",
-                description: "A team created in 1999",
-                maxMembers: 12,
-                minAge: 18,
-                maxAge: 40,
-                sport: sport,
-                gameInvitations: null
-            );
-            team.ApplicationUser = captain;
+            // setting up test users
+            var user1 = new ApplicationUser("1", "Ana", "García", new DateOnly(2004, 1, 1), 22, Gender.Female, "ana@uclm.es");
+            user1.PhoneNumber = "123456789";
 
-            _context.Sports.Add(sport);
-            _context.ApplicationUsers.Add(captain);
-            _context.Teams.Add(team);
+            var user2 = new ApplicationUser("2", "Carlos", "Pérez", new DateOnly(2001, 5, 10), 25, Gender.Male, "carlos@uclm.es");
+            user2.PhoneNumber = "987654321";
+
+            var user3 = new ApplicationUser("3", "Bea", "López", new DateOnly(2004, 3, 15), 22, Gender.Female, "bea@uclm.es");
+            user3.PhoneNumber = "456123789";
+
+            // assigning sports and skills to users
+            user1.InterestedIn = new List<InterestedIn> { new InterestedIn(soccer, user1.Id, 4) };
+            user2.InterestedIn = new List<InterestedIn> { new InterestedIn(soccer, user2.Id, 3), new InterestedIn(basketball, user2.Id, 5) };
+            user3.InterestedIn = new List<InterestedIn> { new InterestedIn(basketball, user3.Id, 2) };
+
+            _context.Sports.Add(soccer);
+            _context.Sports.Add(basketball);
+            _context.ApplicationUsers.Add(user1);
+            _context.ApplicationUsers.Add(user2);
+            _context.ApplicationUsers.Add(user3);
             _context.SaveChanges();
         }
 
-        [Fact]
-        public async Task GetTeam_Successful_Test()
+        public static IEnumerable<object?[]> TestCasesFor_GetUsersForTeam_OK()
+        {
+            var dto1 = new ApplicationUserDTO("1", "Ana", "García", 22, "ana@uclm.es", "123456789");
+            var dto2 = new ApplicationUserDTO("2", "Carlos", "Pérez", 25, "carlos@uclm.es", "987654321");
+            var dto3 = new ApplicationUserDTO("3", "Bea", "López", 22, "bea@uclm.es", "456123789");
+
+            var userDTOsTC1 = new List<ApplicationUserDTO> { dto1, dto2 }
+                .OrderBy(u => u.Name).ThenBy(u => u.Surname).ToList();
+
+            var userDTOsTC2 = new List<ApplicationUserDTO> { dto1 }
+                .OrderBy(u => u.Name).ThenBy(u => u.Surname).ToList();
+
+            var userDTOsTC3 = new List<ApplicationUserDTO> { dto2, dto3 }
+                .OrderBy(u => u.Name).ThenBy(u => u.Surname).ToList();
+
+            var allTests = new List<object?[]>
+            {
+                // filters to apply and expected results
+                new object?[] { "Soccer", (int?)null, userDTOsTC1 },
+                new object?[] { "Soccer", (int?)22, userDTOsTC2 },
+                new object?[] { "Basketball", (int?)null, userDTOsTC3 },
+            };
+
+            return allTests;
+        }
+
+        [Theory]
+        [MemberData(nameof(TestCasesFor_GetUsersForTeam_OK))]
+        [Trait("Database", "WithoutFixture")]
+        [Trait("LevelTesting", "Unit Testing")]
+        public async Task GetUsersForTeam_OK_test(string sport, int? age, IList<ApplicationUserDTO> expectedUsers)
         {
             // Arrange
-            Mock<ILogger<TeamsController>> mockLogger = new Mock<ILogger<TeamsController>>();
-            TeamsController sut = new TeamsController(mockLogger.Object, _context);
+            var mock = new Mock<ILogger<ApplicationUsersController>>();
+            ILogger<ApplicationUsersController> logger = mock.Object;
+            var controller = new ApplicationUsersController(_context, logger);
 
             // Act
-            List<TeamInvitationDTO> expectedInvitations = new List<TeamInvitationDTO>();
-            
-            TeamDTO expectedTeam = new TeamDTO(
-                1,
-                "Soccer Stars",
-                18,
-                40,
-                12,
-                "Elena",
-                "Navarro Martínez",
-                41,
-                "Soccer",
-                expectedInvitations
-            );
-
-            var result = await sut.GetTeam(1);
+            var result = await controller.GetUsersForTeam(sport, age);
 
             // Assert
-            var okresult = Assert.IsType<OkObjectResult>(result);
-            var teamDetailActual = Assert.IsType<TeamDTO>(okresult.Value);
-            Assert.Equal(expectedTeam, teamDetailActual);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var userDTOsActual = Assert.IsType<List<ApplicationUserDTO>>(okResult.Value);
+            Assert.Equal(expectedUsers, userDTOsActual);
         }
 
         [Fact]
-        public async Task GetTeam_NotFound_test()
+        [Trait("LevelTesting", "Unit Testing")]
+        [Trait("Database", "WithoutFixture")]
+        public async Task GetUsersForTeam_badrequest_test()
         {
             // Arrange
-            Mock<ILogger<TeamsController>> mockLogger = new Mock<ILogger<TeamsController>>();
-            TeamsController sut = new TeamsController(mockLogger.Object, _context);
+            var mock = new Mock<ILogger<ApplicationUsersController>>();
+            ILogger<ApplicationUsersController> logger = mock.Object;
+            var controller = new ApplicationUsersController(_context, logger);
 
-            // Act
-            var result = await sut.GetTeam(0);
+            // Act no match to any user
+            var result = await controller.GetUsersForTeam("Tennis", 99);
 
             // Assert
-            Assert.IsType<NotFoundResult>(result);
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var userDTOsActual = Assert.IsType<List<ApplicationUserDTO>>(okResult.Value);
+            Assert.Empty(userDTOsActual);
         }
     }
 }
