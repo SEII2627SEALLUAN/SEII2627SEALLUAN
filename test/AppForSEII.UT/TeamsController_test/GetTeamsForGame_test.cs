@@ -1,15 +1,15 @@
 using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs;
+using AppForSEII.API.DTOs.TeamDTOs;
 using AppForSEII.API.Models;
 using NuGet.Protocol.Core.Types;
 
 namespace AppForSEII.UT.TeamsController_test
 {
-    class GetTeamsForGame_test: AppForSEII4SqliteUT
+    public class GetTeamsForGame_test: AppForSEII4SqliteUT
     {
-        private readonly ApplicationDbContext _context;
 
-        public GetTeamsForGame_test(ApplicationDbContext dbContext)
+        public GetTeamsForGame_test()
         {
             /*
             var soccer = dbContext.Sports.FirstOrDefault(s => s.Name == "Soccer");
@@ -34,6 +34,9 @@ namespace AppForSEII.UT.TeamsController_test
                 new Team(2, "Wild Animals", "A team created in 2005", 12, 18, 40, soccer, new List<GameInvitation>())
             };
 
+            teams[0].ApplicationUser = firstUser;
+            teams[1].ApplicationUser = firstUser;
+
             var gameInvitations = new List<GameInvitation>()
             {
                 new GameInvitation(teams[0], game, true, "The game is starting"),
@@ -48,19 +51,38 @@ namespace AppForSEII.UT.TeamsController_test
 
             
 
-            dbContext.Add(soccer);
-            dbContext.Add(firstUser);
-            dbContext.Add(game);
-            dbContext.AddRange(teams);
-            dbContext.AddRange(gameInvitations);
-            dbContext.SaveChanges();
+            _context.Add(soccer);
+            _context.Add(firstUser);
+            _context.Add(game);
+            _context.AddRange(teams);
+            _context.AddRange(gameInvitations);
+            _context.SaveChanges();
 
         }
 
-        
-        public async Task GetTeamsForGameDoesntExist_test(TeamsController controller)
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        [Trait("Database", "WithoutFixture")]
+        public async Task GetTeamsBothValid_test()
         {
-            
+            // Arrange
+            var mock = new Mock<ILogger<TeamsController>>();
+            ILogger<TeamsController> logger = mock.Object;
+            TeamsController controller = new TeamsController(logger, _context);
+
+            var expectedTeams = new List<TeamDTO>()
+            {
+                new TeamDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", new List<TeamInvitationDTO>()),
+                new TeamDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", new List<TeamInvitationDTO>())
+            };
+
+            // Act
+            var result = await controller.GetTeamsForGame("Soccer", "Elena");
+
+            // Assert 
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var teamsActualResult = Assert.IsType<List<TeamDTO>>(okResult.Value);
+            Assert.Equal(expectedTeams, teamsActualResult);
         }
             
 
