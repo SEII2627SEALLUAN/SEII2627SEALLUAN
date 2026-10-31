@@ -18,5 +18,15 @@ public class GameInvitationDTO: TeamDTO
 
     public string Message { get; set; } = "Default message";
 
+    public override bool Equals(object? obj)
+    {
+        return obj is GameInvitationDTO dTO &&
+               base.Equals(obj) &&
+               Message == dTO.Message;
+    }
 
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(base.GetHashCode(), Message);
+    }
 }
