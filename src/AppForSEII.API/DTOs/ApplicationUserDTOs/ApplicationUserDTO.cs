@@ -64,8 +64,7 @@ public class ApplicationUserDTO
                UserName == dTO.UserName &&
                Email == dTO.Email &&
                PhoneNumber == dTO.PhoneNumber &&
-               Skill == dTO.Skill;
-    }
+               Skill == dTO.Skill;  }
 
     public override int GetHashCode()
     {
