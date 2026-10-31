@@ -18,10 +18,11 @@ namespace AppForSEII.UT.TeamsController_test
         private const string _userName = "Elena";
         private const string _userSurname = "Navarro Martínez";
         private const string _sportName = "Soccer";
+        private const string _playerEmail = "player@uclm.es";
+        private const string _playerUserName = "Player";
 
         public CreateTeam_test()
         {
-            // setting up test sport
             var sport = new Sport(
                 name: _sportName,
                 minimumNumberOfPlayers: 2,
@@ -30,7 +31,6 @@ namespace AppForSEII.UT.TeamsController_test
                 basicRules: "Rules of Soccer"
             );
 
-            // setting up test captain user
             var captain = new ApplicationUser(
                 "1",
                 _userName,
@@ -41,8 +41,19 @@ namespace AppForSEII.UT.TeamsController_test
                 _userEmail
             );
 
+            var invitedPlayer = new ApplicationUser(
+                "2",
+                _playerUserName,
+                "Player Surname",
+                new DateOnly(1995, 1, 1),
+                30,
+                Gender.Male,
+                _playerEmail
+            );
+
             _context.Sports.Add(sport);
             _context.ApplicationUsers.Add(captain);
+            _context.ApplicationUsers.Add(invitedPlayer);
             _context.SaveChanges();
         }
 
@@ -55,7 +66,6 @@ namespace AppForSEII.UT.TeamsController_test
 
             var allTests = new List<object[]>
             {
-                // input for create team - expected error message start
                 new object[] { teamSportNotExist, "Error! Selected sport does not exist." },
                 new object[] { teamUserNotExist, "Error! Captain user is not registered" },
             };
@@ -69,23 +79,18 @@ namespace AppForSEII.UT.TeamsController_test
         [MemberData(nameof(TestCasesFor_CreateTeam_Error))]
         public async Task CreateTeam_Error_test(TeamForCreateDTO teamDTO, string errorExpected)
         {
-            // arrange
             var mock = new Mock<ILogger<TeamsController>>();
             ILogger<TeamsController> logger = mock.Object;
 
             var controller = new TeamsController(logger, _context);
 
-            // act
             var result = await controller.CreateTeam(teamDTO);
 
-            // assert
-            // check that the response type is BadRequest and obtain the error returned
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
 
             var errorActual = problemDetails.Errors.First().Value[0];
 
-            // check that the expected error message and actual start with the same text
             Assert.StartsWith(errorExpected, errorActual);
         }
 
@@ -94,13 +99,16 @@ namespace AppForSEII.UT.TeamsController_test
         [Trait("Database", "WithoutFixture")]
         public async Task CreateTeam_Success_test()
         {
-            // arrange
             var mock = new Mock<ILogger<TeamsController>>();
             ILogger<TeamsController> logger = mock.Object;
 
             var controller = new TeamsController(logger, _context);
 
-            var teamInvitations = new List<TeamInvitationCreateDTO>();
+            var teamInvitations = new List<TeamInvitationCreateDTO>
+            {
+                new TeamInvitationCreateDTO(_playerEmail, "Join our team!")
+            };
+
             var teamDTO = new TeamForCreateDTO(
                 "SocStars",
                 "A team created",
@@ -112,7 +120,11 @@ namespace AppForSEII.UT.TeamsController_test
                 teamInvitations
             );
 
-            var expectedInvitations = new List<TeamInvitationDTO>();
+            var expectedInvitations = new List<TeamInvitationDTO>
+            {
+                new TeamInvitationDTO(_playerUserName, "Player Surname", 30, "Join our team!")
+            };
+
             var expectedTeamDetail = new TeamDTO(
                 1,
                 "SocStars",
@@ -126,20 +138,11 @@ namespace AppForSEII.UT.TeamsController_test
                 expectedInvitations
             );
 
-            // act
             var result = await controller.CreateTeam(teamDTO);
 
-            // assert
-            if (result is BadRequestObjectResult badRequest && badRequest.Value is ValidationProblemDetails problemDetails)
-            {
-                var firstError = problemDetails.Errors.First().Value[0];
-                Assert.Fail($"Validation failed with error: {firstError}");
-            }
-
-            var createdResult = Assert.IsType<CreatedAtActionResult>(result);
-            var actualTeamDTO = Assert.IsType<TeamDTO>(createdResult.Value);
-
-            Assert.Equal(expectedTeamDetail, actualTeamDTO);
+            var okresult = Assert.IsType<CreatedAtActionResult>(result);
+            var actualresult = Assert.IsType<TeamDTO>(okresult.Value);
+            Assert.Equal(expectedTeamDetail, actualresult);
         }
     }
 }
