@@ -18,6 +18,7 @@ namespace AppForSEII.UT.TeamsController_test
             */
 
             var soccer = new Sport("Soccer", 2, 3, "Soccer", "The referee has authority");
+            var basketball = new Sport("Basketball", 2, 3, "Basketball","Don't touch with feet");
             var firstUser = new ApplicationUser("0", "Elena", "Navarro", new DateOnly(2026, 11, 10), 30, Gender.Female, "elena@uclm.es");
 
             var game = new Game(1, "Friendly match", 
@@ -31,11 +32,13 @@ namespace AppForSEII.UT.TeamsController_test
             var teams = new List<Team>()
             {
                 new Team(1, "Soccer Stars", "A team created in 2019", 12, 18, 40, soccer, new List<GameInvitation>()),
-                new Team(2, "Wild Animals", "A team created in 2005", 12, 18, 40, soccer, new List<GameInvitation>())
+                new Team(2, "Wild Animals", "A team created in 2005", 12, 18, 40, soccer, new List<GameInvitation>()),
+                new Team(3, "Tall Beasts", "A team created in 2007", 12, 18, 40, basketball, new List<GameInvitation>())
             };
 
             teams[0].ApplicationUser = firstUser;
             teams[1].ApplicationUser = firstUser;
+            teams[2].ApplicationUser = firstUser;
 
             var gameInvitations = new List<GameInvitation>()
             {
@@ -52,6 +55,7 @@ namespace AppForSEII.UT.TeamsController_test
             
 
             _context.Add(soccer);
+            _context.Add(basketball);
             _context.Add(firstUser);
             _context.Add(game);
             _context.AddRange(teams);
@@ -84,7 +88,50 @@ namespace AppForSEII.UT.TeamsController_test
             var teamsActualResult = Assert.IsType<List<TeamDTO>>(okResult.Value);
             Assert.Equal(expectedTeams, teamsActualResult);
         }
-            
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        [Trait("Database", "WithoutFixture")]
+        public async Task GetTeamsNULLSportDefaultSport()
+        {
+            // Arrange 
+            var mock = new Mock<ILogger<TeamsController>>();
+            ILogger<TeamsController> logger = mock.Object;
+            TeamsController controller = new TeamsController(logger, _context);
+
+            var expectedTeams = new List<TeamDTO>()
+            {
+                new TeamDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", new List<TeamInvitationDTO>()),
+                new TeamDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", new List<TeamInvitationDTO>())
+            };
+
+            // Act
+            var result = await controller.GetTeamsForGame(null, "Elena");
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var teamsActualResult = Assert.IsType<List<TeamDTO>>(okResult.Value);
+            Assert.Equal(expectedTeams, teamsActualResult);
+        }
+        
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        [Trait("Database", "WithoutFixture")]
+        public async Task GetTeamsUnknownUserReturnsEmpty()
+        {
+            // Arrange 
+            var mock = new Mock<ILogger<TeamsController>>();
+            ILogger<TeamsController> logger = mock.Object;
+            TeamsController controller = new TeamsController(logger, _context);
+
+            // Act
+            var result = await controller.GetTeamsForGame("Soccer", "Carlos");
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            var teams = Assert.IsType<List<TeamDTO>>(okResult.Value);
+            Assert.Empty(teams);
+        }
 
     }    
 }
