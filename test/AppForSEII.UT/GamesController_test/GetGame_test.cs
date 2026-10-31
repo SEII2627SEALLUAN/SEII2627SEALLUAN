@@ -75,8 +75,8 @@ namespace AppForSEII.UT.GamesController_test
                                             "Soccer", 
                                             new List<GameInvitationDTO>()
                                             {
-                                                new GameInvitationDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", "The game is starting"),
-                                                new GameInvitationDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", "The game is starting")
+                                                new GameInvitationDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", "The game is starting"),
+                                                new GameInvitationDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", "The game is starting")
                                             });
 
             // Act
@@ -88,6 +88,24 @@ namespace AppForSEII.UT.GamesController_test
             Assert.Equal(expectedGame, actualGame);
 
 
+        }
+
+        [Fact]
+        [Trait("LevelTesting", "Unit Testing")]
+        [Trait("Database", "WithoutFixture")]
+        public async Task GameDoesntExist_test()
+        {
+            // Arrange
+            var mock = new Mock<ILogger<GamesController>>();
+            ILogger<GamesController> logger = mock.Object;
+            GamesController controller = new GamesController(_context, logger);
+
+            // Act
+            var result = await controller.GetGame(22);
+
+            // Assert
+            var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+            Assert.Equal("Game with id 22 not found.", notFoundResult.Value);
         }
 
     }

@@ -41,6 +41,7 @@ namespace AppForSEII.API.Controllers
                     gi.TeamInvited.MaxMembers,
                     gi.TeamInvited.ApplicationUser.Name,
                     gi.TeamInvited.ApplicationUser.Surname,
+                    gi.TeamInvited.ApplicationUser.Age,
                     gi.TeamInvited.Sport != null ? gi.TeamInvited.Sport.Name : "No sport",
                     gi.Message
                 )).ToList<GameInvitationDTO>()
@@ -160,6 +161,7 @@ namespace AppForSEII.API.Controllers
                     gi.TeamInvited.MaxMembers,
                     gi.TeamInvited.ApplicationUser.Name,
                     gi.TeamInvited.ApplicationUser.Surname,
+                    gi.TeamInvited.ApplicationUser.Age,
                     gi.TeamInvited.Sport.Name,
                     gi.Message
                 )).ToList<GameInvitationDTO>());

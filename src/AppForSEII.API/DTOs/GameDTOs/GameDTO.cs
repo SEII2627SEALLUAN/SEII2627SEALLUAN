@@ -45,7 +45,7 @@ public class GameDTO
                Place == dTO.Place &&
                Description == dTO.Description &&
                SportName == dTO.SportName &&
-               EqualityComparer<IList<GameInvitationDTO>>.Default.Equals(GameInvitations, dTO.GameInvitations);
+               GameInvitations.SequenceEqual(dTO.GameInvitations);
     }
 
     public override int GetHashCode()
