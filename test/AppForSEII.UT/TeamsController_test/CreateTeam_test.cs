@@ -108,7 +108,7 @@ namespace AppForSEII.UT.TeamsController_test
                 18,
                 40,
                 _sportName,
-                _userName, // Changed from _userEmail to _userName ("Elena")
+                _userEmail,
                 teamInvitations
             );
 
@@ -130,6 +130,12 @@ namespace AppForSEII.UT.TeamsController_test
             var result = await controller.CreateTeam(teamDTO);
 
             // assert
+            if (result is BadRequestObjectResult badRequest && badRequest.Value is ValidationProblemDetails problemDetails)
+            {
+                var firstError = problemDetails.Errors.First().Value[0];
+                Assert.Fail($"Validation failed with error: {firstError}");
+            }
+
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
             var actualTeamDTO = Assert.IsType<TeamDTO>(createdResult.Value);
 
