@@ -25,6 +25,22 @@ public class GameForCreateDTO
 
     public string CreatorUserName { get; set; }
 
+    public override bool Equals(object? obj)
+    {
+        return obj is GameForCreateDTO dTO &&
+               Name == dTO.Name &&
+               Date == dTO.Date &&
+               Place == dTO.Place &&
+               Message == dTO.Message &&
+               Description == dTO.Description &&
+               EqualityComparer<List<GameTeamForCreateDTO>>.Default.Equals(Invitations, dTO.Invitations) &&
+               CreatorUserName == dTO.CreatorUserName;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, Date, Place, Message, Description, Invitations, CreatorUserName);
+    }
 }
 
 public class GameTeamForCreateDTO
@@ -35,5 +51,17 @@ public class GameTeamForCreateDTO
     [Required]
     [StringLength(50, MinimumLength = 11)]
     public string? RequestMessage { get; set; }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is GameTeamForCreateDTO dTO &&
+               TeamName == dTO.TeamName &&
+               RequestMessage == dTO.RequestMessage;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(TeamName, RequestMessage);
+    }
 }
 
