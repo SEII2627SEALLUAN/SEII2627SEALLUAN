@@ -5,6 +5,17 @@ public class GameForCreateDTO
 {
     public GameForCreateDTO() {}
 
+    public GameForCreateDTO(string? name, DateTime date, string? place, string? message, string? description, List<GameTeamForCreateDTO> invitations, string creatorUserName)
+    {
+        Name = name;
+        Date = date;
+        Place = place;
+        Message = message;
+        Description = description;
+        Invitations = invitations;
+        CreatorUserName = creatorUserName;
+    }
+
     [Required]
     public string? Name { get; set; }
 
@@ -45,6 +56,12 @@ public class GameForCreateDTO
 
 public class GameTeamForCreateDTO
 {
+    public GameTeamForCreateDTO(string? teamName, string? requestMessage)
+    {
+        TeamName = teamName;
+        RequestMessage = requestMessage;
+    }
+
     [Required]
     public string? TeamName { get; set; }
 
