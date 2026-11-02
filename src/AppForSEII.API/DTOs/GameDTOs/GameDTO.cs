@@ -36,6 +36,20 @@ public class GameDTO
 
     public IList<GameInvitationDTO> GameInvitations { get; set; }
 
+    public override bool Equals(object? obj)
+    {
+        return obj is GameDTO dTO &&
+               Id == dTO.Id &&
+               Name == dTO.Name &&
+               Date == dTO.Date &&
+               Place == dTO.Place &&
+               Description == dTO.Description &&
+               SportName == dTO.SportName &&
+               GameInvitations.SequenceEqual(dTO.GameInvitations);
+    }
 
-
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Name, Date, Place, Description, SportName, GameInvitations);
+    }
 }

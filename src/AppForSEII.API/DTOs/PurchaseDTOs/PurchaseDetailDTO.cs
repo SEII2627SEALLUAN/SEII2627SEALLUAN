@@ -1,6 +1,8 @@
 namespace AppForSEII.API.DTOs.PurchaseDTOs;
 using AppForSEII.API.DTOs.ItemDTOs;
-public class PurchaseDetailDTO
+using AppForSEII.API.DTOS.PurchaseDTOS;
+
+public class PurchaseDetailDTO //returned in the details, for example GetPurchase
 {
     public string CustomerName { get; set; } //ask. From ApplicatuinUserDTO? Inside the method? 
     public string CustomerSurname { get; set; }
@@ -8,8 +10,8 @@ public class PurchaseDetailDTO
     public string Description { get; set; }
     public bool Wrapped { get; set; }
     public double TotalPrice { get; set; }
-    public IList<ItemDTO> PurchaseItems { get; set; }
-    public PurchaseDetailDTO(string customerName, string customerSurname, DateTime purchaseDate, string description, bool wrapped, double totalPrice, IList<ItemDTO> purchaseItems)
+    public IList<PurchaseItemDTO> PurchaseItems { get; set; }
+    public PurchaseDetailDTO(string customerName, string customerSurname, DateTime purchaseDate, string description, bool wrapped, double totalPrice, IList<PurchaseItemDTO> purchaseItems)
     {
         CustomerName = customerName;
         CustomerSurname = customerSurname;
