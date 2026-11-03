@@ -7,6 +7,7 @@ public class Referee : ApplicationUser
     {
     }
 
+
     public Referee(
         string id, string name, string surname, string email, DateOnly birthDate, int age, 
         Gender gender, List<InterestedIn> interestedIn, List<TeamInvitation> teamInvitation,
