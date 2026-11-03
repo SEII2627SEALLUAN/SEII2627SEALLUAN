@@ -5,9 +5,9 @@ name: Alejandro Martínez Continuous Integration Pipeline # Name of the workflow
 
 on: #Where this pipleine is done Whenever a memeber create a pull-request, this should be run
   push:
-    branches: [ "“CI-AlejandroMartinez" ]
+    branches: [ "CI-AlejandroMartinez" ]
   pull_request:
-    branches: [ "“CI-AlejandroMartinez" ] #Whenever I push this should be run
+    branches: [ "CI-AlejandroMartinez" ] #Whenever I push this should be run
 
 jobs:  #The task that will be conducted
   build:
