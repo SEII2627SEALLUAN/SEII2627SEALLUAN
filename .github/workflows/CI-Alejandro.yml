@@ -1,0 +1,60 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Alejandro Martínez Continuous Integration Pipeline # Name of the workflow
+
+on: #Where this pipleine is done Whenever a memeber create a pull-request, this should be run
+  push:
+    branches: [ "“CI-Alejandro" ]
+  pull_request:
+    branches: [ "“CI-Alejandro" ] #Whenever I push this should be run
+
+jobs:  #The task that will be conducted
+  build:
+
+    runs-on: ubuntu-latest   #Operating system in order to run. The latest version of ubuntu
+
+    env:
+      API: ./src/AppForSEII.API/AppForSEII.API.csproj
+      WEB: ./src/AppForSEII.Web/AppForSEII.Web.csproj
+      UT:  ./test/AppForSEII.UT/AppForSEII.UT.csproj
+      UIT: ./test/AppForSEII.UIT/AppForSEII.UIT.csproj
+
+    steps:
+    - uses: actions/checkout@v4  #Wherever we obtained when we obtaine that branch in which we work
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4  #
+      with:
+        dotnet-version: 10.0.x  #We try dotnet 10 and here we have dotnet 8. We change
+    - name: Info
+      run: dotnet --info
+    - name: Restore dependencies        
+      run: |  
+          dotnet restore ${{ env.API }} 
+          dotnet restore ${{ env.WEB }}  
+          dotnet restore ${{ env.UT }}  
+          dotnet restore ${{ env.UIT }} 
+          - name: Build the solution
+    - name: build
+      run: |
+          dotnet build ${{ env.API }}  --configuration Release --no-restore
+          dotnet build ${{ env.WEB }}  --configuration Release --no-restore
+          dotnet build ${{ env.UT }}  --configuration Release --no-restore
+          dotnet build ${{ env.UIT }}  --configuration Release --no-restore
+
+          
+    - name: Run tests with coverage
+      run: |
+          dotnet test ${{ env.UT }} \
+          --configuration Release \
+          --collect:"XPlat Code Coverage"
+
+    - name: Install ReportGenerator
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+    - name: Generate coverage report
+      run: |
+          reportgenerator \
+          -reports:**/coverage.cobertura.xml \
+          -targetdir:coverage-report \
+          -reporttypes:Html
