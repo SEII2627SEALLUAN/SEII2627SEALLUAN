@@ -133,7 +133,7 @@ namespace AppForSEII.API.Controllers
         [ProducesResponseType(typeof(TeamDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-        public async Task<ActionResult> CreateTeam(TeamCreateDTO teamCreate)
+        public async Task<ActionResult> CreateTeam(TeamForCreateDTO teamCreate)
         {
             if (await _context.Teams.AnyAsync(t => t.Name == teamCreate.Name))
             {
