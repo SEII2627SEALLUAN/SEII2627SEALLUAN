@@ -5,7 +5,7 @@ name: Alejandro Martínez Continuous Integration Pipeline # Name of the workflow
 
 on: #Where this pipleine is done Whenever a memeber create a pull-request, this should be run
   push:
-    branches: [ "“CI-Alejandro" ]
+    branches: [ "“CI-Alejandro-doesn't exists" ]
   pull_request:
     branches: [ "“CI-Alejandro" ] #Whenever I push this should be run
 
