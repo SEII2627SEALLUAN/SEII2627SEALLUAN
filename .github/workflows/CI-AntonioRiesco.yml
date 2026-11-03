@@ -5,7 +5,7 @@ name: Antonio Riesco Continuous Integration Pipeline
 
 on:
   push:
-    branches: [ "CI-AntonioRiesco-doesntexist" ]
+    branches: [ "CI-AntonioRiesco" ]
   pull_request:
     branches: [ "CI-AntonioRiesco" ]
 
