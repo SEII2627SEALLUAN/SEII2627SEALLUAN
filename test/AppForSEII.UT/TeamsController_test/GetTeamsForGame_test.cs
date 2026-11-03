@@ -130,7 +130,7 @@ namespace AppForSEII.UT.TeamsController_test
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             var teams = Assert.IsType<List<TeamDTO>>(okResult.Value);
-            Assert.Empty(teams);
+            Assert.Equal(new List<TeamDTO>(), teams);
         }
 
     }    
