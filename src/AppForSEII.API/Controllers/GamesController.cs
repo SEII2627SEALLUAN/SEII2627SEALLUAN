@@ -105,6 +105,11 @@ namespace AppForSEII.API.Controllers
             if (user == null)
                 ModelState.AddModelError("RentalApplicationUser", "Error! UserName is not registered");
 
+            if (user != null &&!teams.Any(t => t.ApplicationUser != null && t.ApplicationUser.Id == user!.Id))
+            {
+                ModelState.AddModelError("CreatorUserName", "Error! The user is not the captain of any of the invited teams");
+            }
+
             Game game = new Game(0, 
                                 gameForCreate.Name,
                                 gameForCreate.Date,

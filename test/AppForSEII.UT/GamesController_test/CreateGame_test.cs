@@ -21,6 +21,7 @@ namespace AppForSEII.UT.GamesController_test
             var soccer = new Sport("Soccer", 2, 3, "Soccer", "The referee has authority");
             var basketball = new Sport("Basketball", 2, 3, "Basketball","Don't touch with feet");
             var firstUser = new ApplicationUser("0", "Elena", "Navarro", new DateOnly(2026, 11, 10), 30, Gender.Female, "elena@uclm.es");
+            var notCaptainUser = new ApplicationUser("1", "Carlos", "Gómez", new DateOnly(2000, 11, 10), 27, Gender.Male, "carlos@uclm.es");
 
             var game = new Game(1, "Friendly match", 
                                 new DateTime(2026, 11, 15), 
@@ -34,12 +35,14 @@ namespace AppForSEII.UT.GamesController_test
             {
                 new Team(1, "Soccer Stars", "A team created in 2019", 12, 18, 40, soccer, new List<GameInvitation>()),
                 new Team(2, "Wild Animals", "A team created in 2005", 12, 18, 40, soccer, new List<GameInvitation>()),
-                new Team(3, "Tall Beasts", "A team created in 2007", 12, 18, 40, basketball, new List<GameInvitation>())
+                new Team(3, "Tall Beasts", "A team created in 2007", 12, 18, 40, basketball, new List<GameInvitation>()),
+                new Team(4, "Galactic Beasts", "A team created in 2007", 12, 18, 40, soccer, new List<GameInvitation>())
             };
 
             teams[0].ApplicationUser = firstUser;
             teams[1].ApplicationUser = firstUser;
             teams[2].ApplicationUser = firstUser;
+            teams[3].ApplicationUser = notCaptainUser;
 
             var gameInvitations = new List<GameInvitation>()
             {
@@ -58,6 +61,7 @@ namespace AppForSEII.UT.GamesController_test
             _context.Add(soccer);
             _context.Add(basketball);
             _context.Add(firstUser);
+            _context.Add(notCaptainUser);
             _context.Add(game);
             _context.AddRange(teams);
             _context.AddRange(gameInvitations);
@@ -91,7 +95,9 @@ namespace AppForSEII.UT.GamesController_test
                                                         new GameTeamForCreateDTO("Fake team", _message)
                                                     },
                                                     _captain
-                                                    );     
+                                                    );   
+
+            var noCaptain = new GameForCreateDTO("New match", futureDate, _place, _message, _description, validInvitations, "Carlos");  
 
             return new List<object[]>
             {
@@ -99,7 +105,8 @@ namespace AppForSEII.UT.GamesController_test
                 new object[] { dateInThePast, "The game date cannot be in the past."},
                 new object[] { notEnoughTeams, "There should be at least"},
                 new object[] { unknownCaptain, "Error! UserName is not registered"}, 
-                new object[] { unknownTeam, "Team 'Fake team'not available " }
+                new object[] { unknownTeam, "Team 'Fake team'not available " },
+                new object[] { noCaptain, "Error! The user is not the captain of any of the invited teams"}
             };
 
 
