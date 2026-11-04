@@ -10,7 +10,7 @@ public class RabbitMQLogger : ILogger, IDisposable
     private readonly string _name;
     private readonly RabbitMQLoggerConfiguration _config;
     private IConnection _connection;
-    private readonly IChannel _channel;
+    private IChannel _channel;
     private BasicProperties _properties;
 
     public RabbitMQLogger(string name, RabbitMQLoggerConfiguration config)
@@ -19,9 +19,15 @@ public class RabbitMQLogger : ILogger, IDisposable
         _config = config ?? throw new ArgumentNullException(nameof(config));
         
         ValidateConfiguration(_config); 
-        
-        
-        public async Task InitializeAsync()
+
+        _properties = new BasicProperties
+        {
+            Persistent = _config.Durable,
+            ContentType = "application/json"
+        };
+    }
+
+     private async Task InitializeAsync()
     {
         var factory = new ConnectionFactory
         {
@@ -31,20 +37,13 @@ public class RabbitMQLogger : ILogger, IDisposable
             Password = _config.Password
         };
 
-        _connection = factory.CreateConnectionAsync();
-        _channel = _connection.CreateChannelAsync();
+        _connection = await factory.CreateConnectionAsync();
+        _channel = await _connection.CreateChannelAsync();
 
-        _channel.ExchangeDeclareAsync(
-        exchange: _config.Exchange,
-        type: _config.ExchangeType,
-        durable: _config.Durable );
-    }
-
-        _properties = new BasicProperties
-        {
-            Persistent = _config.Durable,
-            ContentType = "application/json"
-        };
+        await _channel.ExchangeDeclareAsync(
+            exchange: _config.Exchange,
+            type: _config.ExchangeType,
+            durable: _config.Durable);
     }
 
     private static void ValidateConfiguration(RabbitMQLoggerConfiguration config)
@@ -101,9 +100,9 @@ public class RabbitMQLogger : ILogger, IDisposable
     {
         try
         {
-            _channel?.Close();
+            _channel?.CloseAsync();
             _channel?.Dispose();
-            _connection?.Close();
+            _connection?.CloseAsync();
             _connection?.Dispose();
         }
         catch (Exception ex)
