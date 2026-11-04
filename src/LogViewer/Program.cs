@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace LogViewer;
 
@@ -15,6 +15,10 @@ class Program
             $"Config: {configuration["RabbitMQ:HostName"]}:{configuration["RabbitMQ:Port"]}, " +
             $"exchange '{configuration["RabbitMQ:Exchange"]}'");
 
-            await Task.CompletedTask;
+        var subscriber = new Subscriber(configuration);
+        await subscriber.StartConsuming();
+
+        Console.WriteLine("LogViewer listo. Pulsa una tecla para salir.");
+        Console.ReadKey();
     }
 }
