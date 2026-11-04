@@ -1,9 +1,13 @@
+using AppsForSEII.API.Logging;
 using Microsoft.Data.Sqlite;
 using System.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Proveedor de logs personalizado que publica en RabbitMQ
+builder.Logging.AddRabbitMQ(builder.Configuration.GetSection("RabbitMQ"));
 
 builder.Services.AddControllers()
 //show definitions of enums as strings

@@ -19,6 +19,26 @@ public class RabbitMQLogger : ILogger, IDisposable
         _config = config ?? throw new ArgumentNullException(nameof(config));
         
         ValidateConfiguration(_config); 
+        
+        
+        public async Task InitializeAsync()
+    {
+        var factory = new ConnectionFactory
+        {
+            HostName = _config.HostName,
+            Port = _config.Port,
+            UserName = _config.UserName,
+            Password = _config.Password
+        };
+
+        _connection = factory.CreateConnectionAsync();
+        _channel = _connection.CreateChannelAsync();
+
+        _channel.ExchangeDeclareAsync(
+        exchange: _config.Exchange,
+        type: _config.ExchangeType,
+        durable: _config.Durable );
+    }
 
         _properties = new BasicProperties
         {
