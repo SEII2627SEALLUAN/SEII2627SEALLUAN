@@ -1,9 +1,20 @@
-﻿namespace LogViewer;
+﻿using Microsoft.Extensions.Configuration;
+
+namespace LogViewer;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
-        Console.WriteLine("Hello, World!");
+        IConfiguration configuration = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json", optional: false)
+            .Build();
+
+        Console.WriteLine(
+            $"Config: {configuration["RabbitMQ:HostName"]}:{configuration["RabbitMQ:Port"]}, " +
+            $"exchange '{configuration["RabbitMQ:Exchange"]}'");
+
+            await Task.CompletedTask;
     }
 }
