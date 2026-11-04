@@ -1,4 +1,4 @@
-namespace TodoApi.Logging;
+namespace AppsForSEII.API.Logging;
 
 public class RabbitMQLoggerConfiguration
 {
