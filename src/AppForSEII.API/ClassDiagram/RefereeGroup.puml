@@ -6,4 +6,5 @@ class RefereeGroup {
     + Rules : string? <<get>> <<set>>
     + GameId : int <<get>> <<set>>
 }
+RefereeGroup --> "RefereeAssignedTos<RefereeAssignedTo>" "IList`1"
 @enduml

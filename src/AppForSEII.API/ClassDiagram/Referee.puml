@@ -4,4 +4,5 @@ class Referee {
     + YearsRefereeing : int <<get>> <<set>>
 }
 ApplicationUser <|-- Referee
+Referee --> "RefereeAssignedTos<RefereeAssignedTo>" "IList`1"
 @enduml

@@ -9,8 +9,11 @@ class Sport {
     + Description : string <<get>> <<set>> = "Description"
     + BasicRules : string <<get>> <<set>> = "Rules to the game"
 }
+class "List`1"<T> {
+}
 class "IList`1"<T> {
 }
+Sport --> "Items<Item>" "List`1"
 Sport o-> "InterestedIn<InterestedIn>" "IList`1"
 Sport o-> "Team<Team>" "IList`1"
 @enduml
