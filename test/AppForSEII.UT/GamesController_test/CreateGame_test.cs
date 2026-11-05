@@ -39,11 +39,6 @@ namespace AppForSEII.UT.GamesController_test
                 new Team(4, "Galactic Beasts", "A team created in 2007", 12, 18, 40, soccer, notCaptainUser, new List<GameInvitation>())
             };
 
-            teams[0].ApplicationUser = firstUser;
-            teams[1].ApplicationUser = firstUser;
-            teams[2].ApplicationUser = firstUser;
-            teams[3].ApplicationUser = notCaptainUser;
-
             var gameInvitations = new List<GameInvitation>()
             {
                 new GameInvitation(teams[0], game, true, "The game is starting"),
