@@ -45,9 +45,10 @@ namespace AppForSEII.UT.TeamsController_test
                 minAge: 18,
                 maxAge: 40,
                 sport: sport,
+                applicationUser: captain,
                 gameInvitations: new List<GameInvitation>()
             );
-            team.ApplicationUser = captain;
+            // team.ApplicationUser = captain;
 
             _context.Sports.Add(sport);
             _context.ApplicationUsers.Add(captain);

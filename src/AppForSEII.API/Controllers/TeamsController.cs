@@ -88,11 +88,6 @@ namespace AppForSEII.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult> GetTeam(int id)
         {
-            if (_context.Teams == null)
-            {
-                _logger.LogError("Error: Teams table does not exist");
-                return NotFound();
-            }
 
             var teamdto = await _context.Teams
                 .Where(t => t.Id == id)
@@ -133,11 +128,16 @@ namespace AppForSEII.API.Controllers
         [ProducesResponseType(typeof(TeamDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
-        public async Task<ActionResult> CreateTeam(TeamCreateDTO teamCreate)
+        public async Task<ActionResult> CreateTeam(TeamForCreateDTO teamCreate)
         {
             if (await _context.Teams.AnyAsync(t => t.Name == teamCreate.Name))
             {
                 ModelState.AddModelError("Name", "Error! Team's name must be unique.");
+            }
+
+            if (teamCreate.MinAge > teamCreate.MaxAge)
+            {
+                ModelState.AddModelError("AgeRange", "Error! Minimum age cannot be greater than maximum age.");
             }
 
             var captain = await _context.ApplicationUsers.FirstOrDefaultAsync(u => u.UserName == teamCreate.CaptainUserName);
@@ -153,7 +153,7 @@ namespace AppForSEII.API.Controllers
             }
 
             List<ApplicationUser> invitedUsers = new List<ApplicationUser>();
-            if (teamCreate.TeamInvitations == null || teamCreate.TeamInvitations.Count == 0)
+            if (teamCreate.TeamInvitations.Count == 0)
             {
                 ModelState.AddModelError("TeamInvitations", "Error! You must include at least one player to be invited.");
             }
@@ -195,6 +195,7 @@ namespace AppForSEII.API.Controllers
                 minAge: teamCreate.MinAge,
                 maxAge: teamCreate.MaxAge,
                 sport: sport!,
+                applicationUser: captain,
                 gameInvitations: null   
             );
             team.ApplicationUser = captain;
@@ -206,17 +207,11 @@ namespace AppForSEII.API.Controllers
             {
                 var invitedUser = invitedUsers.First(u => u.UserName == invitationDto.PlayerUserName);
 
-                team.TeamInvitations.Add(new TeamInvitation
-                {
-                    Team = team,
-                    ApplicationUser = invitedUser,
-                    InvitationMessage = invitationDto.InvitationMessage,
-                    InvitationAccepted = false
-                });
+                team.TeamInvitations.Add(new TeamInvitation(invitedUser, team, false, invitationDto.InvitationMessage));
 
                 invitationDTOs.Add(new TeamInvitationDTO(
-                    invitedUser.Name ?? "Unknown",
-                    invitedUser.Surname ?? "Unknown",
+                    invitedUser.Name!,
+                    invitedUser.Surname!,
                     invitedUser.Age,
                     invitationDto.InvitationMessage
                 ));
@@ -240,8 +235,8 @@ namespace AppForSEII.API.Controllers
                 team.MinAge,
                 team.MaxAge,
                 team.MaxMembers,
-                captain!.Name ?? "Unknown",
-                captain.Surname ?? "Unknown",
+                captain!.Name!,
+                captain.Surname!,
                 captain.Age,
                 sport!.Name,
                 invitationDTOs

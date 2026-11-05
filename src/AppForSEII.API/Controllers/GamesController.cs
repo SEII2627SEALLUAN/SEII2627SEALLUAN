@@ -95,15 +95,21 @@ namespace AppForSEII.API.Controllers
             
             Sport sport = teams[0].Sport;
 
+            // We take into account that the number of players refers to the teams that are going to play the game
             if (teams.Count < sport.MinimumNumberOfPlayers)
             {
                 ModelState.AddModelError("GameInvitations", $"There should be at least '{sport.MinimumNumberOfPlayers}'");
             }
 
-            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(au => au.Name == gameForCreate.CreatorUserName);
+            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(au => au.UserName == gameForCreate.CreatorUserName);
 
             if (user == null)
                 ModelState.AddModelError("RentalApplicationUser", "Error! UserName is not registered");
+
+            if (user != null &&!teams.Any(t => t.ApplicationUser != null && t.ApplicationUser.Id == user!.Id))
+            {
+                ModelState.AddModelError("CreatorUserName", "Error! The user is not the captain of any of the invited teams");
+            }
 
             Game game = new Game(0, 
                                 gameForCreate.Name,
