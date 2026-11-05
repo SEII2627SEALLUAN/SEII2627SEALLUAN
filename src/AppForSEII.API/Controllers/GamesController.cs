@@ -95,6 +95,7 @@ namespace AppForSEII.API.Controllers
             
             Sport sport = teams[0].Sport;
 
+            // We take into account that the number of players refers to the teams that are going to play the game
             if (teams.Count < sport.MinimumNumberOfPlayers)
             {
                 ModelState.AddModelError("GameInvitations", $"There should be at least '{sport.MinimumNumberOfPlayers}'");
