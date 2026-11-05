@@ -57,15 +57,7 @@ namespace AppForSEII.API.Controllers
         [ProducesResponseType(typeof(IList<ApplicationUserDTO>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetUsersForTeam(string? sport, int? age)
         {
-            if (string.IsNullOrEmpty(sport))
-            {
-                var defaultSport = await _context.Sports.FirstOrDefaultAsync();
-                if (defaultSport != null)
-                {
-                    sport = defaultSport.Name;
-                }
-            }
-
+            
             IList<ApplicationUserDTO> userDTOs = await _context.ApplicationUsers
                 .Include(u => u.InterestedIn)
                     .ThenInclude(i => i.Sport)
