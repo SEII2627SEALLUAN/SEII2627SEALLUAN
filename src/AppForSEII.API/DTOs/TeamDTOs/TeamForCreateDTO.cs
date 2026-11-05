@@ -5,13 +5,13 @@ using System.Linq;
 
 namespace AppForSEII.API.DTOs.TeamDTOs
 {
-    public class TeamCreateDTO
+    public class TeamForCreateDTO
     {
-        public TeamCreateDTO()
+        public TeamForCreateDTO()
         {
         }
 
-        public TeamCreateDTO(string name, string? description, int maxMembers, int minAge, int maxAge,
+        public TeamForCreateDTO(string name, string? description, int maxMembers, int minAge, int maxAge,
             string sportName, string captainUserName, IList<TeamInvitationCreateDTO> teamInvitations)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -49,7 +49,7 @@ namespace AppForSEII.API.DTOs.TeamDTOs
 
         public override bool Equals(object? obj)
         {
-            return obj is TeamCreateDTO other &&
+            return obj is TeamForCreateDTO other &&
                    Name == other.Name &&
                    Description == other.Description &&
                    MaxMembers == other.MaxMembers &&

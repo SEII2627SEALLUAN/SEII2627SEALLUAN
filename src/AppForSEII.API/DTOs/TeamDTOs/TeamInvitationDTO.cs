@@ -1,12 +1,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace AppForSEII.API.DTOs.TeamDTOs{
+namespace AppForSEII.API.DTOs.TeamDTOs
+{
     public class TeamInvitationDTO
     {
         public TeamInvitationDTO()
         {
         }
+
 
         public TeamInvitationDTO(string userName, string userSurname, int userAge, string invitationMessage)
         {
