@@ -6,7 +6,7 @@ public class Team
     {
         
     }
-    public Team(int id, string name, string description, int maxMembers, int minAge, int maxAge, Sport? sport, IList<GameInvitation>? gameInvitations)
+    public Team(int id, string name, string description, int maxMembers, int minAge, int maxAge, Sport? sport, ApplicationUser applicationUser, IList<GameInvitation>? gameInvitations)
     {
         Id = id;
         Name = name;
@@ -16,6 +16,7 @@ public class Team
         MaxAge = maxAge;
         Sport = sport;
         GameInvitations = gameInvitations;
+        ApplicationUser = applicationUser;
     }
 
     public int Id { get; set; }

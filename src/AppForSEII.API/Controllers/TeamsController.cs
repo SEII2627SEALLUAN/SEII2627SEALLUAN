@@ -195,7 +195,8 @@ namespace AppForSEII.API.Controllers
                 minAge: teamCreate.MinAge,
                 maxAge: teamCreate.MaxAge,
                 sport: sport!,
-                gameInvitations: null
+                applicationUser: captain,
+                gameInvitations: null   
             );
             team.ApplicationUser = captain;
             team.TeamInvitations = new List<TeamInvitation>();

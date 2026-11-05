@@ -23,14 +23,10 @@ namespace AppForSEII.UT.GamesController_test
 
             var teams = new List<Team>()
             {
-                new Team(1, "Soccer Stars", "A team created in 2019", 12, 18, 40, soccer, new List<GameInvitation>()),
-                new Team(2, "Wild Animals", "A team created in 2005", 12, 18, 40, soccer, new List<GameInvitation>()),
-                new Team(3, "Tall Beasts", "A team created in 2007", 12, 18, 40, basketball, new List<GameInvitation>())
+                new Team(1, "Soccer Stars", "A team created in 2019", 12, 18, 40, soccer, firstUser, new List<GameInvitation>()),
+                new Team(2, "Wild Animals", "A team created in 2005", 12, 18, 40, soccer, firstUser, new List<GameInvitation>()),
+                new Team(3, "Tall Beasts", "A team created in 2007", 12, 18, 40, basketball, firstUser, new List<GameInvitation>())
             };
-
-            teams[0].ApplicationUser = firstUser;
-            teams[1].ApplicationUser = firstUser;
-            teams[2].ApplicationUser = firstUser;
 
             var gameInvitations = new List<GameInvitation>()
             {

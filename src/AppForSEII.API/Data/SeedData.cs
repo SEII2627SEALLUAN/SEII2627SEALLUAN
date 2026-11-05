@@ -220,6 +220,8 @@ namespace AppForSEII.API.Data
                     continue;
                 }
 
+                var captain = dbcontext.Users.Include(u => u.Team).FirstOrDefault(u => u.UserName == data.Captain);
+
                 var team = new Team(
                     id: 0,
                     name: data.name,
@@ -228,17 +230,11 @@ namespace AppForSEII.API.Data
                     minAge: data.MinAge,
                     maxAge: data.MaxAge,
                     sport: data.Sport,
+                    applicationUser: captain,
                     gameInvitations: null
                 );
 
                 dbcontext.Teams.Add(team);
-
-                var captain = dbcontext.Users.Include(u => u.Team).FirstOrDefault(u => u.UserName == data.Captain);
-
-                if (captain != null)
-                {
-                    captain.Team.Add(team);
-                }
             }
 
             dbcontext.SaveChanges();
