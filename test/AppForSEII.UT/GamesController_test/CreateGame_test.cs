@@ -11,7 +11,7 @@ namespace AppForSEII.UT.GamesController_test
 {
     public class CreateGame_test: AppForSEII4SqliteUT
     {
-        private const string _captain = "Elena";
+        private const string _captain = "elena@uclm.es";
         private const string _message = "The game is starting";
         private const string _place = "Bernabeu";
         private const string _description = "A new game";
@@ -85,7 +85,7 @@ namespace AppForSEII.UT.GamesController_test
             var notEnoughTeams = new GameForCreateDTO("New match", futureDate, _place, _message, _description, 
                                                         new List<GameTeamForCreateDTO>() {new GameTeamForCreateDTO("Soccer Stars", _message)}, _captain);
 
-            var unknownCaptain = new GameForCreateDTO("New match", futureDate, _place, _message, _description, validInvitations, "John");
+            var unknownCaptain = new GameForCreateDTO("New match", futureDate, _place, _message, _description, validInvitations, "john@uclm.es");
 
             var unknownTeam = new GameForCreateDTO("New match", futureDate, _place, _message, _description, 
                                                     new List<GameTeamForCreateDTO>()
@@ -97,7 +97,7 @@ namespace AppForSEII.UT.GamesController_test
                                                     _captain
                                                     );   
 
-            var noCaptain = new GameForCreateDTO("New match", futureDate, _place, _message, _description, validInvitations, "Carlos");  
+            var noCaptain = new GameForCreateDTO("New match", futureDate, _place, _message, _description, validInvitations, "carlos@uclm.es");  
 
             return new List<object[]>
             {

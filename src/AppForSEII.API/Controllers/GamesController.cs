@@ -100,7 +100,7 @@ namespace AppForSEII.API.Controllers
                 ModelState.AddModelError("GameInvitations", $"There should be at least '{sport.MinimumNumberOfPlayers}'");
             }
 
-            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(au => au.Name == gameForCreate.CreatorUserName);
+            var user = await _context.ApplicationUsers.FirstOrDefaultAsync(au => au.UserName == gameForCreate.CreatorUserName);
 
             if (user == null)
                 ModelState.AddModelError("RentalApplicationUser", "Error! UserName is not registered");
