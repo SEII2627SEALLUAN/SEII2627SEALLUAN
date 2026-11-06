@@ -11,9 +11,9 @@ namespace AppForSEII.UT.PurchasesController_test
         private const string _street = "Calle Juan Sebastián Elcano";
         private const string _city = "Albacete";
         private const string _province = "Albacete";
-        private const string _ccNumber = "1234-6789-1234-6789";
+        private const string _creditCardNumber = "1234-6789-1234-6789";
         private const string _ccv = "123";
-        private const string _expDate = "10/30";
+        private const string _expirationDate = "10/30";
         private const string _item1Name = "Boxing glove";
         private const string _item2Name = "Trunks";
 
@@ -35,44 +35,45 @@ namespace AppForSEII.UT.PurchasesController_test
             _context.AddRange(items);
             _context.SaveChanges();
         }
-        public static IEnumerable<object[]> TestCasesFor_CreatePurchase() {
-            var PurchaseNoITem = new PurchaseForCreateDTO(_userName, _customerNameSurname,
-                _deliveryAddress, PaymentMethodTypes.CreditCard,
-                DateTime.Today.AddDays(2), DateTime.Today.AddDays(5), new List<PurchaseItemDTO>());
 
-            var PurchaseItems = new List<PurchaseItemDTO>() { new PurchaseItemDTO(2, _movie2Title, _movie2Genre, 4.0, "My favourite movie") };
+        public static IEnumerable<object[]> TestCasesFor_CreatePurchase() { //inputs from user
+            var PurchaseNoItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, 
+                                _expirationDate, _userName, _customerNameSurname, new List<PurchaseItemForCreateDTO>(), //empty list
+                                "Birthday present for my son", false);
 
-            var PurchaseFromBeforeToday = new PurchaseForCreateDTO(_userName, _customerNameSurname,
-                _deliveryAddress, PaymentMethodTypes.CreditCard,
-                DateTime.Today, DateTime.Today.AddDays(5), PurchaseItems);
+            var PurchaseUnknownUser = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, 
+                                    _expirationDate, "mike.tyson@uclm.es", "Mike Tyson", //not valid
+                                    new List<PurchaseItemForCreateDTO>(){new PurchaseItemForCreateDTO(_item1Name, 1)},
+                                    "Birthday present for my son", false);
 
-            var PurchaseToBeforeFrom = new PurchaseForCreateDTO(_userName, _customerNameSurname,
-                _deliveryAddress, PaymentMethodTypes.CreditCard,
-                DateTime.Today.AddDays(5), DateTime.Today.AddDays(2), PurchaseItems);
+            var NonexistenceOfItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
+                                    _userName, _customerNameSurname,
+                                    new List<PurchaseItemForCreateDTO>() {new PurchaseItemForCreateDTO("Jedi lightsaber", 1)}, //not valid
+                                    "Birthday present", false);
 
-            var PurchaseApplicationUser = new PurchaseForCreateDTO("victor.lopez@uclm.es", _customerNameSurname,
-                _deliveryAddress, PaymentMethodTypes.CreditCard,
-                DateTime.Today.AddDays(2), DateTime.Today.AddDays(4), PurchaseItems);
+            var OutOfStockItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
+                                    _userName, _customerNameSurname,
+                                    new List<PurchaseItemForCreateDTO>() {new PurchaseItemForCreateDTO(_item2Name, 1)}, //Trunks is included, but there's 0 in stock. Problem?
+                                    "Birthday present", false);
 
-            var PurchaseMovieNotAvailable = new PurchaseForCreateDTO(_userName, _customerNameSurname,
-                _deliveryAddress, PaymentMethodTypes.CreditCard,
-                DateTime.Today.AddDays(2), DateTime.Today.AddDays(5),
-                new List<PurchaseItemDTO>() { new PurchaseItemDTO(1, _movie1Title, _movie1Genre, 1.0) });
-
+            var NotEnoughStockItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
+                                    _userName, _customerNameSurname,
+                                    new List<PurchaseItemForCreateDTO>() {new PurchaseItemForCreateDTO(_item1Name, 99999)}, //not that many
+                                    "Birthday present", false);
 
             var allTests = new List<object[]>
-            {             //input for createpurchase - Error expected
-                new object[] { PurchaseNoITem, "Error! You must include at least one movie to be rented",  },
-                new object[] { PurchaseFromBeforeToday, "Error! Your Purchase date must start later than today", },
-                new object[] { PurchaseToBeforeFrom, "Error! Your Purchase must end later than it starts", },
-                new object[] { PurchaseApplicationUser, "Error! UserName is not registered", },
-                new object[] { PurchaseMovieNotAvailable, "Error! Movie titled 'The lord of the rings' is not available for being rented from", },
+            {                       //input and error
+                new object[] { PurchaseNoItem, "Error! The item isn't available." }, 
+                new object[] { PurchaseUnknownUser,"Error! UserName is not registered" }, //without .
+                new object[] { NonexistenceOfItem,"Error! The item isn't available." },
+                new object[] { OutOfStockItem, "Error! Only" }, //change error message for these tests or not? Easier
+                new object[] { NotEnoughStockItem, "Error! Only" }, 
             };
 
             return allTests;
         }
 
-        [Theory]
+        [Theory] //STILL TO CHECK, ONLY REPLACED
         [Trait("LevelTesting", "Unit Testing")]
         [Trait("Database", "WithoutFixture")]
         [MemberData(nameof(TestCasesFor_CreatePurchase))]
