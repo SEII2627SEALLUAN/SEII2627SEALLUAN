@@ -30,4 +30,21 @@ public IList<InterestedIn> InterestedIn {get; set;} = new List<InterestedIn>();
 public IList<TeamInvitation> TeamInvitations {get; set;}= new List<TeamInvitation>();
 public IList<Team> Team {get; set;} = new List<Team>();
 
+    public override bool Equals(object? obj)
+    {
+        return obj is ApplicationUser user &&
+               Name == user.Name &&
+               Surname == user.Surname &&
+               BirthDate.Equals(user.BirthDate) &&
+               Age == user.Age &&
+               Gender == user.Gender &&
+               EqualityComparer<IList<InterestedIn>>.Default.Equals(InterestedIn, user.InterestedIn) &&
+               EqualityComparer<IList<TeamInvitation>>.Default.Equals(TeamInvitations, user.TeamInvitations) &&
+               EqualityComparer<IList<Team>>.Default.Equals(Team, user.Team);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, Surname, BirthDate, Age, Gender, InterestedIn, TeamInvitations, Team);
+    }
 }

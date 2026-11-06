@@ -40,4 +40,21 @@ public class Game
 
     public IList<GameInvitation>? GameInvitations { get; set; } = new List<GameInvitation>();
 
+    public override bool Equals(object? obj)
+    {
+        return obj is Game game &&
+               Id == game.Id &&
+               Name == game.Name &&
+               Date == game.Date &&
+               Place == game.Place &&
+               Description == game.Description &&
+               EqualityComparer<Sport?>.Default.Equals(Sport, game.Sport) &&
+               EqualityComparer<ApplicationUser?>.Default.Equals(ResponsibleFor, game.ResponsibleFor) &&
+               EqualityComparer<IList<GameInvitation>?>.Default.Equals(GameInvitations, game.GameInvitations);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, Name, Date, Place, Description, Sport, ResponsibleFor, GameInvitations);
+    }
 }

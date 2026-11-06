@@ -102,7 +102,7 @@ namespace AppForSEII.API.Data
                 var team = dbcontext.Teams.FirstOrDefault(t => t.Name == data.Team);
                 if (data.Sport == null || elena == null || team == null)
                 {
-                    continue; // missing sport, user or team: skip
+                    continue;
                 }
 
                 var game = new Game(
@@ -116,7 +116,7 @@ namespace AppForSEII.API.Data
                     gameInvitations: new List<GameInvitation>()
                 );
 
-                game.GameInvitations!.Add(new GameInvitation(team, game, true, data.Message));
+                game.GameInvitations.Add(new GameInvitation(team, game, true, data.Message));
 
                 dbcontext.Games.Add(game);
             }

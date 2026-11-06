@@ -42,4 +42,33 @@ public class Sport
 
     // 1:N collection property for Teams
     public IList<Team> Team { get; set; } = new List<Team>();
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Sport sport &&
+               Id == sport.Id &&
+               Name == sport.Name &&
+               MinimumNumberOfPlayers == sport.MinimumNumberOfPlayers &&
+               NumberofRefeeres == sport.NumberofRefeeres &&
+               Description == sport.Description &&
+               BasicRules == sport.BasicRules &&
+               EqualityComparer<List<Item>>.Default.Equals(Items, sport.Items) &&
+               EqualityComparer<IList<InterestedIn>>.Default.Equals(InterestedIn, sport.InterestedIn) &&
+               EqualityComparer<IList<Team>>.Default.Equals(Team, sport.Team);
+    }
+
+    public override int GetHashCode()
+    {
+        HashCode hash = new HashCode();
+        hash.Add(Id);
+        hash.Add(Name);
+        hash.Add(MinimumNumberOfPlayers);
+        hash.Add(NumberofRefeeres);
+        hash.Add(Description);
+        hash.Add(BasicRules);
+        hash.Add(Items);
+        hash.Add(InterestedIn);
+        hash.Add(Team);
+        return hash.ToHashCode();
+    }
 }
