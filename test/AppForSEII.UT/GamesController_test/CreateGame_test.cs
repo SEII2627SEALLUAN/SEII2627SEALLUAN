@@ -178,8 +178,8 @@ namespace AppForSEII.UT.GamesController_test
             var expectedGame = new GameDTO(2, "New match", DateTime.Today.AddDays(30), _place, _description, "Soccer", 
                                             new List<GameInvitationDTO>()
                                             {
-                                                new GameInvitationDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", _message),
-                                                new GameInvitationDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", _message)
+                                                new GameInvitationDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", _message),
+                                                new GameInvitationDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", _message)
                                             });
 
             // Act

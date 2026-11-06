@@ -64,7 +64,6 @@ namespace AppForSEII.API.Controllers
                     m.MaxMembers,
                     m.ApplicationUser != null ? m.ApplicationUser.Name ?? "Unknown" : "No captain",
                     m.ApplicationUser != null ? m.ApplicationUser.Surname ?? "Unknown" : "No surname",
-                    m.ApplicationUser != null ? m.ApplicationUser.Age : 0,
                     m.Sport != null ? m.Sport.Name : "No sport",
                     m.TeamInvitations != null
                         ? m.TeamInvitations
@@ -103,7 +102,6 @@ namespace AppForSEII.API.Controllers
                     t.MaxMembers,
                     t.ApplicationUser!.Name!,
                     t.ApplicationUser!.Surname!,
-                    t.ApplicationUser!.Age,
                     t.Sport!.Name,
                     t.TeamInvitations!
                         .Select(ti => new TeamInvitationDTO(
@@ -237,7 +235,6 @@ namespace AppForSEII.API.Controllers
                 team.MaxMembers,
                 captain!.Name!,
                 captain.Surname!,
-                captain.Age,
                 sport!.Name,
                 invitationDTOs
             );

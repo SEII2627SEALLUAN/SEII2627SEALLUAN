@@ -13,7 +13,7 @@ namespace AppForSEII.API.DTOs.TeamDTOs
             TeamInvitations = new List<TeamInvitationDTO>();
         }
 
-        public TeamDTO(int id, string name, int minAge, int maxAge, int maxMembers, string captainName, string captainSurname, int captainAge, string sportName, IList<TeamInvitationDTO> teamInvitations)
+        public TeamDTO(int id, string name, int minAge, int maxAge, int maxMembers, string captainName, string captainSurname, string sportName, IList<TeamInvitationDTO> teamInvitations)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -22,13 +22,12 @@ namespace AppForSEII.API.DTOs.TeamDTOs
             MaxMembers = maxMembers;
             CaptainName = captainName ?? throw new ArgumentNullException(nameof(captainName));
             CaptainSurname = captainSurname ?? throw new ArgumentNullException(nameof(captainSurname));
-            CaptainAge = captainAge;
             SportName = sportName ?? throw new ArgumentNullException(nameof(sportName));
             TeamInvitations = teamInvitations ?? throw new ArgumentNullException(nameof(teamInvitations));
         }
 
         public TeamDTO(int id, string name, int minAge, int maxAge, int maxMembers, string captainName, string sportName)
-            : this(id, name, minAge, maxAge, maxMembers, captainName, "Unknown", 0, sportName, new List<TeamInvitationDTO>())
+            : this(id, name, minAge, maxAge, maxMembers, captainName, "Unknown", sportName, new List<TeamInvitationDTO>())
         {
         }
 
@@ -52,9 +51,10 @@ namespace AppForSEII.API.DTOs.TeamDTOs
         [Required]
         public string CaptainSurname { get; set; } = "Captain surname";
 
+        /*
         [Range(1, 100)]
         public int CaptainAge { get; set; } = 18;
-
+        */
         [Required]
         public string SportName { get; set; } = "Sport name";
 
@@ -70,7 +70,6 @@ namespace AppForSEII.API.DTOs.TeamDTOs
                    MaxMembers == dTO.MaxMembers &&
                    CaptainName == dTO.CaptainName &&
                    CaptainSurname == dTO.CaptainSurname &&
-                   CaptainAge == dTO.CaptainAge &&
                    SportName == dTO.SportName &&
                    TeamInvitations.SequenceEqual(dTO.TeamInvitations);
         }

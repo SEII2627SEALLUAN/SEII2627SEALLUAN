@@ -133,7 +133,6 @@ namespace AppForSEII.UT.TeamsController_test
                 12,
                 _userName,
                 _userSurname,
-                41,
                 _sportName,
                 expectedInvitations
             );

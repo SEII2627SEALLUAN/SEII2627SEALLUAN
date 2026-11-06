@@ -12,10 +12,16 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         // Composite Keys for N:N Join Entities
         builder.Entity<TeamInvitation>()
-            .HasKey(ti => new { ti.UserId, ti.TeamId });
+            .HasOne(ti => ti.Team)
+            .WithMany(t => t.TeamInvitations)
+            .HasForeignKey(ti => ti.TeamId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<InterestedIn>()
-            .HasKey(i => new { i.SportId, i.UserId });
+            .HasOne(i => i.Sport)
+            .WithMany(s => s.InterestedIn)
+            .HasForeignKey(i => i.SportId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         // Fix decimal precision warning
         builder.Entity<Item>()

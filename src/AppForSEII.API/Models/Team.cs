@@ -44,6 +44,38 @@ public class Team
     public IList<GameInvitation>? GameInvitations { get; set; }
     public IList<TeamInvitation>? TeamInvitations { get; set; }
 
-    
+    public override bool Equals(object? obj)
+    {
+        return obj is Team team &&
+               Id == team.Id &&
+               Name == team.Name &&
+               Description == team.Description &&
+               MaxMembers == team.MaxMembers &&
+               MinAge == team.MinAge &&
+               MaxAge == team.MaxAge &&
+               SportId == team.SportId &&
+               EqualityComparer<Sport?>.Default.Equals(Sport, team.Sport) &&
+               ApplicationUserId == team.ApplicationUserId &&
+               EqualityComparer<ApplicationUser?>.Default.Equals(ApplicationUser, team.ApplicationUser) &&
+               EqualityComparer<IList<GameInvitation>?>.Default.Equals(GameInvitations, team.GameInvitations) &&
+               EqualityComparer<IList<TeamInvitation>?>.Default.Equals(TeamInvitations, team.TeamInvitations);
+    }
 
+    public override int GetHashCode()
+    {
+        HashCode hash = new HashCode();
+        hash.Add(Id);
+        hash.Add(Name);
+        hash.Add(Description);
+        hash.Add(MaxMembers);
+        hash.Add(MinAge);
+        hash.Add(MaxAge);
+        hash.Add(SportId);
+        hash.Add(Sport);
+        hash.Add(ApplicationUserId);
+        hash.Add(ApplicationUser);
+        hash.Add(GameInvitations);
+        hash.Add(TeamInvitations);
+        return hash.ToHashCode();
+    }
 }

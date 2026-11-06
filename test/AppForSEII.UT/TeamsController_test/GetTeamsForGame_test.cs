@@ -72,8 +72,8 @@ namespace AppForSEII.UT.TeamsController_test
 
             var expectedTeams = new List<TeamDTO>()
             {
-                new TeamDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", new List<TeamInvitationDTO>()),
-                new TeamDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", new List<TeamInvitationDTO>())
+                new TeamDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", new List<TeamInvitationDTO>()),
+                new TeamDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", new List<TeamInvitationDTO>())
             };
 
             // Act
@@ -97,8 +97,8 @@ namespace AppForSEII.UT.TeamsController_test
 
             var expectedTeams = new List<TeamDTO>()
             {
-                new TeamDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", new List<TeamInvitationDTO>()),
-                new TeamDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", 30, "Soccer", new List<TeamInvitationDTO>())
+                new TeamDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", new List<TeamInvitationDTO>()),
+                new TeamDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", new List<TeamInvitationDTO>())
             };
 
             // Act

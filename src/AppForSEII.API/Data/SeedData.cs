@@ -53,6 +53,23 @@ namespace AppForSEII.API.Data
 
             try
             {
+                SeedTeams(dbContext);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding Teams in the Database.");
+            }
+
+            try
+            {
+                SeedGames(dbContext);
+            } catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding Games in the Database.");
+            }
+
+            try
+            {
                 SeedInterestedIn(dbContext);
             }
             catch (Exception ex)
@@ -70,6 +87,52 @@ namespace AppForSEII.API.Data
             }
         }
 
+        public static void SeedGames(ApplicationDbContext dbcontext)
+        {
+            var soccer = dbcontext.Sports.FirstOrDefault(s => s.Name == "Soccer");
+            var basketball = dbcontext.Sports.FirstOrDefault(s => s.Name == "Basketball");
+            var elena = dbcontext.Users.FirstOrDefault(u => u.UserName == "elena@uclm.es");
+
+            var gamesData = new[]
+            {
+                (Name: "Friendly match", Date: DateTime.Today.AddDays(30), Place: "Bernabeu",
+                Description: "A friendly soccer game", Sport: soccer, Team: "Soccer Stars",
+                Message: "The game is starting"),
+                (Name: "Basketball night", Date: DateTime.Today.AddDays(45), Place: "Palau Sant Jordi",
+                Description: "A basketball game", Sport: basketball, Team: "Basketball Legends",
+                Message: "Join us for the game")
+            };
+            foreach (var data in gamesData)
+            {
+                if (dbcontext.Games.FirstOrDefault(g => g.Name == data.Name) != null)
+                {
+                    continue;
+                }
+
+                var team = dbcontext.Teams.FirstOrDefault(t => t.Name == data.Team);
+                if (data.Sport == null || elena == null || team == null)
+                {
+                    continue;
+                }
+
+                var game = new Game(
+                    id: 0,
+                    name: data.Name,
+                    date: data.Date,
+                    place: data.Place,
+                    description: data.Description,
+                    sport: data.Sport,
+                    responsibleFor: elena,
+                    gameInvitations: new List<GameInvitation>()
+                );
+
+                game.GameInvitations.Add(new GameInvitation(team, game, true, data.Message));
+
+                dbcontext.Games.Add(game);
+            }
+
+            dbcontext.SaveChanges();
+        }
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager, List<string> roles)
         {
