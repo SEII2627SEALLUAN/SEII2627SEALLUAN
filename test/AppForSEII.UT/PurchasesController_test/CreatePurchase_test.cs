@@ -6,7 +6,7 @@ namespace AppForSEII.UT.PurchasesController_test
 {
     public class CreatePurchase_test : AppForSEII4SqliteUT
     {
-        private const string _userName = "elena.navarro@uclm.es"; //we make them here to reause a lot
+        private const string _userName = "elena@uclm.es"; //we make them here to reuse a lot
         private const string _customerNameSurname = "Elena Navarro";
         private const string _street = "Calle Juan Sebastián Elcano";
         private const string _city = "Albacete";
@@ -63,7 +63,7 @@ namespace AppForSEII.UT.PurchasesController_test
 
             var allTests = new List<object[]>
             {                       //input and error
-                new object[] { PurchaseNoItem, "Error! The item isn't available." }, 
+                new object[] { PurchaseNoItem, "Error! You must include at least one item to be purchased" }, 
                 new object[] { PurchaseUnknownUser,"Error! UserName is not registered" }, //without .
                 new object[] { NonexistenceOfItem,"Error! The item isn't available." },
                 new object[] { OutOfStockItem, "Error! Only" }, //change error message for these tests or not? Easier
@@ -73,62 +73,59 @@ namespace AppForSEII.UT.PurchasesController_test
             return allTests;
         }
 
-        [Theory] //STILL TO CHECK, ONLY REPLACED
+        [Theory] //General for errors, uses the IEnumerable<object[]> TestCasesFor_Createpurchase with the cases
         [Trait("LevelTesting", "Unit Testing")]
         [Trait("Database", "WithoutFixture")]
         [MemberData(nameof(TestCasesFor_CreatePurchase))]
-        public async Task CreatePurchase_Error_test(PurchaseForCreateDTO PurchaseDTO, string errorExpected) {
-            // Arrange
+        public async Task CreatePurchase_Error_test(PurchaseForCreateDTO purchaseDTO, string errorExpected)
+        {
+            //ARRANGE
             var mock = new Mock<ILogger<PurchasesController>>();
             ILogger<PurchasesController> logger = mock.Object;
-
             var controller = new PurchasesController(_context, logger);
-
-            // Act
-            var result = await controller.CreatePurchase(PurchaseDTO);
-
-            //Assert
+            //ACT
+            var result = await controller.CreatePurchase(purchaseDTO);
+            //ASSERT
             //we check that the response type is BadRequest and obtain the error returned
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var problemDetails = Assert.IsType<ValidationProblemDetails>(badRequestResult.Value);
-
             var errorActual = problemDetails.Errors.First().Value[0];
 
             //we check that the expected error message and actual are the same
             Assert.StartsWith(errorExpected, errorActual);
-
         }
 
         [Fact]
         [Trait("LevelTesting", "Unit Testing")]
         [Trait("Database", "WithoutFixture")]
-        public async Task CreatePurchase_Success_test() {
-            //ARRANGE
+        public async Task CreatePurchase_Success_test()
+        {
+            //ARRANGE (preparation)
             var mock = new Mock<ILogger<PurchasesController>>();
             ILogger<PurchasesController> logger = mock.Object;
             var controller = new PurchasesController(_context, logger);
 
-            var PurchaseDTO = new PurchaseForCreateDTO(_userName, _customerNameSurname,
-                _deliveryAddress, PaymentMethodTypes.CreditCard,
-                to, from, new List<PurchaseItemDTO>()
-                { new PurchaseItemDTO(2, _movie1Title, _movie1Genre, 1.0) });
+            var purchaseDTO = new PurchaseForCreateDTO( //we will be testing this input
+                _street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
+                _userName, _customerNameSurname,new List<PurchaseItemForCreateDTO>() {
+                    new PurchaseItemForCreateDTO(_item1Name, 2)
+                },
+                "Birthday present for my son", false);
+            //we expect this
+            var expectedPurchaseDetailDTO = new PurchaseDetailDTO("Elena","Navarro", DateTime.Now, "Birthday present for my son", false,
+                50,                                  // 25 * 2
+                new List<PurchaseItemDTO>() {
+                    new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25, "M", 2)
+                });
 
-            var expectedPurchaseDetailDTO = new PurchaseDetailDTO(2, DateTime.Now,
-                _userName, _customerNameSurname,
-                _deliveryAddress, PaymentMethodTypes.CreditCard,
-                to, from, new List<PurchaseItemDTO>()
-                { new PurchaseItemDTO(2, _movie1Title, _movie1Genre, 1.0) });
+            //ACT (really add it, returns PurchaseDetail)
+            var result = await controller.CreatePurchase(purchaseDTO);
 
-            //ACT
-            var result = await controller.CreatePurchase(PurchaseDTO);
-
-            //ASSERT
-            //we check that the response type is BadRequest and obtain the error returned
+            //ASSERT (get the types, assign, and finally compare)
             var createdResult = Assert.IsType<CreatedAtActionResult>(result);
             var actualPurchaseDetailDTO = Assert.IsType<PurchaseDetailDTO>(createdResult.Value);
 
-            Assert.Equal(expectedPurchaseDetailDTO, actualPurchaseDetailDTO);
-
+            Assert.True(expectedPurchaseDetailDTO.Equals(actualPurchaseDetailDTO));
         }
     }
 }

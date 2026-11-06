@@ -64,6 +64,10 @@ namespace AppForSEII.API.Controllers
             var user = _context.ApplicationUsers.FirstOrDefault(au => au.UserName == purchaseForCreate.CustomerUserName);
             if (user == null)
                 ModelState.AddModelError("ApplicationUser", "Error! UserName is not registered");
+            
+            if (purchaseForCreate.PurchaseItems == null || purchaseForCreate.PurchaseItems.Count == 0)//new in test
+                ModelState.AddModelError("PurchaseItems", "Error! You must include at least one item to be purchased");
+
             if (ModelState.ErrorCount > 0)
                 return BadRequest(new ValidationProblemDetails(ModelState));
 
