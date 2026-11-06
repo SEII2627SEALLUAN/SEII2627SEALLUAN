@@ -75,7 +75,6 @@ namespace AppForSEII.UT.TeamsController_test
                 12,
                 "Elena",
                 "Navarro Martínez",
-                41,
                 "Soccer",
                 expectedInvitations
             );
