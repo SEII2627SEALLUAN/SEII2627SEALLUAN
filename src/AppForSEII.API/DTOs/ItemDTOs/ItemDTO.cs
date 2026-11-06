@@ -20,15 +20,22 @@ public class ItemDTO
         SportName = sportName;
     }
 
-    public bool Equals(ItemDTO other)
+    public override bool Equals(object? obj) => Equals(obj as ItemDTO);
+
+    public bool Equals(ItemDTO? other)
     {
-        if (other == null) return false;
-        if (Name != other.Name) return false;
-        if (RecommendedAge != other.RecommendedAge) return false;
-        if (Gender != other.Gender) return false;
-        if (Price != other.Price) return false;
-        if (Size != other.Size) return false;
-        if (SportName != other.SportName) return false;
-        return true;
+        if (other is null) return false;
+        return Name == other.Name
+            && RecommendedAge == other.RecommendedAge
+            && Gender == other.Gender
+            && Price == other.Price
+            && Size == other.Size
+            && QuantityAvailableForPurchase == other.QuantityAvailableForPurchase
+            && SportName == other.SportName;
     }
+
+    public override int GetHashCode() =>
+        HashCode.Combine(Name, RecommendedAge, Gender, Price, Size,
+                         QuantityAvailableForPurchase, SportName);
+
 }

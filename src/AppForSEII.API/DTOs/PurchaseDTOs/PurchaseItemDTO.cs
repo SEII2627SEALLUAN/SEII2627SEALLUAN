@@ -26,6 +26,7 @@ namespace AppForSEII.API.DTOS.PurchaseDTOS
             if (Gender != other.Gender) return false;
             if (Price != other.Price) return false;
             if (Size != other.Size) return false;
+            if (Quantity != other.Quantity) return false; //added for the test
             return true;
         }
     }

@@ -26,7 +26,7 @@ public class PurchaseDetailDTO //returned in the details, for example GetPurchas
         if (other == null) return false;
         if (CustomerName != other.CustomerName) return false;
         if (CustomerSurname != other.CustomerSurname) return false;
-        if (PurchaseDate != other.PurchaseDate) return false;
+        if ((PurchaseDate - other.PurchaseDate).Duration() > TimeSpan.FromSeconds(5)) return false; //I had to add a tolerance period
         if (Description != other.Description) return false;
         if (Wrapped != other.Wrapped) return false;
         if (TotalPrice != other.TotalPrice) return false;

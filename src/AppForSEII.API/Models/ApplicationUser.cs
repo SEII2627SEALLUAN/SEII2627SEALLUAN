@@ -18,6 +18,7 @@ public ApplicationUser()
         Gender = gender;
         Email = email;
         UserName = email;
+
     }
 
 
