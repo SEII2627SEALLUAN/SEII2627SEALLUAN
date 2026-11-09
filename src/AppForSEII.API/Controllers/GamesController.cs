@@ -109,6 +109,13 @@ namespace AppForSEII.API.Controllers
             {
                 ModelState.AddModelError("CreatorUserName", "Error! The user is not the captain of any of the invited teams");
             }
+            
+            /*
+            if (teams.Any())
+            {
+                ModelState.AddModelError("Message", "Error! One of the game invitation messages has not been properly formatted");
+            }
+            */
 
             Game game = new Game(0, 
                                 gameForCreate.Name,
@@ -124,6 +131,11 @@ namespace AppForSEII.API.Controllers
             foreach (var invitation in gameForCreate.Invitations)
             {
                 Team? team = teams.FirstOrDefault(t => t.Name == invitation.TeamName);
+                if (!invitation.RequestMessage.StartsWith("Dear Team,"))
+                {
+                    ModelState.AddModelError("Message", "Error! One of the game invitation messages has not been properly formatted");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
+                }
                 if (team == null)
                 {
                     ModelState.AddModelError("GameInvitations", $"Team '{invitation.TeamName}'not available ");
@@ -132,6 +144,18 @@ namespace AppForSEII.API.Controllers
                     game.GameInvitations.Add(new GameInvitation(team, game, true, invitation.RequestMessage));
                 }
             }
+
+            /*
+            foreach (var teamName in teamNames)
+            {
+                var message = await _context.GameInvitations.Where(gi => gi.TeamInvited.Name == teamName).Select(gi => gi.Message).FirstOrDefaultAsync();
+                if (message != null && !message!.StartsWith("Dear Team,"))
+                {
+                    ModelState.AddModelError("Message", "Error! One of the game invitation messages has not been properly formatted");
+                    return BadRequest(new ValidationProblemDetails(ModelState));
+                }
+            }
+            */
 
             if (ModelState.ErrorCount > 0) {
                 return BadRequest(new ValidationProblemDetails(ModelState));

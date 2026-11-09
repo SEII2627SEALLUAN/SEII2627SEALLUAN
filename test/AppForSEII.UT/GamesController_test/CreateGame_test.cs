@@ -12,7 +12,7 @@ namespace AppForSEII.UT.GamesController_test
     public class CreateGame_test: AppForSEII4SqliteUT
     {
         private const string _captain = "elena@uclm.es";
-        private const string _message = "The game is starting";
+        private const string _message = "Dear Team, the game is starting";
         private const string _place = "Bernabeu";
         private const string _description = "A new game";
 
@@ -73,6 +73,14 @@ namespace AppForSEII.UT.GamesController_test
                 new GameTeamForCreateDTO("Wild Animals", _message)
             };
 
+            var invalidInvitations = new List<GameTeamForCreateDTO>()
+            {
+                new GameTeamForCreateDTO("Soccer Stars", "Not starting with Dear"),
+                new GameTeamForCreateDTO("Wild Animals", "Not starting with Dear")
+            };
+
+            
+
             var notUniqueName = new GameForCreateDTO("Friendly match", futureDate, _place, _message, _description, validInvitations, _captain);
 
             var dateInThePast = new GameForCreateDTO("New match", DateTime.Today.AddDays(-1), _place, _message, _description, validInvitations, _captain);
@@ -92,7 +100,9 @@ namespace AppForSEII.UT.GamesController_test
                                                     _captain
                                                     );   
 
-            var noCaptain = new GameForCreateDTO("New match", futureDate, _place, _message, _description, validInvitations, "carlos@uclm.es");  
+            var noCaptain = new GameForCreateDTO("New match", futureDate, _place, _message, _description, validInvitations, "carlos@uclm.es");
+
+            var notCorrectMessage = new GameForCreateDTO("New match", futureDate, _place, "Not dear team", _description, invalidInvitations, _captain);
 
             return new List<object[]>
             {
@@ -101,7 +111,8 @@ namespace AppForSEII.UT.GamesController_test
                 new object[] { notEnoughTeams, "There should be at least"},
                 new object[] { unknownCaptain, "Error! UserName is not registered"}, 
                 new object[] { unknownTeam, "Team 'Fake team'not available " },
-                new object[] { noCaptain, "Error! The user is not the captain of any of the invited teams"}
+                new object[] { noCaptain, "Error! The user is not the captain of any of the invited teams"},
+                new object[] { notCorrectMessage, "Error! One of the game invitation messages has not been properly formatted" }
             };
 
 
