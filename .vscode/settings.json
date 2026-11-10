@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/e56f36a1-e3b6-42cc-ba1e-83af99c204e6/resourceGroups/Isii2526/providers/Microsoft.Web/sites/appformovies",
+    "appService.deploySubpath": "."
+}
