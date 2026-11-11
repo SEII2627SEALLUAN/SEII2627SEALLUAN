@@ -89,6 +89,17 @@ public class RabbitMQLogger : ILogger, IDisposable
                 Exception = exception?.ToString()
             };
 
+            // serializar dicho objeto y convertirlo en un array de bytes de nombre body
+            var json = JsonSerializer.Serialize(logEntry);
+            var body = Encoding.UTF8.GetBytes(json);
+
+            // Publicar en el exchange (de forma síncrona) awit no va
+            _channel.BasicPublishAsync(
+                exchange: _config.Exchange,
+                routingKey: "",
+                mandatory: false,
+                basicProperties: _properties,
+                body: body).GetAwaiter().GetResult();            
         }
         catch (Exception ex)
         {
