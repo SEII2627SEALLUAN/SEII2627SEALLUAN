@@ -62,7 +62,7 @@ namespace AppForSEII.API.Controllers
                 .Include(u => u.InterestedIn)
                     .ThenInclude(i => i.Sport)
                 .Where(u => 
-                    (age == null || u.Age == age) &&
+                    (age == null || u.Age == age) && 
                     (sport == null || (u.InterestedIn != null && u.InterestedIn.Any(i => i.Sport != null && i.Sport.Name == sport)))
                 )
                 .OrderBy(u => u.Name)

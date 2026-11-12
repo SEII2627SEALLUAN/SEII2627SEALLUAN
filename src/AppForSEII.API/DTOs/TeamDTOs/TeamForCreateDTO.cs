@@ -9,10 +9,11 @@ namespace AppForSEII.API.DTOs.TeamDTOs
     {
         public TeamForCreateDTO()
         {
+            
         }
 
         public TeamForCreateDTO(string name, string? description, int maxMembers, int minAge, int maxAge,
-            string sportName, string captainUserName, IList<TeamInvitationCreateDTO> teamInvitations)
+            string sportName, string captainUserName, IList<TeamInvitationDTO> teamInvitations)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description;
@@ -45,7 +46,7 @@ namespace AppForSEII.API.DTOs.TeamDTOs
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set the user name of the captain")]
         public string CaptainUserName { get; set; } = string.Empty;
 
-        public IList<TeamInvitationCreateDTO> TeamInvitations { get; set; } = new List<TeamInvitationCreateDTO>();
+        public IList<TeamInvitationDTO> TeamInvitations { get; set; } = new List<TeamInvitationDTO>();
 
         public override bool Equals(object? obj)
         {
@@ -72,38 +73,6 @@ namespace AppForSEII.API.DTOs.TeamDTOs
             hash.Add(CaptainUserName);
             foreach (var invitation in TeamInvitations) hash.Add(invitation);
             return hash.ToHashCode();
-        }
-    }
-
-    public class TeamInvitationCreateDTO
-    {
-        public TeamInvitationCreateDTO()
-        {
-        }
-
-        public TeamInvitationCreateDTO(string playerUserName, string invitationMessage)
-        {
-            PlayerUserName = playerUserName ?? throw new ArgumentNullException(nameof(playerUserName));
-            InvitationMessage = invitationMessage ?? throw new ArgumentNullException(nameof(invitationMessage));
-        }
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Please, set the user name of the player")]
-        public string PlayerUserName { get; set; } = string.Empty;
-
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Invitation message must have at least 3 characters")]
-        [StringLength(250, MinimumLength = 3, ErrorMessage = "Invitation message must have at least 3 characters")]
-        public string InvitationMessage { get; set; } = string.Empty;
-
-        public override bool Equals(object? obj)
-        {
-            return obj is TeamInvitationCreateDTO other &&
-                   PlayerUserName == other.PlayerUserName &&
-                   InvitationMessage == other.InvitationMessage;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(PlayerUserName, InvitationMessage);
         }
     }
 }
