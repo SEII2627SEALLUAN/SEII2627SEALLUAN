@@ -9,7 +9,12 @@ namespace AppForSEII.API.DTOs.TeamDTOs
         {
         }
 
-
+        public TeamInvitationDTO(string userName, string invitationMessage)
+        {
+            UserName = userName ?? throw new ArgumentNullException(nameof(userName));
+            InvitationMessage = invitationMessage ?? throw new ArgumentNullException(nameof(invitationMessage));
+        }
+        
         public TeamInvitationDTO(string userName, string userSurname, int userAge, string invitationMessage)
         {
             UserName = userName ?? throw new ArgumentNullException(nameof(userName));
@@ -30,7 +35,6 @@ namespace AppForSEII.API.DTOs.TeamDTOs
         [Required(AllowEmptyStrings = false, ErrorMessage = "Invitation message must have at least 3 characters")]
         [StringLength(250, MinimumLength = 3, ErrorMessage = "Invitation message must have at least 3 characters")]
         public string InvitationMessage { get; set; } = "Join my team!";
-
         public override bool Equals(object? obj)
         {
             return obj is TeamInvitationDTO dTO &&

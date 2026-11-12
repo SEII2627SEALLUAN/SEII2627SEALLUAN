@@ -29,7 +29,7 @@ namespace AppForSEII.API.Controllers
         {
             if (op2 == 0)
             {
-                _logger.LogError($"{DateTime.Now} Exception: op2=0, division by 0");
+                _logger.LogError("Exception: op2=0, division by 0");
                 return BadRequest("op2 must be different from 0");
             }
             decimal result = decimal.Round(op1 / op2, 2);
@@ -87,7 +87,6 @@ namespace AppForSEII.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult> GetTeam(int id)
         {
-
             var teamdto = await _context.Teams
                 .Where(t => t.Id == id)
                 .Include(t => t.Sport)
@@ -105,17 +104,17 @@ namespace AppForSEII.API.Controllers
                     t.Sport!.Name,
                     t.TeamInvitations!
                         .Select(ti => new TeamInvitationDTO(
-                            ti.ApplicationUser!.Name!,
-                            ti.ApplicationUser!.Surname!,
-                            ti.ApplicationUser!.Age,
-                            ti.InvitationMessage
-                        )).ToList<TeamInvitationDTO>()
+                            ti.ApplicationUser!.UserName ?? "Unknown", 
+                            ti.ApplicationUser!.Name ?? "Unknown",     
+                            ti.ApplicationUser!.Age,                   
+                            ti.InvitationMessage ?? string.Empty       
+                        )).ToList()
                 ))
                 .FirstOrDefaultAsync();
 
             if (teamdto == null)
             {
-                _logger.LogError($"Error: Team with id {id} does not exist");
+                _logger.LogError("Error: Team with id {id} does not exist", id);
                 return NotFound();
             }
 
@@ -157,7 +156,8 @@ namespace AppForSEII.API.Controllers
             }
             else
             {
-                var userNames = teamCreate.TeamInvitations.Select(i => i.PlayerUserName).ToList();
+                // Updated to use UserName instead of PlayerUserName
+                var userNames = teamCreate.TeamInvitations.Select(i => i.UserName).ToList();
 
                 if (userNames.Distinct().Count() != userNames.Count)
                 {
@@ -194,7 +194,7 @@ namespace AppForSEII.API.Controllers
                 maxAge: teamCreate.MaxAge,
                 sport: sport!,
                 applicationUser: captain,
-                gameInvitations: null   
+                gameInvitations: null
             );
             team.ApplicationUser = captain;
             team.TeamInvitations = new List<TeamInvitation>();
@@ -203,12 +203,12 @@ namespace AppForSEII.API.Controllers
 
             foreach (var invitationDto in teamCreate.TeamInvitations!)
             {
-                var invitedUser = invitedUsers.First(u => u.UserName == invitationDto.PlayerUserName);
+                var invitedUser = invitedUsers.First(u => u.UserName == invitationDto.UserName);
 
                 team.TeamInvitations.Add(new TeamInvitation(invitedUser, team, false, invitationDto.InvitationMessage));
 
                 invitationDTOs.Add(new TeamInvitationDTO(
-                    invitedUser.Name!,
+                    invitedUser.UserName!,
                     invitedUser.Surname!,
                     invitedUser.Age,
                     invitationDto.InvitationMessage

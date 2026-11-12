@@ -59,7 +59,7 @@ namespace AppForSEII.UT.TeamsController_test
 
         public static IEnumerable<object[]> TestCasesFor_CreateTeam_Error()
         {
-            var emptyInvitations = new List<TeamInvitationCreateDTO>();
+            var emptyInvitations = new List<TeamInvitationDTO>();
 
             var teamSportNotExist = new TeamForCreateDTO("SocStars", "A team created", 12, 18, 40, "NonExistentSport", _userEmail, emptyInvitations);
             var teamUserNotExist = new TeamForCreateDTO("SocStars", "A team created", 12, 18, 40, _sportName, "unknown@uclm.es", emptyInvitations);
@@ -104,9 +104,9 @@ namespace AppForSEII.UT.TeamsController_test
 
             var controller = new TeamsController(logger, _context);
 
-            var teamInvitations = new List<TeamInvitationCreateDTO>
+            var teamInvitations = new List<TeamInvitationDTO>
             {
-                new TeamInvitationCreateDTO(_playerEmail, "Join our team!")
+                new TeamInvitationDTO(_playerEmail, "Join our team!")
             };
 
             var teamDTO = new TeamForCreateDTO(
@@ -122,7 +122,7 @@ namespace AppForSEII.UT.TeamsController_test
 
             var expectedInvitations = new List<TeamInvitationDTO>
             {
-                new TeamInvitationDTO(_playerUserName, "Player Surname", 30, "Join our team!")
+                new TeamInvitationDTO(_playerEmail, "Player Surname", 30, "Join our team!")
             };
 
             var expectedTeamDetail = new TeamDTO(
