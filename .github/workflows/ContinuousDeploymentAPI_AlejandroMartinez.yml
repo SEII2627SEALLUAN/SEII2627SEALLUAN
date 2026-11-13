@@ -16,7 +16,7 @@ on:
     types: # triggers the workflow when a PR is closed. 
       - closed      
 
-  workflow_dispatch:  # I want be able to run as much times as I want
+  workflow_dispatch:
 
 jobs: 
   build:
@@ -24,25 +24,26 @@ jobs:
     permissions:
       contents: read #This is required for actions/checkout
     env:
-      API: ./src/AppForSEII.API/AppForSEII.API.csproj  #We're working just with API, not with all projects
+      API: ./src/AppForSEII.API/AppForSEII.API.csproj
 
-    steps:  #steps for building
+    steps:
       - uses: actions/checkout@v4
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.x'
-
+          
       - name: Restore dependencies        
-        run: dotnet restore ${{ env.API }}            
+        run: |  
+          dotnet restore ${{ env.API }}            
 
       - name: Build with dotnet
-        run: dotnet build ${{ env.API }} --configuration Release --no-restore
+        run: |
+          dotnet build ${{ env.API }} --configuration Release --no-restore
 
       - name: dotnet publish
-        run: dotnet publish ${{ env.API }}  -c Release -o "${{env.DOTNET_ROOT}}/myapp"
-
+        run: dotnet publish ${{ env.API }} -c Release -o "${{ env.DOTNET_ROOT }}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -52,8 +53,6 @@ jobs:
           retention-days: 1
 
   deploy:
-
-  
     # This condition ensures that the pipeline ONLY runs if the PR was closed because it was merged. 
     # If the PR was closed without merging (rejected), the job will be skipped.
     # if: github.event.pull_request.merged == true
