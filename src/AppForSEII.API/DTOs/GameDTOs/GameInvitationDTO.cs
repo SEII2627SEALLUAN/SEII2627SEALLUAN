@@ -9,6 +9,11 @@ public class GameInvitationDTO: TeamDTO
         
     }
 
+    public GameInvitationDTO(string teamName, string message) : base(0, teamName, 1, 100, 1, "Unknown", "Unknown", "Unknown", new List<TeamInvitationDTO>())
+    {
+        Message = message;
+    }
+
     public GameInvitationDTO(int id, string name, int minAge, int maxAge, int maxMembers, 
                             string captainName, string captainSurname, string sportName, string message) 
                             : base(id, name, minAge, maxAge, maxMembers, captainName, captainSurname, sportName, new List<TeamInvitationDTO>())
