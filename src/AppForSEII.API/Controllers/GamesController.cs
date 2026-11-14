@@ -34,7 +34,6 @@ namespace AppForSEII.API.Controllers
                 g.Description, 
                 g.Sport != null ? g.Sport.Name : "No sport",
                 g.GameInvitations.Select(gi => new GameInvitationDTO(
-                    gi.TeamInvited.Id,
                     gi.TeamInvited.Name,
                     gi.TeamInvited.MinAge,
                     gi.TeamInvited.MaxAge,
@@ -183,7 +182,6 @@ namespace AppForSEII.API.Controllers
                 game.Description,
                 game.Sport.Name,                                   
                 game.GameInvitations.Select(gi => new GameInvitationDTO(
-                    gi.TeamInvited.Id,
                     gi.TeamInvited.Name,
                     gi.TeamInvited.MinAge,
                     gi.TeamInvited.MaxAge,
