@@ -71,9 +71,9 @@ namespace AppForSEII.UT.GamesController_test
                                             "Soccer", 
                                             new List<GameInvitationDTO>()
                                             {
-                                                new GameInvitationDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", "The game is starting"),
-                                                new GameInvitationDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", "The game is starting")
-                                            });
+                                                new GameInvitationDTO("Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", "The game is starting"),
+                                                new GameInvitationDTO("Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", "The game is starting")
+                                            }, "elena@uclm.es");
 
             // Act
             var result = await controller.GetGame(1);
