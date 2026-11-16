@@ -67,42 +67,41 @@ namespace AppForSEII.UT.GamesController_test
         {
             var futureDate = DateTime.Today.AddDays(3);
 
-            var validInvitations = new List<GameTeamForCreateDTO>()
+            var validInvitations = new List<GameInvitationDTO>()
             {
-                new GameTeamForCreateDTO("Soccer Stars", _message),
-                new GameTeamForCreateDTO("Wild Animals", _message)
+                new GameInvitationDTO("Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", _message),
+                new GameInvitationDTO("Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", _message)
             };
 
-            var invalidInvitations = new List<GameTeamForCreateDTO>()
+            var invalidInvitations = new List<GameInvitationDTO>()
             {
-                new GameTeamForCreateDTO("Soccer Stars", "Not starting with Dear"),
-                new GameTeamForCreateDTO("Wild Animals", "Not starting with Dear")
+                new GameInvitationDTO("Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", "Not starting by Dear"),
+                new GameInvitationDTO("Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", "Not starting by Dear")
             };
-
             
 
-            var notUniqueName = new GameForCreateDTO("Friendly match", futureDate, _place, _message, _description, validInvitations, _captain);
+            var notUniqueName = new GameForCreateDTO("Friendly match", futureDate, _place, _description, validInvitations, _captain);
 
-            var dateInThePast = new GameForCreateDTO("New match", DateTime.Today.AddDays(-1), _place, _message, _description, validInvitations, _captain);
+            var dateInThePast = new GameForCreateDTO("New match", DateTime.Today.AddDays(-1), _place, _description, validInvitations, _captain);
 
-            var notEnoughTeams = new GameForCreateDTO("New match", futureDate, _place, _message, _description, 
-                                                        new List<GameTeamForCreateDTO>() {new GameTeamForCreateDTO("Soccer Stars", _message)}, _captain);
+            var notEnoughTeams = new GameForCreateDTO("New match", futureDate, _place, _description, 
+                                                        new List<GameInvitationDTO>() {new GameInvitationDTO("Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", _message)}, _captain);
 
-            var unknownCaptain = new GameForCreateDTO("New match", futureDate, _place, _message, _description, validInvitations, "john@uclm.es");
+            var unknownCaptain = new GameForCreateDTO("New match", futureDate, _place, _description, validInvitations, "john@uclm.es");
 
-            var unknownTeam = new GameForCreateDTO("New match", futureDate, _place, _message, _description, 
-                                                    new List<GameTeamForCreateDTO>()
-                                                    {
-                                                        new GameTeamForCreateDTO("Soccer Stars", _message),
-                                                        new GameTeamForCreateDTO("Wild Animals", _message),
-                                                        new GameTeamForCreateDTO("Fake team", _message)
-                                                    },
+            var unknownTeam = new GameForCreateDTO("New match", futureDate, _place, _description, 
+                                                    new List<GameInvitationDTO>()
+                                                        {
+                                                            new GameInvitationDTO("Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", _message),
+                                                            new GameInvitationDTO("Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", _message),
+                                                            new GameInvitationDTO("Fake team", 18, 40, 12, "Elena", "Navarro", "Soccer", _message)
+                                                        },
                                                     _captain
                                                     );   
 
-            var noCaptain = new GameForCreateDTO("New match", futureDate, _place, _message, _description, validInvitations, "carlos@uclm.es");
+            var noCaptain = new GameForCreateDTO("New match", futureDate, _place, _description, validInvitations, "carlos@uclm.es");
 
-            var notCorrectMessage = new GameForCreateDTO("New match", futureDate, _place, "Not dear team", _description, invalidInvitations, _captain);
+            var notCorrectMessage = new GameForCreateDTO("New match", futureDate, _place, _description, invalidInvitations, _captain);
 
             return new List<object[]>
             {
@@ -150,13 +149,12 @@ namespace AppForSEII.UT.GamesController_test
             GamesController controller = new GamesController(_context, logger);
 
             // WE use NULL in the place attribute to force an error
-            var gameDTO = new GameForCreateDTO("New match", DateTime.Today.AddDays(3), null, _message, _description,
-                                new List<GameTeamForCreateDTO>()
-                                {
-                                    new GameTeamForCreateDTO("Soccer Stars", _message),
-                                    new GameTeamForCreateDTO("Wild Animals", _message)
-                                },
-                                _captain);
+            var gameDTO = new GameForCreateDTO("New match", DateTime.Today.AddDays(3), null, _description,
+                new List<GameInvitationDTO>()
+                {
+                    new GameInvitationDTO("Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", _message),
+                    new GameInvitationDTO("Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", _message)
+                }, _captain);
 
             // Act
             var result = await controller.CreateGame(gameDTO);
@@ -177,21 +175,22 @@ namespace AppForSEII.UT.GamesController_test
             ILogger<GamesController> logger = mock.Object;
             GamesController controller = new GamesController(_context, logger);
 
-            var gameForCreate = new GameForCreateDTO("New match", DateTime.Today.AddDays(30), _place, _message, _description, 
-                                                    new List<GameTeamForCreateDTO>()
-                                                    {
-                                                        new GameTeamForCreateDTO("Soccer Stars", _message),
-                                                        new GameTeamForCreateDTO("Wild Animals", _message)
-                                                    },
-                                                    _captain
-                                                    );
+            var futureDate = DateTime.Today.AddDays(30);
 
-            var expectedGame = new GameDTO(2, "New match", DateTime.Today.AddDays(30), _place, _description, "Soccer", 
-                                            new List<GameInvitationDTO>()
-                                            {
-                                                new GameInvitationDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", _message),
-                                                new GameInvitationDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", _message)
-                                            });
+
+            var gameForCreate = new GameForCreateDTO("New match", futureDate, _place, _description,
+                new List<GameInvitationDTO>()
+                {
+                    new GameInvitationDTO("Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", _message),
+                    new GameInvitationDTO("Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", _message)
+                }, _captain);
+
+            var expectedGame = new GameDTO(2, "New match", futureDate, _place, _description, "Soccer",
+                new List<GameInvitationDTO>()
+                {
+                    new GameInvitationDTO("Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", _message),
+                    new GameInvitationDTO("Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", _message)
+                }, _captain);
 
             // Act
             var result = await controller.CreateGame(gameForCreate);

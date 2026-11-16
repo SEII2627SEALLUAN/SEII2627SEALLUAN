@@ -70,10 +70,10 @@ namespace AppForSEII.UT.TeamsController_test
             ILogger<TeamsController> logger = mock.Object;
             TeamsController controller = new TeamsController(logger, _context);
 
-            var expectedTeams = new List<TeamDTO>()
+            var expectedTeams = new List<TeamForGameDTO>()
             {
-                new TeamDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", new List<TeamInvitationDTO>()),
-                new TeamDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", new List<TeamInvitationDTO>())
+                new TeamForGameDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer"),
+                new TeamForGameDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer")
             };
 
             // Act
@@ -81,7 +81,7 @@ namespace AppForSEII.UT.TeamsController_test
 
             // Assert 
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var teamsActualResult = Assert.IsType<List<TeamDTO>>(okResult.Value);
+            var teamsActualResult = Assert.IsType<List<TeamForGameDTO>>(okResult.Value);
             Assert.Equal(expectedTeams, teamsActualResult);
         }
 
@@ -95,10 +95,10 @@ namespace AppForSEII.UT.TeamsController_test
             ILogger<TeamsController> logger = mock.Object;
             TeamsController controller = new TeamsController(logger, _context);
 
-            var expectedTeams = new List<TeamDTO>()
+            var expectedTeams = new List<TeamForGameDTO>()
             {
-                new TeamDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer", new List<TeamInvitationDTO>()),
-                new TeamDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer", new List<TeamInvitationDTO>())
+                new TeamForGameDTO(1, "Soccer Stars", 18, 40, 12, "Elena", "Navarro", "Soccer"),
+                new TeamForGameDTO(2, "Wild Animals", 18, 40, 12, "Elena", "Navarro", "Soccer")
             };
 
             // Act
@@ -106,7 +106,7 @@ namespace AppForSEII.UT.TeamsController_test
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var teamsActualResult = Assert.IsType<List<TeamDTO>>(okResult.Value);
+            var teamsActualResult = Assert.IsType<List<TeamForGameDTO>>(okResult.Value);
             Assert.Equal(expectedTeams, teamsActualResult);
         }
         
@@ -125,8 +125,8 @@ namespace AppForSEII.UT.TeamsController_test
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
-            var teams = Assert.IsType<List<TeamDTO>>(okResult.Value);
-            Assert.Equal(new List<TeamDTO>(), teams);
+            var teams = Assert.IsType<List<TeamForGameDTO>>(okResult.Value);
+            Assert.Equal(new List<TeamForGameDTO>(), teams);
         }
 
     }    

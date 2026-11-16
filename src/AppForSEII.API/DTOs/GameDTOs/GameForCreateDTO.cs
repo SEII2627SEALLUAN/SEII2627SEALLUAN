@@ -5,12 +5,11 @@ public class GameForCreateDTO
 {
     public GameForCreateDTO() {}
 
-    public GameForCreateDTO(string? name, DateTime date, string? place, string? message, string? description, List<GameTeamForCreateDTO> invitations, string creatorUserName)
+    public GameForCreateDTO(string? name, DateTime date, string? place, string? description, IList<GameInvitationDTO> invitations, string creatorUserName)
     {
         Name = name;
         Date = date;
         Place = place;
-        Message = message;
         Description = description;
         Invitations = invitations;
         CreatorUserName = creatorUserName;
@@ -26,15 +25,11 @@ public class GameForCreateDTO
     [StringLength(50, MinimumLength = 6)]
     public string? Place { get; set; }
 
-    [Required]
-    [StringLength(50, MinimumLength = 11)]
-    public string? Message { get; set; }
-
     public string? Description { get; set; }
 
-    public List<GameTeamForCreateDTO> Invitations { get; set; }
+    public IList<GameInvitationDTO> Invitations { get; set; }
 
-    public string CreatorUserName { get; set; }
+    public string CreatorUserName { get; set; } = String.Empty;
 
     public override bool Equals(object? obj)
     {
@@ -42,43 +37,13 @@ public class GameForCreateDTO
                Name == dTO.Name &&
                Date == dTO.Date &&
                Place == dTO.Place &&
-               Message == dTO.Message &&
                Description == dTO.Description &&
-               EqualityComparer<List<GameTeamForCreateDTO>>.Default.Equals(Invitations, dTO.Invitations) &&
+               Invitations.SequenceEqual(dTO.Invitations) &&
                CreatorUserName == dTO.CreatorUserName;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Name, Date, Place, Message, Description, Invitations, CreatorUserName);
+        return HashCode.Combine(Name, Date, Place, Description, CreatorUserName);
     }
 }
-
-public class GameTeamForCreateDTO
-{
-    public GameTeamForCreateDTO(string? teamName, string? requestMessage)
-    {
-        TeamName = teamName;
-        RequestMessage = requestMessage;
-    }
-
-    [Required]
-    public string? TeamName { get; set; }
-
-    [Required]
-    [StringLength(50, MinimumLength = 11)]
-    public string? RequestMessage { get; set; }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is GameTeamForCreateDTO dTO &&
-               TeamName == dTO.TeamName &&
-               RequestMessage == dTO.RequestMessage;
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(TeamName, RequestMessage);
-    }
-}
-
