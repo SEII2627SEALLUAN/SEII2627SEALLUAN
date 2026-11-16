@@ -34,7 +34,6 @@ namespace AppForSEII.API.Controllers
                 g.Description, 
                 g.Sport != null ? g.Sport.Name : "No sport",
                 g.GameInvitations.Select(gi => new GameInvitationDTO(
-                    gi.TeamInvited.Id,
                     gi.TeamInvited.Name,
                     gi.TeamInvited.MinAge,
                     gi.TeamInvited.MaxAge,
@@ -43,7 +42,7 @@ namespace AppForSEII.API.Controllers
                     gi.TeamInvited.ApplicationUser.Surname,
                     gi.TeamInvited.Sport != null ? gi.TeamInvited.Sport.Name : "No sport",
                     gi.Message
-                )).ToList<GameInvitationDTO>()
+                )).ToList<GameInvitationDTO>(), g.ResponsibleFor.UserName
             )).FirstOrDefaultAsync();
 
             if (Game == null)
@@ -84,7 +83,7 @@ namespace AppForSEII.API.Controllers
             if (ModelState.ErrorCount > 0)
                 return BadRequest(new ValidationProblemDetails(ModelState));
 
-            var teamNames = gameForCreate.Invitations.Select(i => i.TeamName).ToList();
+            var teamNames = gameForCreate.Invitations.Select(i => i.Name).ToList();
 
             var teams = await _context.Teams
                         .Include(t => t.Sport)
@@ -95,7 +94,7 @@ namespace AppForSEII.API.Controllers
             Sport sport = teams[0].Sport;
 
             // We take into account that the number of players refers to the teams that are going to play the game
-            if (teams.Count < sport.MinimumNumberOfPlayers)
+            if (gameForCreate.Invitations.Count < sport.MinimumNumberOfPlayers)
             {
                 ModelState.AddModelError("GameInvitations", $"There should be at least '{sport.MinimumNumberOfPlayers}'");
             }
@@ -130,18 +129,18 @@ namespace AppForSEII.API.Controllers
 
             foreach (var invitation in gameForCreate.Invitations)
             {
-                Team? team = teams.FirstOrDefault(t => t.Name == invitation.TeamName);
-                if (!invitation.RequestMessage.StartsWith("Dear Team,"))
+                Team? team = teams.FirstOrDefault(t => t.Name == invitation.Name);
+                if (!invitation.Message.StartsWith("Dear Team,"))
                 {
                     ModelState.AddModelError("Message", "Error! One of the game invitation messages has not been properly formatted");
                     return BadRequest(new ValidationProblemDetails(ModelState));
                 }
                 if (team == null)
                 {
-                    ModelState.AddModelError("GameInvitations", $"Team '{invitation.TeamName}'not available ");
+                    ModelState.AddModelError("GameInvitations", $"Team '{invitation.Name}'not available ");
                 } else
                 {
-                    game.GameInvitations.Add(new GameInvitation(team, game, true, invitation.RequestMessage));
+                    game.GameInvitations.Add(new GameInvitation(team, game, true, invitation.Message));
                 }
             }
 
@@ -183,7 +182,6 @@ namespace AppForSEII.API.Controllers
                 game.Description,
                 game.Sport.Name,                                   
                 game.GameInvitations.Select(gi => new GameInvitationDTO(
-                    gi.TeamInvited.Id,
                     gi.TeamInvited.Name,
                     gi.TeamInvited.MinAge,
                     gi.TeamInvited.MaxAge,
@@ -192,7 +190,7 @@ namespace AppForSEII.API.Controllers
                     gi.TeamInvited.ApplicationUser.Surname,
                     gi.TeamInvited.Sport.Name,
                     gi.Message
-                )).ToList<GameInvitationDTO>());
+                )).ToList<GameInvitationDTO>(), user.UserName);
 
             return CreatedAtAction("GetGame", new { id = game.Id}, gameDetail);
 

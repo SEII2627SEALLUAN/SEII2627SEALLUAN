@@ -1,25 +1,21 @@
 using System.ComponentModel.DataAnnotations;
 namespace AppForSEII.API.Models;
-public class GameDTO
+public class GameDTO : GameForCreateDTO
 {
     public GameDTO()
     {
         
     }
 
-    public GameDTO(int id, string? name, DateTime date, string? place, string? description, string sportName, IList<GameInvitationDTO> gameInvitations)
+    public GameDTO(int id, string? name, DateTime date, string? place, string? description, string sportName, IList<GameInvitationDTO> gameInvitations, string creatorUserName) : base (name, date, place, description, gameInvitations, creatorUserName)
     {
         Id = id;
-        Name = name;
-        Date = date;
-        Place = place;
-        Description = description;
         SportName = sportName;
-        GameInvitations = gameInvitations;
     }
 
     public int Id { get; set; }
 
+    /*
     [Required]
     public string? Name { get; set; }
     
@@ -32,24 +28,19 @@ public class GameDTO
 
     public string? Description { get; set; }
 
+    */
     public string SportName { get; set; } = "Sport name";
-
-    public IList<GameInvitationDTO> GameInvitations { get; set; }
 
     public override bool Equals(object? obj)
     {
         return obj is GameDTO dTO &&
+               base.Equals(obj) &&
                Id == dTO.Id &&
-               Name == dTO.Name &&
-               Date == dTO.Date &&
-               Place == dTO.Place &&
-               Description == dTO.Description &&
-               SportName == dTO.SportName &&
-               GameInvitations.SequenceEqual(dTO.GameInvitations);
+               SportName == dTO.SportName;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Id, Name, Date, Place, Description, SportName, GameInvitations);
+        return HashCode.Combine(base.GetHashCode(), Id, SportName);
     }
 }
