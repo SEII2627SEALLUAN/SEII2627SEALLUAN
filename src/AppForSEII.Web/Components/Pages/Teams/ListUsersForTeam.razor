@@ -1,0 +1,30 @@
+@page "/teams/listusersforteam"
+@using AppForSEII.Web.API
+@using Microsoft.AspNetCore.Authorization
+
+
+@inject IAppForSEIIAPIClient apiservice
+@* @attribute [Authorize] *@
+
+
+@* 2. Markup with C# expressions *@
+<button @onclick="@SearchUsersForTeam">Search</button>
+
+@* 3. C# logic *@
+@code {
+    private ICollection<ApplicationUserDTO>? Users { get; set; } = new List<ApplicationUserDTO>();
+
+    protected async Task SearchUsersForTeam(){
+        try
+        {
+            Users = await apiservice.GetUsersForTeamAsync(null, null);
+        }
+        catch (ApiException)
+        {
+            Users = new List<ApplicationUserDTO>();
+        }
+        StateHasChanged();
+    }
+
+    
+}
