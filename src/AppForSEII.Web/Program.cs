@@ -6,6 +6,7 @@ using AppForSEII.Web.Components;
 using AppForSEII.Web.Components.Account;
 using AppForSEII.Web.Data;
 using AppForSEII.Web.API;
+using AppForSEII.Web;
 
 
 
@@ -74,6 +75,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.AddScoped<IAppForSEIIAPIClient>(sp => new AppForSEIIAPIClient(builder.Configuration["AppForSEIIAPI"], new HttpClient()));
+
+builder.Services.AddScoped<TeamStateContainer>();
 
 var app = builder.Build();
 
