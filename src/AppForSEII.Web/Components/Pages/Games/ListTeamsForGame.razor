@@ -1,0 +1,20 @@
+@page "/games/listteamsforgame"
+@using AppForSEII.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject IAppForSEIIAPIClient apiservice
+@* @attribute [Authorize] *@
+
+@* 2. Markup with C# expressions *@
+<button @onclick="@SearchMovies">Search</button>
+@* 3. C# logic *@
+@code {
+private ICollection<TeamDTO>? Movies { get; set; } = new List<TeamDTO>();
+protected async Task SearchMovies() {
+    try { 
+        Movies = await apiservice.GetTeamsForGameAsync("Soccer", "Elena");
+    } catch (ApiException ex) {
+        Movies = new List<TeamDTO>();
+    }
+        StateHasChanged();
+    }
+}
