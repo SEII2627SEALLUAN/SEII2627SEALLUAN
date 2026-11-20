@@ -1,5 +1,6 @@
 @page "/teams/listusersforteam"
 @rendermode InteractiveServer
+@implements IDisposable
 @using Microsoft.AspNetCore.Authorization
 @using AppForSEII.Web.API
 @inject IAppForSEIIAPIClient apiservice
@@ -8,87 +9,123 @@
 @inject NavigationManager navigation
 
 @* @attribute [Authorize] *@
-<h3>Select Users For Team</h3>
+<h3 class="mb-3">Select Users For Team</h3>
+
 <div class="container-fluid">
     <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
-        <p id="ErrorsShown">Errors: @errors</p>
+        <p id="ErrorsShown" class="mb-0">Errors: @errors</p>
     </div>
+
     <div class="row">
         <div class="col-8">
             <div class="row">
                 <div class="col">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">Sport</span>
-                        <input type="text" id="inputSport" @bind=sport class="form-control" placeholder="Sport"
+                        <input type="text" id="inputSport" @bind="sport" class="form-control" placeholder="Sport"
                                aria-label="Sport" aria-describedby="basic-addon1">
                     </div>
                 </div>
                 <div class="col">
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon2">Age</span>
-                        <input type="number" id="inputAge" @bind=age class="form-control" placeholder="Age"
+                        <input type="number" id="inputAge" @bind="age" class="form-control" placeholder="Age"
                                aria-label="Age" aria-describedby="basic-addon2">
                     </div>
                 </div>
-                <div class="col">
-                    <button type="button" class="btn btn-primary" @onclick=@SearchUsersForTeam id="searchUsers">Search
-                        users</button>
-                    </div>
-                </div>
-                <div class="row">
-                    @if (users == null)
-                    {
-                        <p>Loading users....</p>
-                    }
-                    else
-                    {
-                        <div class="mh-100 table-responsive">
-                            <table class="table table-condensed table-hover" id="TableOfUsers">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Surname</th>
-                                        <th>Age</th>
-                                        <th>Invite</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var user in users)
-                                    {
-                                        <tr id="UserData_@user.UserName">
-                                            <td>@user.Name</td>
-                                            <td>@user.Surname</td>
-                                            <td>@user.Age</td>
-                                            <td>
-                                                <button class="btn btn-outline-secondary" id="userToInvite_@user.UserName"
-                                                        @onclick="@(() => AddUser(user))">Add</button>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
+                <div class="col-auto mb-3">
+                    <button type="button" class="btn btn-warning" @onclick="SearchUsersForTeam" id="searchUsers">
+                        Search users
+                    </button>
                 </div>
             </div>
-            <div class="col-4" hidden="@hideTeamCart">
-                <div class="row">
-                    <h3>Team Invitations</h3>
-                </div>
-                @foreach (TeamInvitationDTO item in team.TeamInvitations)
+
+            <div class="row">
+                @if (users == null)
                 {
-                    <div class="row mb-2">
-                        <button type="button" class="btn btn-light" id="removeUser_@item.UserName"
-                                @onclick="@(() => RemoveTeamInvitation(item))">x @item.UserName (@item.UserAge)</button>
+                    <p>Loading users....</p>
+                }
+                else if (users.Count == 0)
+                {
+                    <div class="alert alert-warning" id="NoUsersFound" role="alert">
+                        Warning: There are no available players matching the selected criteria.
                     </div>
                 }
-                <div class="row mt-3">
-                    <button type="button" class="btn btn-primary" id="createTeamButton"
-                            @onclick=@NavigateToCreateTeam>Create team</button>
+                else
+                {
+                    <div class="mh-100 table-responsive">
+                        <table class="table table-condensed table-hover" id="TableOfUsers">
+                            <thead class="table-warning">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Surname</th>
+                                    <th>Age</th>
+                                    <th>Sports &amp; Skill</th>
+                                    <th>Invite</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in users)
+                                {
+                                    bool isSelected = team.TeamInvitations.Any(ti => ti.UserName == user.UserName);
+                                    <tr id="UserData_@user.UserName" class="@(isSelected ? "table-warning" : "")">
+                                        <td>@user.Name</td>
+                                        <td>@user.Surname</td>
+                                        <td>@user.Age</td>
+                                        <td>@(string.IsNullOrWhiteSpace(user.Skill) ? "-" : user.Skill)</td>
+                                        <td>
+                                            <button type="button"
+                                                    class="btn @(isSelected ? "btn-warning" : "btn-outline-warning") btn-sm"
+                                                    id="userToInvite_@user.UserName"
+                                                    @onclick="@(() => AddUser(user))">
+                                                @(isSelected ? "Selected" : "Add")
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-4 border border-warning rounded p-3" hidden="@hideTeamCart">
+            <div class="row mb-2 align-items-center">
+                <div class="col">
+                    <h4 class="mb-0">Team Invitations</h4>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-outline-warning btn-sm" id="clearTeamCart"
+                            @onclick="ClearTeamInvitations">
+                        Clear all
+                    </button>
+                </div>
+            </div>
+
+            @foreach (TeamInvitationDTO item in team.TeamInvitations)
+            {
+                <div class="row mb-2">
+                    <div class="col">
+                        <button type="button" class="btn btn-warning w-100 text-start" id="removeUser_@item.UserName"
+                                @onclick="@(() => RemoveTeamInvitation(item))">
+                            x @item.UserName (@item.UserAge)
+                        </button>
+                    </div>
+                </div>
+            }
+
+            <div class="row mt-3">
+                <div class="col">
+                    <button type="button" class="btn btn-warning w-100" id="createTeamButton"
+                            @onclick="NavigateToCreateTeam">
+                        Create team
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 @code {
     private bool hideTeamCart { get { return team.TeamInvitations.Count == 0; } }
@@ -110,11 +147,17 @@
         teamState.RemoveUserFromTeam(item);
     }
 
+    private void ClearTeamInvitations()
+    {
+        teamState.ClearTeamCart();
+    }
+
     public async Task SearchUsersForTeam()
     {
         try
         {
-            users = await apiservice.GetUsersForTeamAsync(sport, age); 
+            string? sportFilter = string.IsNullOrWhiteSpace(sport) ? null : sport;
+            users = await apiservice.GetUsersForTeamAsync(sportFilter, age);
             errors = "";
         }
         catch (ApiException ex)
