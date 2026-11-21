@@ -1,19 +1,84 @@
 @page "/games/listteamsforgame"
+@rendermode InteractiveServer
 @using AppForSEII.Web.API
 @using Microsoft.AspNetCore.Authorization
 @inject IAppForSEIIAPIClient apiservice
 @* @attribute [Authorize] *@
 
 @* 2. Markup with C# expressions *@
-<button @onclick="@SearchMovies">Search</button>
+<h2>Select Teams for creating your game</h2>
+<div class="mb-4 pb-3 border-bottom">
+    <button @onclick="SearchTeams" type="button" class="btn btn-warning" id="SearchTeams">
+        Search for Teams
+    </button>
+</div>
+@if (Teams == null || !Teams.Any())
+{
+    <div class="alert alert-warning">No teams to show. Press Search.</div>
+}
+else
+{
+  <h3>Teams</h3>
+  <div class="accordion" id="accordionExample">
+    @foreach(var team in Teams)
+    {
+      var isOpen = openTeam == team.Name;
+      <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button @(isOpen ? "" : "collapsed")" type="button" @onclick="() => Toggle(team.Name)">
+          @team.Name
+        </button>
+      </h2>
+      <div class="accordion-collapse collapse @(isOpen ? "show" : "")">
+        <div class="accordion-body">
+          <table class="table">
+              <thead>
+                  <tr>
+                  <th scope="col">Captain Name</th>
+                  <th scope="col">Captain Surname</th>
+                  <th scope="col">Number of members</th>
+                  <th scope="col">Minimum Age</th>
+                  <th scope="col">Maximum Age</th>
+                  <th scope="col">Sport Name</th>
+
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                  <td>@team.CaptainName</td>
+                  <td>@team.CaptainSurname</td>
+                  <td>@team.MaxMembers</td>
+                  <td>@team.MinAge</td>
+                  <td>@team.MaxAge</td>
+                  <td>@team.SportName</td>
+                  </tr>
+              </tbody>
+              </table>
+              <button type="button" class="btn btn-warning">
+                  Select Team
+              </button>
+        </div>
+      </div>
+    </div>
+    }
+    
+  </div>
+
+}
+
+
+
 @* 3. C# logic *@
 @code {
-private ICollection<TeamDTO>? Movies { get; set; } = new List<TeamDTO>();
-protected async Task SearchMovies() {
+  private ICollection<TeamForGameDTO>? Teams { get; set; } = new List<TeamForGameDTO>();
+  private string? openTeam;
+  private void Toggle(string name) => openTeam = openTeam == name ? null : name;
+
+  protected async Task SearchTeams() {
     try { 
-        Movies = await apiservice.GetTeamsForGameAsync("Soccer", "Elena");
+        Teams = await apiservice.GetTeamsForGameAsync("", "Elena");
     } catch (ApiException ex) {
-        Movies = new List<TeamDTO>();
+        Teams = new List<TeamForGameDTO>();
     }
         StateHasChanged();
     }
