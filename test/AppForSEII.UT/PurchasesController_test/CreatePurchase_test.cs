@@ -2,6 +2,7 @@ using AppForSEII.API.Controllers;
 using AppForSEII.API.DTOs.PurchaseDTOs;
 using AppForSEII.API.DTOS.PurchaseDTOS;
 
+
 namespace AppForSEII.UT.PurchasesController_test
 {
     public class CreatePurchase_test : AppForSEII4SqliteUT
@@ -38,27 +39,27 @@ namespace AppForSEII.UT.PurchasesController_test
 
         public static IEnumerable<object[]> TestCasesFor_CreatePurchase() { //inputs from user
             var PurchaseNoItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, 
-                                _expirationDate, _userName, _customerNameSurname, new List<PurchaseItemForCreateDTO>(), //empty list
+                                _expirationDate, _userName, _customerNameSurname, new List<PurchaseItemDTO>(), //empty list
                                 "Birthday present for my son", false);
 
             var PurchaseUnknownUser = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, 
                                     _expirationDate, "mike.tyson@uclm.es", "Mike Tyson", //not valid
-                                    new List<PurchaseItemForCreateDTO>(){new PurchaseItemForCreateDTO(_item1Name, 1)},
+                                    new List<PurchaseItemDTO>(){new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25m, "M", 1)},
                                     "Birthday present for my son", false);
 
             var NonexistenceOfItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
                                     _userName, _customerNameSurname,
-                                    new List<PurchaseItemForCreateDTO>() {new PurchaseItemForCreateDTO("Jedi lightsaber", 1)}, //not valid
+                                    new List<PurchaseItemDTO>() {new PurchaseItemDTO("Jedi lightsaber", 18, Gender.Other, 25m, "M", 1)}, //not valid
                                     "Birthday present", false);
 
             var OutOfStockItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
                                     _userName, _customerNameSurname,
-                                    new List<PurchaseItemForCreateDTO>() {new PurchaseItemForCreateDTO(_item2Name, 1)}, //Trunks is included, but there's 0 in stock. Problem?
+                                    new List<PurchaseItemDTO>() {new PurchaseItemDTO(_item2Name, 18, Gender.Male, 20m, "M", 1)}, //Trunks is included, but there's 0 in stock. Problem?
                                     "Birthday present", false);
 
             var NotEnoughStockItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
                                     _userName, _customerNameSurname,
-                                    new List<PurchaseItemForCreateDTO>() {new PurchaseItemForCreateDTO(_item1Name, 99999)}, //not that many
+                                    new List<PurchaseItemDTO>() {new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25m, "M", 99999)}, //not that many
                                     "Birthday present", false);
 
             var allTests = new List<object[]>
@@ -107,8 +108,8 @@ namespace AppForSEII.UT.PurchasesController_test
 
             var purchaseDTO = new PurchaseForCreateDTO( //we will be testing this input
                 _street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
-                _userName, _customerNameSurname,new List<PurchaseItemForCreateDTO>() {
-                    new PurchaseItemForCreateDTO(_item1Name, 2)
+                _userName, _customerNameSurname,new List<PurchaseItemDTO>() {
+                    new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25m, "M", 2)
                 },
                 "Birthday present for my son", false);
             //we expect this
