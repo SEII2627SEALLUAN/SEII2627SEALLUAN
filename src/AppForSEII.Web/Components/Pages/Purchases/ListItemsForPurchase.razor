@@ -1,0 +1,24 @@
+@* 1. Directives *@
+@page "/purchases/listitemsforpurchase"
+@using AppForSEII.Web.API
+@using AppForSEII.Web.API
+@using Microsoft.AspNetCore.Authorization
+
+@inject IAppForSEIIAPIClient apiservice 
+@* @attribute [Authorize]  *@
+
+@* 2. Markup with C# expressions *@ 
+<button @onclick="@BrowseItems">Search</button> 
+
+@* 3. C# logic *@
+@code { 
+    private ICollection<ItemDTO>? Items { get; set; } = new List<ItemDTO>(); 
+    protected async void BrowseItems() {
+        try{ 
+            Items = await apiservice.GetItemsForPurchaseAsync(null, null,null); 
+        } catch (ApiException ex) { 
+            Items = new List<ItemDTO>(); 
+        } 
+        StateHasChanged();
+    } 
+}
