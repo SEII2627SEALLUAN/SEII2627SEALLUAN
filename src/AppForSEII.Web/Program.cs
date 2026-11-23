@@ -77,7 +77,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddScoped<IAppForSEIIAPIClient>(sp => new AppForSEIIAPIClient(builder.Configuration["AppForSEIIAPI"], new HttpClient()));
 
 builder.Services.AddScoped<GameStateContainer>();
-
+builder.Services.AddScoped<PurchaseStateContainer>();
 
 var app = builder.Build();
 

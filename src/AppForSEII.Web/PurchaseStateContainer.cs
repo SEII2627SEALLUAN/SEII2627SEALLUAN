@@ -2,7 +2,7 @@
 
 using AppForSEII.Web.API;
 
-namespace AppForSEII2526.Web {
+namespace AppForSEII.Web {
     public class PurchaseStateContainer {
 
         //we create an instance of Purchase when an instance of PurchaseStateContainer is created
