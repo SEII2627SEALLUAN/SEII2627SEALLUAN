@@ -1619,7 +1619,7 @@ namespace AppForSEII.Web.API
         [Newtonsoft.Json.JsonProperty("purchaseItems", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.MinLength(1)]
-        public System.Collections.Generic.ICollection<PurchaseItemForCreateDTO> PurchaseItems { get; set; } = new System.Collections.ObjectModel.Collection<PurchaseItemForCreateDTO>();
+        public System.Collections.Generic.ICollection<PurchaseItemDTO> PurchaseItems { get; set; } = new System.Collections.ObjectModel.Collection<PurchaseItemDTO>();
 
     }
 
@@ -1642,19 +1642,6 @@ namespace AppForSEII.Web.API
 
         [Newtonsoft.Json.JsonProperty("size", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Size { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("quantity", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int Quantity { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.8.0.0 (NJsonSchema v11.6.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class PurchaseItemForCreateDTO
-    {
-
-        [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        public string Name { get; set; }
 
         [Newtonsoft.Json.JsonProperty("quantity", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
