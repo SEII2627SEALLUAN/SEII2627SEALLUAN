@@ -1,183 +1,167 @@
 @page "/teams/listusersforteam"
 @rendermode InteractiveServer
 @implements IDisposable
-@using Microsoft.AspNetCore.Authorization
 @using AppForSEII.Web.API
+@using Microsoft.AspNetCore.Authorization
 @inject IAppForSEIIAPIClient apiservice
-@inject ILogger<ListUsersForTeam> logger
 @inject TeamStateContainer teamState
 @inject NavigationManager navigation
-
 @* @attribute [Authorize] *@
-<h3 class="mb-3">Select Users For Team</h3>
 
-<div class="container-fluid">
-    <div class="row alert alert-danger" role="alert" hidden="@hideErrors">
-        <p id="ErrorsShown" class="mb-0">Errors: @errors</p>
+<h2>Select Users for creating your team</h2>
+
+<div class="row g-2 align-items-end mb-4 pb-3 border-bottom">
+    <div class="col-md-4">
+        <label for="sport" class="form-label">Sport</label>
+        <input type="text" class="form-control" id="sport"
+               placeholder="e.g. Soccer" @bind="selectedSport" />
     </div>
-
-    <div class="row">
-        <div class="col-8">
-            <div class="row">
-                <div class="col">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">Sport</span>
-                        <input type="text" id="inputSport" @bind="sport" class="form-control" placeholder="Sport"
-                               aria-label="Sport" aria-describedby="basic-addon1">
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon2">Age</span>
-                        <input type="number" id="inputAge" @bind="age" class="form-control" placeholder="Age"
-                               aria-label="Age" aria-describedby="basic-addon2">
-                    </div>
-                </div>
-                <div class="col-auto mb-3">
-                    <button type="button" class="btn btn-warning" @onclick="SearchUsersForTeam" id="searchUsers">
-                        Search users
-                    </button>
-                </div>
-            </div>
-
-            <div class="row">
-                @if (users == null)
-                {
-                    <p>Loading users....</p>
-                }
-                else if (users.Count == 0)
-                {
-                    <div class="alert alert-warning" id="NoUsersFound" role="alert">
-                        Warning: There are no available players matching the selected criteria.
-                    </div>
-                }
-                else
-                {
-                    <div class="mh-100 table-responsive">
-                        <table class="table table-condensed table-hover" id="TableOfUsers">
-                            <thead class="table-warning">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Surname</th>
-                                    <th>Age</th>
-                                    <th>Sports &amp; Skill</th>
-                                    <th>Invite</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var user in users)
-                                {
-                                    bool isSelected = team.TeamInvitations.Any(ti => ti.UserName == user.UserName);
-                                    <tr id="UserData_@user.UserName" class="@(isSelected ? "table-warning" : "")">
-                                        <td>@user.Name</td>
-                                        <td>@user.Surname</td>
-                                        <td>@user.Age</td>
-                                        <td>@(string.IsNullOrWhiteSpace(user.Skill) ? "-" : user.Skill)</td>
-                                        <td>
-                                            <button type="button"
-                                                    class="btn @(isSelected ? "btn-warning" : "btn-outline-warning") btn-sm"
-                                                    id="userToInvite_@user.UserName"
-                                                    @onclick="@(() => AddUser(user))">
-                                                @(isSelected ? "Selected" : "Add")
-                                            </button>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                }
-            </div>
-        </div>
-
-        <div class="col-4 border border-warning rounded p-3" hidden="@hideTeamCart">
-            <div class="row mb-2 align-items-center">
-                <div class="col">
-                    <h4 class="mb-0">Team Invitations</h4>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-outline-warning btn-sm" id="clearTeamCart"
-                            @onclick="ClearTeamInvitations">
-                        Clear all
-                    </button>
-                </div>
-            </div>
-
-            @foreach (TeamInvitationDTO item in team.TeamInvitations)
-            {
-                <div class="row mb-2">
-                    <div class="col">
-                        <button type="button" class="btn btn-warning w-100 text-start" id="removeUser_@item.UserName"
-                                @onclick="@(() => RemoveTeamInvitation(item))">
-                            x @item.UserName (@item.UserAge)
-                        </button>
-                    </div>
-                </div>
-            }
-
-            <div class="row mt-3">
-                <div class="col">
-                    <button type="button" class="btn btn-warning w-100" id="createTeamButton"
-                            @onclick="NavigateToCreateTeam">
-                        Create team
-                    </button>
-                </div>
-            </div>
-        </div>
+    <div class="col-md-4">
+        <label for="age" class="form-label">Age</label>
+        <input type="number" class="form-control" id="age"
+               placeholder="e.g. 25" @bind="selectedAge" />
+    </div>
+    <div class="col-md-auto">
+        <button @onclick="SearchUsers" type="button" class="btn btn-warning" id="SearchUsers">
+            Search
+        </button>
     </div>
 </div>
 
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger" id="ErrorMessage">@errorMessage</div>
+}
+
+@if (!searched)
+{
+    <div class="alert alert-info">Press Search to find players.</div>
+}
+else if (Users == null || !Users.Any())
+{
+    <div class="alert alert-warning" id="NoUsersFound">
+        There are no players available for the selected filters. Try a different sport or age.
+    </div>
+}
+else
+{
+    <h3>Players</h3>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle" id="TableOfUsers">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Surname</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Sports &amp; Skill</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Users)
+                {
+                    <tr id="UserData_@user.UserName">
+                        <td>@user.Name</td>
+                        <td>@user.Surname</td>
+                        <td>@user.Age</td>
+                        <td>@(string.IsNullOrWhiteSpace(user.Skill) ? "-" : user.Skill)</td>
+                        <td class="text-end">
+                            <button type="button" class="btn btn-sm btn-outline-warning"
+                                    id="SelectUser_@user.UserName"
+                                    @onclick="() => SelectUser(user)">
+                                Select User
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<div class="mt-5">
+    <h4>Selected players (@teamState.Team.TeamInvitations.Count)</h4>
+
+    @if (!teamState.Team.TeamInvitations.Any())
+    {
+        <div class="alert alert-info" id="NoUsersSelected">No players selected yet.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle" id="TableOfSelectedUsers">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Surname</th>
+                        <th>Age</th>
+                        <th>Invitation Message</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var invitation in teamState.Team.TeamInvitations)
+                    {
+                        <tr>
+                            <td>@invitation.UserName</td>
+                            <td>@invitation.UserSurname</td>
+                            <td>@invitation.UserAge</td>
+                            <td>@invitation.InvitationMessage</td>
+                            <td class="text-end">
+                                <button type="button" class="btn btn-sm btn-outline-danger"
+                                        id="RemoveUser_@invitation.UserName"
+                                        @onclick="() => teamState.RemoveUserFromTeam(invitation)">
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <button @onclick="NavigateToCreateTeam" type="button" class="btn btn-warning" id="ConfirmSelection">
+                Confirm
+            </button>
+        </div>
+    }
+</div>
+
 @code {
-    private bool hideTeamCart { get { return team.TeamInvitations.Count == 0; } }
-    private ICollection<ApplicationUserDTO>? users;
-    private bool hideErrors { get { return errors.Length == 0; } }
-    private string errors = "";
-    private string? sport;
-    private int? age;
+    private ICollection<ApplicationUserDTO>? Users { get; set; } = new List<ApplicationUserDTO>();
+    private string selectedSport = "";
+    private int? selectedAge;
+    private string? errorMessage;
+    private bool searched = false;
 
-    private TeamForCreateDTO team => teamState.Team;
-
-    private void AddUser(ApplicationUserDTO user)
-    {
-        teamState.AddUserToTeam(user);
-    }
-
-    private void RemoveTeamInvitation(TeamInvitationDTO item)
-    {
-        teamState.RemoveUserFromTeam(item);
-    }
-
-    private void ClearTeamInvitations()
-    {
-        teamState.ClearTeamCart();
-    }
-
-    public async Task SearchUsersForTeam()
-    {
-        try
-        {
-            string? sportFilter = string.IsNullOrWhiteSpace(sport) ? null : sport;
-            users = await apiservice.GetUsersForTeamAsync(sportFilter, age);
-            errors = "";
-        }
-        catch (ApiException ex)
-        {
-            logger.LogError($"{DateTime.Now} Error: {ex}");
-            errors = "Error while connecting to the system";
-            users = new List<ApplicationUserDTO>();
-        }
-        StateHasChanged();
-    }
-
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         teamState.OnChange += StateHasChanged;
-        await SearchUsersForTeam();
     }
 
     public void Dispose()
     {
         teamState.OnChange -= StateHasChanged;
+    }
+
+    protected async Task SearchUsers()
+    {
+        errorMessage = null;
+        try
+        {
+            string? sportFilter = string.IsNullOrWhiteSpace(selectedSport) ? null : selectedSport;
+            Users = await apiservice.GetUsersForTeamAsync(sportFilter, selectedAge);
+        }
+        catch (ApiException)
+        {
+            errorMessage = "Error while connecting to the system.";
+            Users = new List<ApplicationUserDTO>();
+        }
+        searched = true;
+        StateHasChanged();
+    }
+
+    private void SelectUser(ApplicationUserDTO user)
+    {
+        teamState.AddUserToTeam(user);
     }
 
     private void NavigateToCreateTeam()
