@@ -7,6 +7,7 @@ namespace AppForSEII.API.DTOS.PurchaseDTOS
         public Gender? Gender { get; set; }
         public decimal Price { get; set; }
         public string Size { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
         public int Quantity { get; set; }
         public PurchaseItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, int quantity)
         {
@@ -29,5 +30,7 @@ namespace AppForSEII.API.DTOS.PurchaseDTOS
             if (Quantity != other.Quantity) return false; //added for the test
             return true;
         }
+        public override int GetHashCode() =>
+            HashCode.Combine(Name, RecommendedAge, Gender, Price, Size, Quantity);
     }
 }

@@ -32,9 +32,9 @@ namespace AppForSEII.API.DTOs.PurchaseDTOs
         public bool Wrapped { get; set; }=false;
         [Required]
         [MinLength(1, ErrorMessage = "At least one item must be selected")]
-        public IList<PurchaseItemForCreateDTO> PurchaseItems { get; set; }
+        public IList<PurchaseItemDTO> PurchaseItems { get; set; }
 
-        public PurchaseForCreateDTO(string street, string city, string province, string creditCardNumber, string ccv, string expirationDate, string customerUserName, string customerNameSurname, IList<PurchaseItemForCreateDTO> purchaseItems, string purchaseDescription, bool wrapped)
+        public PurchaseForCreateDTO(string street, string city, string province, string creditCardNumber, string ccv, string expirationDate, string customerUserName, string customerNameSurname, IList<PurchaseItemDTO> purchaseItems, string purchaseDescription, bool wrapped)
         {
          Street = street;
          City = city;
@@ -51,7 +51,7 @@ namespace AppForSEII.API.DTOs.PurchaseDTOs
 
         public PurchaseForCreateDTO()
         {
-            PurchaseItems = new List<PurchaseItemForCreateDTO>();
+            PurchaseItems = new List<PurchaseItemDTO>();
         }
         public override bool Equals(object? obj)
         {
