@@ -35,7 +35,7 @@
 
 @if (!searched)
 {
-    <div class="alert alert-info">Press Search to find players.</div>
+    <div class="alert alert-info">Loading players...</div>
 }
 else if (Users == null || !Users.Any())
 {
@@ -53,23 +53,25 @@ else
                     <th scope="col">Name</th>
                     <th scope="col">Surname</th>
                     <th scope="col">Age</th>
-                    <th scope="col">Sports &amp; Skill</th>
+                    <th scope="col">Sports &amp; Skill (1-5)</th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var user in Users)
                 {
+                    bool isSelected = teamState.Team.TeamInvitations.Any(ti => ti.UserName == user.UserName);
                     <tr id="UserData_@user.UserName">
                         <td>@user.Name</td>
                         <td>@user.Surname</td>
                         <td>@user.Age</td>
                         <td>@(string.IsNullOrWhiteSpace(user.Skill) ? "-" : user.Skill)</td>
                         <td class="text-end">
-                            <button type="button" class="btn btn-sm btn-outline-warning"
+                            <button type="button"
+                                    class="btn btn-sm @(isSelected ? "btn-warning" : "btn-outline-warning")"
                                     id="SelectUser_@user.UserName"
                                     @onclick="() => SelectUser(user)">
-                                Select User
+                                @(isSelected ? "Selected" : "Select User")
                             </button>
                         </td>
                     </tr>
@@ -92,7 +94,7 @@ else
             <table class="table table-striped table-hover align-middle" id="TableOfSelectedUsers">
                 <thead>
                     <tr>
-                        <th>User Name</th>
+                        <th>Name</th>
                         <th>Surname</th>
                         <th>Age</th>
                         <th>Invitation Message</th>
@@ -127,14 +129,15 @@ else
 
 @code {
     private ICollection<ApplicationUserDTO>? Users { get; set; } = new List<ApplicationUserDTO>();
-    private string selectedSport = "";
+    private string selectedSport = "Soccer";
     private int? selectedAge;
     private string? errorMessage;
     private bool searched = false;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         teamState.OnChange += StateHasChanged;
+        await SearchUsers();
     }
 
     public void Dispose()
