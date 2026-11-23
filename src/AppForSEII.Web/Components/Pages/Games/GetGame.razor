@@ -1,0 +1,64 @@
+@page "/games/getgame"
+@rendermode InteractiveServer
+@using AppForSEII.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject IAppForSEIIAPIClient apiservice
+@inject GameStateContainer gameState
+
+<h2>See the details of the game</h2>
+<div class="row g-2 align-items-end mb-4 pb-3 border-bottom">
+    <div class="col-md-4">
+        <label for="sport" class="form-label">ID of the game</label>
+        <input type="text" class="form-control" id="sport"
+               placeholder="e.g. 1" @bind="gameId"/>
+    </div>
+    <div class="col-md-auto">
+        <button type="button" class="btn btn-warning" id="SearchTeams" @onclick="ObtainGame">
+            Get the game
+        </button>
+    </div>
+</div>
+@if(showDetails)
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle" id="gameTable">
+            <thead>
+                <tr>
+                    <th>Game Name</th>
+                    <th>Sport</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Place</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@game.Name</td>
+                    <td>@game.SportName</td>
+                    <td>@game.Date.ToString("dd/MM/yyyy")</td>
+                    <td>@game.Date.ToString("HH:mm")</td>
+                    <td>@game.Place</td>
+                    <td>@game.Description</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+
+@code {
+    private int gameId;
+    private GameDTO game = new GameDTO(); 
+    private string date;
+    private string time;
+    private bool showDetails = false;
+
+    protected async Task ObtainGame()
+    {
+        showDetails = true;
+        var games = await apiservice.GetGameAsync(gameId);
+        game = games.FirstOrDefault();
+    }
+
+}
