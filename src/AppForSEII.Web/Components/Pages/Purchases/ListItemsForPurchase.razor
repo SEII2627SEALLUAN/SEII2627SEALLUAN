@@ -1,7 +1,6 @@
 @* 1. Directives *@
 @page "/purchases/listitemsforpurchase"
 @using AppForSEII.Web.API
-@using AppForSEII.Web.API
 @using Microsoft.AspNetCore.Authorization
 @inject IAppForSEIIAPIClient apiservice 
 @inject PurchaseStateContainer purchaseState
@@ -9,22 +8,27 @@
 
 @* 2. Markup with C# expressions *@ 
 <h2>Select items to purchase</h2>
-<div class="row g-2 align-items-end mb-4 pb-3 border-bottom">
+
+    <div class="row g-2 align-items-end mb-4 pb-3 border-bottom">
     <div class="col-md-4">
         <label for="itemName" class="form-label">Item name</label>
         <input type="text" class="form-control" id="itemName"
                placeholder="e.g. Soccer Ball" @bind="selectedItemName" />
     </div>
+
     <div class="col-md-4">
-        <label for="gender" class="form-label">Gender</label>
-        <input type="text" class="form-control" id="gender"
-               placeholder="Male, Female or Other" @bind="selectedGender" />
+    <select class="form-select" id="gender" @bind="selectedGender">
+        <option value="">Any</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+    </select>
 
     </div>
     <div class="col-md-4">
         <label for="sportName" class="form-label">Sport Name</label>
         <input type="text" class="form-control" id="sportName"
-               placeholder="e.g. Elena" @bind="selectedSportName" />
+               placeholder="e.g. Soccer" @bind="selectedSportName" />
 
     </div>
     <div class="col-md-auto">
@@ -32,7 +36,8 @@
             Search
         </button>
     </div>
-</div>
+    </div>
+
 @if (errorMessage != null)
 {
     <div class="alert alert-danger" id="ErrorMessage">@errorMessage</div>
@@ -129,7 +134,7 @@ else
                             <td>@purchaseItem.Gender</td>
                             <td>@purchaseItem.Price</td>
                             <td>@purchaseItem.Size</td>
-                            <td>@purchaseItem.</td>
+                            <td>@purchaseItem.SportName</td>
                             <td class="text-end">
                                 <button type="button" class="btn btn-sm btn-outline-danger" id="RemoveItem_@purchaseItem.Name" @onclick="() => purchaseState.RemovePurchaseItemToRent(purchaseItem)">
                                     Remove
@@ -158,15 +163,17 @@ else
     private string selectedSportName = "";
     private string? errorMessage;
     private bool searched = false;
-    protected async void BrowseItems() {
+    protected async Task BrowseItems() {
         try{ 
-            Items = await apiservice.GetItemsForPurchaseAsync(null, null,null); 
+            Gender? genderFilter = Enum.TryParse<Gender>(selectedGender, ignoreCase: true, out var g) ? g : (Gender?)null;
+            Items = await apiservice.GetItemsForPurchaseAsync(selectedItemName, genderFilter, selectedSportName); 
         } catch (ApiException ex) { 
             Items = new List<ItemDTO>(); 
         } 
         StateHasChanged();
+        searched = true;
     } 
-    private void SelectItem(PurchaseItemDTO item)
+    private void SelectItem(ItemDTO item)
     {
         purchaseState.AddItemToPurchase(item);
     }

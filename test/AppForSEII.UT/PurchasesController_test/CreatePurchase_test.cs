@@ -17,6 +17,7 @@ namespace AppForSEII.UT.PurchasesController_test
         private const string _expirationDate = "10/30";
         private const string _item1Name = "Boxing glove";
         private const string _item2Name = "Trunks";
+        private const string _sport1Name = "Boxing";
 
         public CreatePurchase_test()
         {
@@ -44,22 +45,22 @@ namespace AppForSEII.UT.PurchasesController_test
 
             var PurchaseUnknownUser = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, 
                                     _expirationDate, "mike.tyson@uclm.es", "Mike Tyson", //not valid
-                                    new List<PurchaseItemDTO>(){new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25m, "M", 1)},
+                                    new List<PurchaseItemDTO>(){new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25m, "M", 1, _sport1Name)},
                                     "Birthday present for my son", false);
 
             var NonexistenceOfItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
                                     _userName, _customerNameSurname,
-                                    new List<PurchaseItemDTO>() {new PurchaseItemDTO("Jedi lightsaber", 18, Gender.Other, 25m, "M", 1)}, //not valid
+                                    new List<PurchaseItemDTO>() {new PurchaseItemDTO("Jedi lightsaber", 18, Gender.Other, 25m, "M", 1, _sport1Name)}, //not valid
                                     "Birthday present", false);
 
             var OutOfStockItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
                                     _userName, _customerNameSurname,
-                                    new List<PurchaseItemDTO>() {new PurchaseItemDTO(_item2Name, 18, Gender.Male, 20m, "M", 1)}, //Trunks is included, but there's 0 in stock. Problem?
+                                    new List<PurchaseItemDTO>() {new PurchaseItemDTO(_item2Name, 18, Gender.Male, 20m, "M", 1, _sport1Name)}, //Trunks is included, but there's 0 in stock. Problem?
                                     "Birthday present", false);
 
             var NotEnoughStockItem = new PurchaseForCreateDTO(_street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
                                     _userName, _customerNameSurname,
-                                    new List<PurchaseItemDTO>() {new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25m, "M", 99999)}, //not that many
+                                    new List<PurchaseItemDTO>() {new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25m, "M", 99999, _sport1Name)}, //not that many
                                     "Birthday present", false);
 
             var allTests = new List<object[]>
@@ -109,14 +110,14 @@ namespace AppForSEII.UT.PurchasesController_test
             var purchaseDTO = new PurchaseForCreateDTO( //we will be testing this input
                 _street, _city, _province, _creditCardNumber, _ccv, _expirationDate,
                 _userName, _customerNameSurname,new List<PurchaseItemDTO>() {
-                    new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25m, "M", 2)
+                    new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25m, "M", 2, _sport1Name)
                 },
                 "Birthday present for my son", false);
             //we expect this
             var expectedPurchaseDetailDTO = new PurchaseDetailDTO("Elena","Navarro", DateTime.Now, "Birthday present for my son", false,
                 50,                                  // 25 * 2
                 new List<PurchaseItemDTO>() {
-                    new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25, "M", 2)
+                    new PurchaseItemDTO(_item1Name, 18, Gender.Other, 25, "M", 2, _sport1Name)
                 });
 
             //ACT (really add it, returns PurchaseDetail)

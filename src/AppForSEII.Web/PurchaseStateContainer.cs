@@ -18,7 +18,7 @@ namespace AppForSEII.Web {
         public double TotalPrice =>
             Purchase.PurchaseItems.Sum(pi => pi.Price * pi.Quantity);
         
-        public void AddItemToPurchase(PurchaseItemDTO Item) {
+        public void AddItemToPurchase(ItemDTO Item) {
             //before adding a Item we checked whether it has been already added
             if (!Purchase.PurchaseItems.Any(ri => ri.Name == Item.Name)) //name is unique, acts as ID, should be fine because of DTOs
                 //we add it if it is not in the list
@@ -28,7 +28,6 @@ namespace AppForSEII.Web {
                     Gender = Item.Gender,
                     Price = Item.Price,
                     Size = Item.Size,
-                    Quantity = Item.Quantity
                 }
             );
 

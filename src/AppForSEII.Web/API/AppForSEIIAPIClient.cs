@@ -1647,6 +1647,9 @@ namespace AppForSEII.Web.API
         [System.ComponentModel.DataAnnotations.Range(1, 2147483647)]
         public int Quantity { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("sportName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string SportName { get; set; }
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.8.0.0 (NJsonSchema v11.6.2.0 (Newtonsoft.Json v13.0.0.0))")]

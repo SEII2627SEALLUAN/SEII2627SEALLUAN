@@ -77,8 +77,8 @@ namespace AppForSEII.UT.PurchasesController_test
                 70,
                 new List<PurchaseItemDTO>()
                 {
-                    new PurchaseItemDTO("Boxing glove",  18,  Gender.Other, 25, "M", 2),
-                    new PurchaseItemDTO("Trunks", 18, Gender.Male, 20, "M", 1)
+                    new PurchaseItemDTO("Boxing glove",  18,  Gender.Other, 25, "M", 2, "Boxing"),
+                    new PurchaseItemDTO("Trunks", 18, Gender.Male, 20, "M", 1, "Boxing")
                 });
 
             //ACT
