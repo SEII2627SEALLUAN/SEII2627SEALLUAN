@@ -78,7 +78,7 @@ builder.Services.AddScoped<IAppForSEIIAPIClient>(sp => new AppForSEIIAPIClient(b
 
 builder.Services.AddScoped<TeamStateContainer>();
 builder.Services.AddScoped<GameStateContainer>();
-
+builder.Services.AddScoped<PurchaseStateContainer>();
 
 var app = builder.Build();
 

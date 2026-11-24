@@ -29,7 +29,7 @@ namespace AppForSEII.API.Controllers
                     .Include(i=>i.Sport) //include sport
                     .Where(i=>((i.Name.Equals(name)) || (name==null)) //filter by name (perhaps change to contains), null includes all
                         && ((i.Sport.Name.Equals(sport)) || (sport==null)) //filter by sport, null includes all
-                        && ((i.Gender==gender) || (gender==null)) //gender filter
+                        && ((gender == null) || ((i.Gender ?? Gender.Other) == gender)) //gender filter CHANGED. Check if null, then check if gender is input, and if null, becomes other
                         && (i.QuantityAvailableForPurchase>0)) //do not show out of stock items
                         .OrderBy(i=>i.Name)
                             .ThenBy(i=>i.Price)

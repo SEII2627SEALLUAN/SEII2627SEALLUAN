@@ -9,7 +9,8 @@ namespace AppForSEII.API.DTOS.PurchaseDTOS
         public string Size { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
         public int Quantity { get; set; }
-        public PurchaseItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, int quantity)
+        public string SportName { get; set; }
+        public PurchaseItemDTO(string name, int? recommendedAge, Gender? gender, decimal price, string size, int quantity, string sportName)
         {
             Name = name;
             RecommendedAge = recommendedAge;
@@ -17,6 +18,7 @@ namespace AppForSEII.API.DTOS.PurchaseDTOS
             Price = price;
             Size = size;
             Quantity = quantity;
+            SportName = sportName;
         }
 
         public bool Equals(PurchaseItemDTO other)
@@ -27,10 +29,11 @@ namespace AppForSEII.API.DTOS.PurchaseDTOS
             if (Gender != other.Gender) return false;
             if (Price != other.Price) return false;
             if (Size != other.Size) return false;
+            if (SportName != other.SportName) return false;
             if (Quantity != other.Quantity) return false; //added for the test
             return true;
         }
         public override int GetHashCode() =>
-            HashCode.Combine(Name, RecommendedAge, Gender, Price, Size, Quantity);
+            HashCode.Combine(Name, RecommendedAge, Gender, Price, Size, Quantity, SportName);
     }
 }

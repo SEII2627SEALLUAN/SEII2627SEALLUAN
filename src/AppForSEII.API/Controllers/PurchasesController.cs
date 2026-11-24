@@ -30,7 +30,7 @@ namespace AppForSEII.API.Controllers
              .Where(p => p.Id == id)
                  .Include(p => p.PurchaseItems) //join table PurchaseItems
                     .ThenInclude(pi => pi.Item) //then join table Item
-                        .ThenInclude(s => s.Sport) //then join table Sport
+                        .ThenInclude(s => s.Sport) //then join table Sport, NAME IS REQUIRED TO DISPLAY
              .Select(p => new PurchaseDetailDTO(p.User.Name, p.User.Surname, p.PurchaseDate, p.PurchaseDescription, p.Wrapped, p.TotalPrice,
                     p.PurchaseItems
                     .Select(pi => new PurchaseItemDTO(
@@ -39,7 +39,8 @@ namespace AppForSEII.API.Controllers
                         pi.Item.Gender,
                         pi.Price,    
                         pi.Item.Size,
-                        pi.Quantity))
+                        pi.Quantity,
+                        pi.Item.Sport.Name))
                     .ToList()))
             .FirstOrDefaultAsync();
 
@@ -83,6 +84,7 @@ namespace AppForSEII.API.Controllers
                     i.Size,
                     i.QuantityAvailableForPurchase,
                     i.Price,
+                    SportName = i.Sport.Name,
                     NumberOfPurchasedItems = i.PurchaseItems.Sum(pi => pi.Quantity) //for each name, compute the items already bought. Will replace and complete later on to remove items, probably. Ask Elena                         
                     })
                 .ToList();
@@ -152,7 +154,8 @@ namespace AppForSEII.API.Controllers
                         db.Gender,
                         db.Price,
                         db.Size,
-                        pi.Quantity);
+                        pi.Quantity,
+                        db.SportName);
                     })
                 .ToList());
 
