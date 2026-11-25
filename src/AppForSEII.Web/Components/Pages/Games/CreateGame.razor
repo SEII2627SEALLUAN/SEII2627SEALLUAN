@@ -7,7 +7,32 @@
 @* @attribute [Authorize] *@
 
 <h2>Create the Game</h2>
+<form>
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input class="form-control" id="name">
+  </div>
+  <div class="mb-3">
+    <label for="startDate">Date </label>
+    <input id="startDate" class="form-control" type="date" />
+  </div>
+  <div class="mb-3">
+    <label for="startDate">Time </label>
+    <input id="startDate" class="form-control" type="time" />
+  </div>
+  <div class="mb-3">
+    <label for="name" class="form-label">Place</label>
+    <input class="form-control" id="name">
+  </div>
+  <div class="mb-3">
+      <div class="input-group">
+        <span class="input-group-text">Description</span>
+        <textarea class="form-control" aria-label="With textarea"></textarea>
+        </div>
+  </div>
 
+  <button type="submit" class="btn btn-warning">Submit</button>
+</form>
 @code {
     private bool searched = false;
 }
