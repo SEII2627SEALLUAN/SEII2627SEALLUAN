@@ -1,0 +1,13 @@
+@page "/games/creategame"
+@rendermode InteractiveServer
+@using AppForSEII.Web.API
+@using Microsoft.AspNetCore.Authorization
+@inject IAppForSEIIAPIClient apiservice
+@inject GameStateContainer gameState
+@* @attribute [Authorize] *@
+
+<h2>Create the Game</h2>
+
+@code {
+    private bool searched = false;
+}

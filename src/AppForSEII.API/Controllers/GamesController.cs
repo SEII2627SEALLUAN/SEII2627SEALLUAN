@@ -17,7 +17,7 @@ namespace AppForSEII.API.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        [ProducesResponseType(typeof(IList<GameDTO>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(GameDTO), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> GetGame(int id)
         {
 

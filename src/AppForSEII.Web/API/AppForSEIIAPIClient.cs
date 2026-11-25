@@ -47,12 +47,12 @@ namespace AppForSEII.Web.API
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GameDTO>> GetGameAsync(int? id);
+        System.Threading.Tasks.Task<GameDTO> GetGameAsync(int? id);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GameDTO>> GetGameAsync(int? id, System.Threading.CancellationToken cancellationToken);
+        System.Threading.Tasks.Task<GameDTO> GetGameAsync(int? id, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
@@ -344,7 +344,7 @@ namespace AppForSEII.Web.API
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GameDTO>> GetGameAsync(int? id)
+        public virtual System.Threading.Tasks.Task<GameDTO> GetGameAsync(int? id)
         {
             return GetGameAsync(id, System.Threading.CancellationToken.None);
         }
@@ -352,7 +352,7 @@ namespace AppForSEII.Web.API
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GameDTO>> GetGameAsync(int? id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<GameDTO> GetGameAsync(int? id, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -399,7 +399,7 @@ namespace AppForSEII.Web.API
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<GameDTO>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<GameDTO>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
