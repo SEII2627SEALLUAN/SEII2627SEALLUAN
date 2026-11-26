@@ -43,6 +43,10 @@ else if (Teams == null || !Teams.Any())
 else
 {
   <h3>Teams</h3>
+  @if (selectionError != null)
+    {
+        <div class="alert alert-danger">@selectionError</div>
+    }
   <div class="accordion" id="accordionExample">
     @foreach(var team in Teams)
     {
@@ -152,6 +156,7 @@ else
     private string captainName = "";
     private string? errorMessage;
     private bool searched = false;
+    private string? selectionError;
 
     protected async Task SearchTeams() {
         errorMessage = null;
@@ -166,6 +171,13 @@ else
 
     private void SelectTeam(TeamForGameDTO team)
     {
+        selectionError = null;
+        var firstSport = gameState.Game.Invitations.FirstOrDefault();
+        if (firstSport != null && firstSport.SportName != team.SportName)
+        {
+            selectionError = "All invited teams must play the same sport.";
+            return;
+        }
         gameState.AddTeamToGame(team);
     }
 

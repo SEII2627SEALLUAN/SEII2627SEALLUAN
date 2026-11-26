@@ -6,7 +6,8 @@ namespace AppForSEII.Web
     {
         public GameForCreateDTO Game { get; private set; } = new GameForCreateDTO()
         {
-            Invitations = new List<GameInvitationDTO>()
+            Invitations = new List<GameInvitationDTO>(),
+            Date = DateTime.Today.AddDays(1)
         };
 
         public event Action? OnChange;
