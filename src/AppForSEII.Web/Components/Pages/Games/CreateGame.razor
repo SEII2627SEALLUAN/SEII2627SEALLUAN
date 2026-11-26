@@ -2,12 +2,149 @@
 @rendermode InteractiveServer
 @using AppForSEII.Web.API
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Forms
 @inject IAppForSEIIAPIClient apiservice
 @inject GameStateContainer gameState
+@inject NavigationManager navigation
+@implements IDisposable
 @* @attribute [Authorize] *@
 
-<h2>Create the Game</h2>
+<h2>Create the Game</h2>  
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger" id="ErrorMessage">@errorMessage</div>
+}
+@if(!gameState.Game.Invitations.Any())
+{
+  <div class="alert alert-danger">
+        You have not selected any team. <a href="/games/listteamsforgame">Select teams</a>
+    </div>
+} 
+else
+{
+  <EditForm EditContext="editContext" OnValidSubmit="SubmitGame">
+  <DataAnnotationsValidator />
+  <ValidationSummary />    
+    <div class="mb-3">
+      <label for="gameName" class="form-label">Name</label>
+      <InputText id="gameName" class="form-control" @bind-Value="gameState.Game.Name"/>
+      <ValidationMessage For="() => gameState.Game.Name" />
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="startDate" class="form-label">Date</label>
+        <InputDate id="startDate" class="form-control" @bind-Value="startDate" />
+      </div>
+      <div class="col-md-6">
+        <label for="gameTime" class="form-label">Time</label>
+        <InputDate Type="InputDateType.Time" id="gameTime" class="form-control" @bind-Value="gameTime" />
+      </div>
+      <ValidationMessage For="() => gameState.Game.Date" />
+    </div>
+    <div class="mb-3">
+      <label for="gamePlace" class="form-label">Place</label>
+        <InputText id="gamePlace" class="form-control" @bind-Value="gameState.Game.Place" />
+        <ValidationMessage For="() => gameState.Game.Place" />
+    </div>
+    @foreach(var invitation in gameState.Game.Invitations)
+    {
+      <div class="mb-3">
+        <label class="form-label">@invitation.Name message</label>
+        <InputText class="form-control" @bind-Value="invitation.Message" />
+        <ValidationMessage For="() => invitation.Message" />
+      </div>
+    }
+    <div class="mb-3">
+        <label for="gameDescription" class="form-label">Description</label>
+        <InputTextArea id="gameDescription" class="form-control" rows="3" @bind-Value="gameState.Game.Description" />
+        <ValidationMessage For="() => gameState.Game.Description" />
+    </div>
+
+    <button type="submit" class="btn btn-warning">Submit</button>
+  </EditForm>
+}
 
 @code {
-    private bool searched = false;
+  private bool searched = false;
+  private string? errorMessage;
+  private DateTime? startDate;
+  private TimeOnly? gameTime;
+  private EditContext editContext = default!;
+  private ValidationMessageStore messageStore = default!;
+
+  protected override void OnInitialized()
+  {
+    editContext = new EditContext(gameState.Game);
+    messageStore = new ValidationMessageStore(editContext);
+    editContext.OnValidationRequested += ValidateRules;
+  }
+
+  public void Dispose() => editContext.OnValidationRequested -= ValidateRules;
+
+  private void ValidateRules(object? sender, ValidationRequestedEventArgs e)
+  {
+    messageStore.Clear();
+
+    if (String.IsNullOrWhiteSpace(gameState.Game.Name))
+    {
+      messageStore.Add(new FieldIdentifier(gameState.Game, nameof(gameState.Game.Name)), "The game name is required");
+    }
+
+    if (String.IsNullOrWhiteSpace(gameState.Game.Place))
+    {
+      messageStore.Add(new FieldIdentifier(gameState.Game, nameof(gameState.Game.Place)), "The location is required");
+    }
+
+    if (startDate == null || gameTime == null)
+    {
+      messageStore.Add(new FieldIdentifier(gameState.Game, nameof(gameState.Game.Date)), "The date and the time are required.");
+    } else
+    {
+      gameState.Game.Date = startDate.Value.Date + gameTime.Value.ToTimeSpan();
+      if (gameState.Game.Date <= DateTime.Now)
+      {
+        messageStore.Add(new FieldIdentifier(gameState.Game, nameof(gameState.Game.Date)),
+          "The game must take place in the future.");
+      }
+    }
+
+    foreach (var invitation in gameState.Game.Invitations)
+    {
+      var msg = invitation.Message ?? "";
+      if (msg.Length < 11 || msg.Length > 200 || !msg.StartsWith("Dear Team,")) {
+        messageStore.Add(new FieldIdentifier(invitation, nameof(invitation.Message)),"The message must start with \"Dear Team,\" and have between 11 and 200 characters.");
+      }
+
+    }
+
+    editContext.NotifyValidationStateChanged();
+
+  }
+
+  private async Task SubmitGame()
+  {
+    errorMessage = null;
+    try
+    {
+      gameState.Game.CreatorUserName = "elena@uclm.es";
+      GameDTO? createdGame = await apiservice.CreateGameAsync(gameState.Game);
+
+      gameState.GameProcessed();
+      navigation.NavigateTo($"/games/getgame?GameID={createdGame.Id}");
+    }
+    catch(ApiException<ValidationProblemDetails> ex)
+    {
+      messageStore.Clear();
+      foreach (var error in ex.Result.Errors)
+        foreach (var message in error.Value)
+          messageStore.Add(editContext.Field(error.Key), message);
+      editContext.NotifyValidationStateChanged();
+    }
+    catch(ApiException ex)
+    {
+      errorMessage = $"Error {ex.StatusCode}: {ex.Response}";
+    }
+  }
+
 }
+

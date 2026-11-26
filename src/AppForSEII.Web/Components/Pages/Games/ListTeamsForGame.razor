@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using AppForSEII.Web.API
 @using Microsoft.AspNetCore.Authorization
+@inject NavigationManager navigation
 @inject IAppForSEIIAPIClient apiservice
 @inject GameStateContainer gameState
 @* @attribute [Authorize] *@
@@ -42,6 +43,10 @@ else if (Teams == null || !Teams.Any())
 else
 {
   <h3>Teams</h3>
+  @if (selectionError != null)
+    {
+        <div class="alert alert-danger">@selectionError</div>
+    }
   <div class="accordion" id="accordionExample">
     @foreach(var team in Teams)
     {
@@ -96,7 +101,7 @@ else
 
     @if (!gameState.Game.Invitations.Any())
     {
-        <div class="alert alert-info" id="NoTeamsSelected">No teams selected yet.</div>
+        <div class="alert alert-info" id="NoTeamsSelected">In order to create a game, you need to select teams.</div>
     }
     else
     {
@@ -133,7 +138,7 @@ else
                     }
                 </tbody>
             </table>
-            <button @onclick="SearchTeams" type="button" class="btn btn-warning" id="SearchTeams">
+            <button @onclick="goToCreateGame" type="button" class="btn btn-warning" id="SearchTeams">
                 Confirm
             </button>
         </div>
@@ -144,27 +149,42 @@ else
 
 @* 3. C# logic *@
 @code {
-  private ICollection<TeamForGameDTO>? Teams { get; set; } = new List<TeamForGameDTO>();
-  private string? openTeam;
-  private void Toggle(string name) => openTeam = openTeam == name ? null : name;
-  private string selectedSport = "";
-  private string captainName = "";
-  private string? errorMessage;
-  private bool searched = false;
+    private ICollection<TeamForGameDTO>? Teams { get; set; } = new List<TeamForGameDTO>();
+    private string? openTeam;
+    private void Toggle(string name) => openTeam = openTeam == name ? null : name;
+    private string selectedSport = "";
+    private string captainName = "";
+    private string? errorMessage;
+    private bool searched = false;
+    private string? selectionError;
 
-  protected async Task SearchTeams() {
-    errorMessage = null;
-    try { 
-      Teams = await apiservice.GetTeamsForGameAsync(selectedSport, captainName);
-    } catch (ApiException ex) {
-      Teams = new List<TeamForGameDTO>();
+    protected async Task SearchTeams() {
+        errorMessage = null;
+        try { 
+            Teams = await apiservice.GetTeamsForGameAsync(selectedSport, captainName);
+        } catch (ApiException ex) {
+            Teams = new List<TeamForGameDTO>();
+        }
+        StateHasChanged();
+        searched = true;
     }
-    StateHasChanged();
-    searched = true;
-  }
 
-  private void SelectTeam(TeamForGameDTO team)
-  {
-    gameState.AddTeamToGame(team);
-  }
+    private void SelectTeam(TeamForGameDTO team)
+    {
+        selectionError = null;
+        var firstSport = gameState.Game.Invitations.FirstOrDefault();
+        if (firstSport != null && firstSport.SportName != team.SportName)
+        {
+            selectionError = "All invited teams must play the same sport.";
+            return;
+        }
+        gameState.AddTeamToGame(team);
+    }
+
+    private void goToCreateGame()
+    {
+        if (gameState.Game.Invitations.Any())
+        navigation.NavigateTo("/games/creategame");
+    }
+
 }

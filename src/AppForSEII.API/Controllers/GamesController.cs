@@ -54,7 +54,7 @@ namespace AppForSEII.API.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        [ProducesResponseType(typeof(GameDTO), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(GameDTO), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.Conflict)]
         public async Task<ActionResult> CreateGame(GameForCreateDTO gameForCreate)
